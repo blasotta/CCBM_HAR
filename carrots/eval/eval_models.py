@@ -4,9 +4,6 @@ Created on Wed Jul 27 11:14:31 2022
 
 @author: bened
 """
-#from scipy.io import arff
-#from sklearn import preprocessing
-#from sklearn.model_selection import train_test_split
 from sklearn import model_selection
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis as QDA
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
@@ -17,36 +14,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sn
 import matplotlib.pyplot as plt
-#import yaml
-#import os
 
-# CONFIG_PATH = '../config/'
-
-# def loadDataset(number):
-#     dataset, meta = arff.loadarff(f'../data/001-IMU/raw_{number}.arff')
-#     labels = dataset['class']
-#     df = pd.DataFrame(dataset)
-#     df.drop(columns=['time', 'class'], inplace=True)
-    
-#     for i in range(len(labels)):
-#         s = labels[i].decode('UTF-8')
-#         split = s.split('-',1)
-#         labels[i]=split[0]
-    
-#     str_labels = labels.astype('str')
-#     global le
-#     le = preprocessing.LabelEncoder()
-#     le.fit(str_labels)
-#     y = le.transform(str_labels)
-#     X = df.to_numpy()
-#     return X,y
-
-
-# def load_config(config_name):
-#     with open(os.path.join(CONFIG_PATH, config_name)) as file:
-#         config = yaml.safe_load(file)
-
-#     return config
 
 config = load_config('qda_config.yaml')
 
@@ -76,7 +44,7 @@ X_test = X_7
 y_test = y_7
 
 #TODO: Probably add second loop such that always one subject is tested on and report avg. Performance across all subject
-#datasets in the end. Port to git
+#datasets in the end.
 
 X_train = np.concatenate(X, axis=0)
 y_train = np.concatenate(y, axis=0)
