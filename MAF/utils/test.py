@@ -10,9 +10,12 @@ def test_maf(model, train, test_loader):
     model.eval()
     test_loss = []
     _, _ = model.forward(train)
+    i = 1 #remove
     with torch.no_grad():
         for batch in test_loader:
             u, log_det = model.forward(batch.float())
+            print('Batch:', i, ' U:', u , '\n log_det:', log_det)  #remove
+            i +=1 #remove
 
             negloglik_loss = 0.5 * (u ** 2).sum(dim=1)
             negloglik_loss += 0.5 * batch.shape[1] * np.log(2 * math.pi)

@@ -31,6 +31,7 @@ class MAF(nn.Module):
         # Forward pass.
         for layer in self.layers:
             x, log_det = layer(x)
+            print('Shape in maf: x ', x.shape, '\n log_det:', log_det.shape) #n
             log_det_sum += log_det
 
         return x, log_det_sum

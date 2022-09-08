@@ -1,0 +1,322 @@
+% do not change these two lines (this is a hard requirement
+% there is one exception: you might replace oneside by twoside in case you deliver 
+% the printed version in the accordant format
+\documentclass[11pt,titlepage,oneside,openany]{book}
+\usepackage{times}
+
+
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{ntheorem}
+
+% \usepackage{paralist}
+\usepackage{tabularx}
+
+% this packaes are useful for nice algorithms
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+% well, when your work is concerned with definitions, proposition and so on, we suggest this
+% feel free to add Corrolary, Theorem or whatever you need
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+
+
+% its always useful to have some shortcuts (some are specific for algorithms
+% if you do not like your formating you can change it here (instead of scanning through the whole text)
+\renewcommand{\algorithmiccomment}[1]{\ensuremath{\rhd} \textit{#1}}
+\def\MYCALL#1#2{{\small\textsc{#1}}(\textup{#2})}
+\def\MYSET#1{\scshape{#1}}
+\def\MYAND{\textbf{ and }}
+\def\MYOR{\textbf{ or }}
+\def\MYNOT{\textbf{ not }}
+\def\MYTHROW{\textbf{ throw }}
+\def\MYBREAK{\textbf{break }}
+\def\MYEXCEPT#1{\scshape{#1}}
+\def\MYTO{\textbf{ to }}
+\def\MYNIL{\textsc{Nil}}
+\def\MYUNKNOWN{ unknown }
+% simple stuff (not all of this is used in this examples thesis
+\def\INT{{\mathcal I}} % interpretation
+\def\ONT{{\mathcal O}} % ontology
+\def\SEM{{\mathcal S}} % alignment semantic
+\def\ALI{{\mathcal A}} % alignment
+\def\USE{{\mathcal U}} % set of unsatisfiable entities
+\def\CON{{\mathcal C}} % conflict set
+\def\DIA{\Delta} % diagnosis
+% mups and mips
+\def\MUP{{\mathcal M}} % ontology
+\def\MIP{{\mathcal M}} % ontology
+% distributed and local entities
+\newcommand{\cc}[2]{\mathit{#1}\hspace{-1pt} \# \hspace{-1pt} \mathit{#2}}
+\newcommand{\cx}[1]{\mathit{#1}}
+% complex stuff
+\def\MER#1#2#3#4{#1 \cup_{#3}^{#2} #4} % merged ontology
+\def\MUPALL#1#2#3#4#5{\textit{MUPS}_{#1}\left(#2, #3, #4, #5\right)} % the set of all mups for some concept
+\def\MIPALL#1#2{\textit{MIPS}_{#1}\left(#2\right)} % the set of all mips
+
+
+
+
+
+\begin{document}
+
+\pagenumbering{roman}
+% lets go for the title page, something like this should be okay
+\begin{titlepage}
+	\vspace*{2cm}
+  \begin{center}
+   {\Large Combining Neural Density Estimation and Computational State Space Models for Human Activity Recognition\\}
+   \vspace{2cm} 
+   {Master Thesis\\}
+   \vspace{2cm}
+   {presented by\\
+    Benedikt Jakob Lasotta \\
+    Matriculation Number 1610104\\
+   }
+   \vspace{1cm} 
+   {submitted to the\\
+    Institute for Enterprise Systems\\
+    Dr.\ Stefan L\"udtke\\
+    University of Mannheim\\} \vspace{2cm}
+   {September 2022}
+  \end{center}
+\end{titlepage} 
+
+% no lets make some add some table of contents
+\tableofcontents
+\newpage
+
+\listofalgorithms
+
+\listoffigures
+
+\listoftables
+
+% evntuelly you might add something like this
+% \listtheorems{definition}
+% \listtheorems{proposition}
+
+\newpage
+
+
+% okay, start new numbering ... here is where it really starts
+\pagenumbering{arabic}
+
+\chapter{Introduction}
+\label{cha:intro}
+
+%\begin{itemize}
+%	\item A table can be found in Section \ref{sec:results}. This example (Table \ref{tab:confonly}) is only a suggestion. You are allowed to format your tables in your preferred style.
+%	\item An example of an algorithm is depicted in Section \ref{sec:diag}. Again, you are allowed to use a different style for algorithms, but the style we used to display Algorithm \ref{alg:efficient-lod} looks quite nice.
+%	\item Chapter \ref{cha:intro} demontrates how to refer to chapters and algorithms and other elements of your thesis.
+%	\item You should always place definitions, propositions, and whatever might be useful in an appropriate environment.  Examples can be found in section \ref{sec:prelim}.
+%\end{itemize}
+
+%The structure of this draft is \emph{non-binding}. The structure of your thesis - the breakup in chapters, sections, and so on - highly depends on the chosen topic and should be discussed with your adviser. In this draft we made no use of subsections. While subsections might make sense in your own thesis, we believe that subsubsections should be avoided if possible. Notice that we did not break up this template in different parts using the command \verb|\part{}|. It depends on your own style and your work wether to use this option.
+
+%If you cite something, do it in the following way. 
+%\begin{itemize}
+%	\item Conference Proceedings: This problem is typically addressed by approaches for selecting the optimal matcher based on the nature of the matching task and the known characteristics of the different matching systems. Such an approach is described in \cite{mochol08matcher}.
+%	\item Journal Article: S-Match, described in \cite{giunchiglia2008semanticmatching}, employs sound and complete reasoning procedures. Nevertheless, the underlying semantic is restricted to propositional logic due to the fact that ontologies are interpreted as tree-like structures.
+%	\item Book: According to Euzenat and Shvaiko \cite{euzenat07matcherbook}, we define a correspondence as follows.
+%\end{itemize}
+%These are some randomly chosen examples from other works. Take a look at the end of this thesis so see how the bibliography is included.
+
+%In this examples thesis you will find two chapters in the appendix. Appendix \ref{cha:appendix-a} describes the program code that might have been part of your work. It depends of the type of work wether such an appendix makes sense. Appendix \ref{cha:appendix-b} contains some additional experimental results. It might happen that most of your experimental results are presented in aggregated form; a complete listing of detailed results in the appendix might make sense. Nevertheless, there are no hard requirements with respect to the use of an appendix. It is up to you wether or not you will use an appendix (well .. as long as your adviser does not tell you something else).
+%
+%Some words about the list of figures, list of algorithm, and so on. Listing your figures is obligatory. It depends on your own choice, wether to include a list of other \textit{things}. Relevant aspects are the subject of your thesis and the way you develop your ideas. For example: If your work contains lots of tables with different experimental results, add a list of tables. If you develop and explicitly state algorithms, add a list of algorithms. 
+
+%\emph{Very Important:} Do not forget to sign (manually) the last page, before you submit/deliver the final version of your thesis. Otherwise your work cannot be accepted for legal reasons.
+
+The task of recognizing human activities from sensor data is relevant for many real world applications. Its uses range from optimizing logistics in warehouses to providing healthcare and assistance systems for elderly and disabled people. Consequently, human activity recognition (HAR) has been an active topic of research in recent years. Methods to perform sensor-based HAR, broadly fall into either of two categories, each with their respective strengths and weaknesses: Symbolic methods as proposed in \cite{kruger_computational_2014, ramirez_goal_2011} can employ prior domain knowledge and thus may need less training data, but often lack the capacity to learn from complex, time-series sensor data. One such approach are computational state space models (CSSMs) \cite{kruger_computational_2014}, which employ probabilistic inference on top of symbolic, rule based representations of possible actions within a domain to reason about observed activities. Contrary to this, modern, data-driven methods are capable of handling complex, multi-channel sensor data and have shown promising results in the past. An approach using a convolutional neural network (CNN) is described in \cite{moya_rueda_convolutional_2018}. The drawback of purely data-driven methods is, that they are oblivious to the causal structure of activities in the domain and thus may require more training data which is often hard to obtain. The goal of hybrid models is to combine both approaches in order to obtain state of the art performance while being able to incorporate prior knowledge to reduce the need for training data.
+
+To benefit from the advantages of symbolic and data-driven methods, the main goal of this thesis is to develop a hybrid system for HAR by combining existing components in a novel way. The aim of this hybrid system is to achieve a greater sample efficiency than current state of the art systems. That is, with a fixed amount of limited training data, the hybrid system should outperform both data-driven and purely symbolic approaches. To build this hybrid model, an implementation of computational state space models (CSSM) \cite{kruger_computational_2014} referred to as computational causal behavior models (CCBM) will be combined with an observation model that is obtained from sensor data via neural density estimation methods. Initial experiments will be conducted with a type of normalizing flows called masked autoregressive flow (MAF) \cite{papamakarios_masked_2017} since it has shown promising performance on density estimation tasks, as shown in \cite{kobyzev_normalizing_2021}. The system will be evaluated on a data set of raw sensor data from inertial measurement units (IMUs) of people performing the task of cooking a carrot soup, eating at, and cleaning up afterwards. It is available for download from the University of Rostock \cite{kruger2017recognising}. %A dataset from a logistics context, which was introduced in \cite{niemann2020lara} is also available for evaluation at a later stage.
+
+Additionally, an important research goal of this thesis is to examine which component contributes in what part to the final performance. To this end, an ablation study will be conducted. For this, the performance of the symbolic approach with a simple observation model, the density estimation component with a simple prediction, the full hybrid model, and a baseline of quadratic discriminant analysis (QDA) will be compared on the data set introduced above. The results of this ablation study can be found in chapter (insert ref).
+
+%TODO: Add outline for the remaining paper
+ 
+\section{Problem Statement}
+ 
+
+\section{Contribution}
+
+
+\section{Related Work}
+ Intellectually closest to this thesis is the approach proposed by Rueda et al. introduced in \cite{rueda_combining_2019}. They present the idea of using deep neural architectures as the observation model required by CSSMs. In particular the authors use a CNN to learn from time-series sensor data provided by inertial measurement units (IMUs), and predict the observed actions. In the line of this work, a similar approach will be taken. With the difference being, that the observation model is obtained by a neural density estimator like MAF. Which is subsequently combined with CSSMs to perform probabilistic inference. However, many other approaches to combine deep neural architectures with symbolic reasoning have been proposed in recent literature. DeepProbLog \cite{manhaeve_deepproblog_2018} is introduced as a framework which combines neural networks and probabilistic-logical modeling via the existing language ProbLog \cite{raedt_problog_nodate}. This is done by extending ProbLog with neural predicates. The evaluation of DeepProbLog shows that this framework is capable of performing symbolic reasoning as well as deep learning from examples in an end-to-end fashion. The downside of this approach is that its inference algorithms and language are ill-suited for dynamic systems, such as HAR. A recent approach that shows promising results for HAR is DUSTIN \cite{arrotta_knowledge_2022} which employs knowledge infusion on top of features extracted via a neural network. That is, the model uses a CNN to extract features from time series sensor data as well as the high-level context and concatenates to this representation a set of features which are obtained by a knowledge based reasoner. Just as for CSSMs, this has the added benefit that common-sense knowledge can be introduced to the model, which means that estimated action sequences are consistent with the user-context. The evaluation of DUSTIN shows that it is able to outperform other state-of-the-art neuro-symbolic approaches while having a high sample efficiency at the same time. Lastly, in \cite{ludtke_human_2021} another hybrid architecture is proposed. This model combines high-level features extracted by a deep neural network with context information about process steps to obtain state-of-the-art HAR performance.
+
+
+\chapter{Theoretical Framework}
+\label{cha:theory}
+
+
+\section{Preliminaries}
+\label{sec:prelim}
+
+%\begin{definition}
+%\label{def:good}
+%An entity is good if it is not an evil entity.
+%\end{definition}
+%In a similar way an evil entity can be defined in the following way.
+%\begin{definition}
+%\label{def:evil}
+%An entity is evil if it is not a good entity.
+%\end{definition}
+%Proposition \ref{pro:good-evil} follows directly from Definition \ref{def:good} and \ref{def:evil}.
+%\begin{proposition}
+%\label{pro:good-evil}
+%There exists no such entity that is evil and good at the same time.
+%\end{proposition}
+
+\section{Distribution Estimation}
+\label{sec:good}
+The task of estimating the joint probability distribution $p(x)$ from a set of examples $\{\pmb{x}_n\}^N_{n=1}$ is a central topic for many machine learning applications. Let $\pmb{x}$ be an example with $D$ variables $x_1, x_2,...,x_D$. The central fact is that any joint distribution of variables can be decomposed into a product of joint conditional probabilities, where variable $x_d$ only depends on the prior variables $x_{1:d-1}$. This means that according to the chain rule of probability the joint distribution $p(x)$ can be expressed as
+
+\begin{equation}
+	\label{func:chain}
+	p(x) = \prod_{d=1}^{D} p(x_d|x_{1:d-1})
+\end{equation}
+
+\section{Symbolic Reasoning}
+\label{sec:evil}
+
+\section{Differences and Similarities}
+\label{sec:diff}
+
+
+\chapter{Algorithms}
+\label{cha:alg}
+
+\section{Computing the Good}
+\label{sec:comp-good}
+
+\section{Computing the Evil}
+\label{sec:comp-evil}
+
+\section{Diagnosis}
+\label{sec:diag}
+
+%\begin{algorithm}{\MYCALL{EfficientLOD}{$\ALI$, $\ONT_1$, $\ONT_2$}}
+%\caption[Efficient Local Optimal Diagnosis]{}
+%\label{alg:efficient-lod}
+%\begin{algorithmic}[1]
+%% \STATE $\ALI' \leftarrow \ALI$
+%% \STATE $k \leftarrow 0$
+%\LOOP
+%	\FOR{$i \leftarrow k$ to  $\left|\ALI'\right| - 1 $}
+%		\FOR{$j \leftarrow 0$ to $i - 1$}
+%			\IF{\MYNOT \MYCALL{PossiblyCoherentPair}{$\ALI'[j]$,  $\ALI'[i]$, $\ONT_1$, $\ONT_2$}}
+%				\STATE $\ALI' \leftarrow \ALI' \setminus \{\ALI'[i]\}$
+%				\STATE $i \leftarrow i -1$ \ \algorithmiccomment{adjust $i$ to continue with next element of $\ALI'$}
+%				\STATE \MYBREAK \ \algorithmiccomment{exit inner for loop}
+%			\ENDIF
+%		\ENDFOR	
+%	\ENDFOR
+%	\STATE $k \leftarrow$ \MYCALL{SearchIndexOfAccusedCorrespondence}{$\ALI'$, $\ONT_1$, $\ONT_2$}
+%	\IF{$k = \MYNIL$}
+%		\RETURN $\ALI \setminus \ALI'$
+%	\ENDIF
+%	\STATE \algorithmiccomment{let $k^*$ be the counterpart of $k$ adjusted for $\ALI$ such that $\ALI[k^*] = \ALI'[k]$}
+%	\STATE $\ALI' \leftarrow \ALI'[\ldots k-1] \cup \ALI[k^*+1 \ldots]$ 
+%\ENDLOOP
+%\end{algorithmic}
+%\end{algorithm}
+
+
+
+\chapter{Experimental Evaluation}
+\label{cha:exp}
+
+
+
+
+\section{Settings}
+\label{sec:setting}
+
+\section{Experiments}
+\label{sec:exp}
+
+
+\section{Results}
+\label{sec:results}
+
+
+%\begin{table}[h]
+%
+%\begin{center}
+%\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}>{\scriptsize}l|>{\scriptsize}c>{\scriptsize}c>{\scriptsize}c|>{\scriptsize}c>{\scriptsize}c>{\scriptsize}c>{\scriptsize}c} 
+%& \multicolumn{3}{>{\scriptsize}c|}{Baselines} & \multicolumn{4}{>{\scriptsize}c}{Decision Tree} \\\hline
+%Ontology & M(edian) & G(ood) & E(vil) & results & $\Delta$-M & $\Delta$-G & $\Delta$-E \\\hline\hline
+%\#301 & 0.825 & 0.877 & 0.877 & 0.855 & +0.030 & -0.022 & -0.022 \\\hline
+%\#302 & 0.709 & 0.753 & 0.753 & 0.753 & +0.044 & +0.000 & +0.000 \\\hline
+%\#303 & 0.804 & 0.860 & 0.891 & 0.816 & +0.012 & -0.044 & -0.075 \\\hline
+%\#304 & 0.940 & 0.961 & 0.961 & 0.967 & +0.027 & +0.006 & +0.006 \\\hline
+%\bfseries Average & \bfseries 0.820 & \bfseries 0.863 & \bfseries 0.871 & \bfseries 0.848 & \bfseries +0.028 & \bfseries -0.015 & \bfseries -0.023 
+%
+%\end{tabular*}
+%\caption[Good vs. Evil]{Comparison between the Good and the Evil}
+%\label{tab:confonly}
+%\end{center}
+%\end{table}
+
+
+\chapter{Conclusion}
+\label{cha:conclusion}
+
+
+\section{Summary}
+\label{sec:sum}
+
+
+\section{Future Work}
+\label{sec:future}
+
+
+\bibliographystyle{plain}
+\bibliography{thesis-ref}
+
+
+\appendix
+
+\chapter{Program Code / Resources}
+\label{cha:appendix-a}
+
+The source code, a documentation, some usage examples, and additional test results are available at ...
+
+They as well as a PDF version of this thesis is also contained on the CD-ROM attached to this thesis.
+
+\chapter{Further Experimental Results}
+\label{cha:appendix-b}
+
+In the following further experimental results are ...
+
+
+\newpage
+
+
+\pagestyle{empty}
+
+
+\section*{Ehrenw\"ortliche Erkl\"arung}
+Ich versichere, dass ich die beiliegende Master-/Bachelorarbeit ohne Hilfe Dritter
+und ohne Benutzung anderer als der angegebenen Quellen und Hilfsmittel
+angefertigt und die den benutzten Quellen w\"ortlich oder inhaltlich
+entnommenen Stellen als solche kenntlich gemacht habe. Diese Arbeit
+hat in gleicher oder \"ahnlicher Form noch keiner Pr\"ufungsbeh\"orde
+vorgelegen. Ich bin mir bewusst, dass eine falsche Er- kl\"arung rechtliche Folgen haben
+wird.
+\\
+\\
+
+\noindent
+Mannheim, den 31.09.2022 \hspace{4cm} Unterschrift
+
+\end{document}

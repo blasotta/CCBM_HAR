@@ -8,10 +8,14 @@ from utils.validation import val_maf, val_made
 from utils.test import test_maf, test_made
 from utils.plot import sample_digits_maf, plot_losses
 
+import sys
+sys.path.insert(1, 'C:/Users/bened/PythonWork/CCBM_HAR/carrots/eval')
+from loaders import load_dataset, load_config
+
 
 # --------- SET PARAMETERS ----------
 model_name = "maf"  # 'maf' or 'made'
-dataset_name = "mnist" # can be 'mnist', 'power', or 'hepmass'
+dataset_name = "carrots" # can be 'mnist', 'power', 'hepmass'
 batch_size = 128
 n_mades = 5
 hidden_dims = [512] #1024 or 512 for mnist, 100 for power, 512 for hepmass
@@ -19,17 +23,41 @@ lr = 1e-4
 random_order = False
 patience = 30  # For early stopping
 seed = 290713
-plot = True
+plot = False
 max_epochs = 1000
 # -----------------------------------
 
-# Get dataset.
-data = get_data(dataset_name)
-train = torch.from_numpy(data.train.x)
+#TODO: Change this to accept the carrots data set and batch it correctly
+# Get dataset. How do we handle the classes? Should do conditional density
+# estimation as it perfroms better.
+
+X_1, y_1,_ = load_dataset(1)
+X_2, y_2,_ = load_dataset(2)
+X_3, y_3,_ = load_dataset(3)
+X_4, y_4,_ = load_dataset(4)
+X_5, y_5,_ = load_dataset(5)
+X_6, y_6,_ = load_dataset(6)
+X_7, y_7,le = load_dataset(7)
+
+X = [X_1, X_2, X_3, X_5, X_6]
+train_x = np.concatenate(X, axis=0)
+print('Train shape', train_x.shape)
+val_x = X_4
+test_x = X_7
+
+train = torch.from_numpy(train_x)
+val = torch.from_numpy(val_x)
+test = torch.from_numpy(test_x)
+
+train_loader = torch.utils.data.DataLoader(train, batch_size=batch_size,)
+val_loader = torch.utils.data.DataLoader(val, batch_size=batch_size,)
+test_loader = torch.utils.data.DataLoader(test, batch_size=batch_size,)
+
+
 # Get data loaders.
-train_loader, val_loader, test_loader = get_data_loaders(data, batch_size)
 # Get model.
-n_in = data.n_dims
+n_in = train.size(dim=1)
+print('Number of dimensions:', n_in)
 if model_name.lower() == "maf":
     model = MAF(n_in, n_mades, hidden_dims)
 elif model_name.lower() == "made":

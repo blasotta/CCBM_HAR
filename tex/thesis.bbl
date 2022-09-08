@@ -1,0 +1,78 @@
+\begin{thebibliography}{10}
+
+\bibitem{arrotta_knowledge_2022}
+Luca Arrotta, Gabriele Civitarese, and Claudio Bettini.
+\newblock Knowledge {Infusion} for {Context}-{Aware} {Sensor}-{Based} {Human}
+  {Activity} {Recognition}.
+\newblock In {\em 2022 {IEEE} {International} {Conference} on {Smart}
+  {Computing} ({SMARTCOMP})}, pages 1--8, June 2022.
+\newblock ISSN: 2693-8340.
+
+\bibitem{kobyzev_normalizing_2021}
+Ivan Kobyzev, Simon~J.D. Prince, and Marcus~A. Brubaker.
+\newblock Normalizing {Flows}: {An} {Introduction} and {Review} of {Current}
+  {Methods}.
+\newblock {\em IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  43(11):3964--3979, November 2021.
+\newblock Conference Name: IEEE Transactions on Pattern Analysis and Machine
+  Intelligence.
+
+\bibitem{kruger_computational_2014}
+Frank Krüger, Martin Nyolt, Kristina Yordanova, Albert Hein, and Thomas
+  Kirste.
+\newblock Computational {State} {Space} {Models} for {Activity} and {Intention}
+  {Recognition}. {A} {Feasibility} {Study}.
+\newblock {\em PLOS ONE}, 9(11):e109381, November 2014.
+\newblock Publisher: Public Library of Science.
+
+\bibitem{ludtke_human_2021}
+Stefan Lüdtke, Fernando~Moya Rueda, Waqas Ahmed, Gernot~A. Fink, and Thomas
+  Kirste.
+\newblock Human {Activity} {Recognition} using {Attribute}-{Based} {Neural}
+  {Networks} and {Context} {Information}, October 2021.
+\newblock arXiv:2111.04564 [cs, eess].
+
+\bibitem{manhaeve_deepproblog_2018}
+Robin Manhaeve, Sebastijan Dumancic, Angelika Kimmig, Thomas Demeester, and Luc
+  De~Raedt.
+\newblock {DeepProbLog}: {Neural} {Probabilistic} {Logic} {Programming}.
+\newblock In {\em Advances in {Neural} {Information} {Processing} {Systems}},
+  volume~31. Curran Associates, Inc., 2018.
+
+\bibitem{moya_rueda_convolutional_2018}
+Fernando Moya~Rueda, René Grzeszick, Gernot~A. Fink, Sascha Feldhorst, and
+  Michael Ten~Hompel.
+\newblock Convolutional {Neural} {Networks} for {Human} {Activity}
+  {Recognition} {Using} {Body}-{Worn} {Sensors}.
+\newblock {\em Informatics}, 5(2):26, June 2018.
+\newblock Number: 2 Publisher: Multidisciplinary Digital Publishing Institute.
+
+\bibitem{papamakarios_masked_2017}
+George Papamakarios, Theo Pavlakou, and Iain Murray.
+\newblock Masked {Autoregressive} {Flow} for {Density} {Estimation}.
+\newblock In {\em Advances in {Neural} {Information} {Processing} {Systems}},
+  volume~30. Curran Associates, Inc., 2017.
+
+\bibitem{raedt_problog_nodate}
+Luc~De Raedt.
+\newblock {ProbLog}: {A} {Probabilistic} {Prolog} and {Its} {Application} in
+  {Link} {Discovery}.
+\newblock page~6.
+
+\bibitem{ramirez_goal_2011}
+Miquel Ramirez and Hector Geffner.
+\newblock Goal {Recognition} over {POMDPs}: {Inferring} the {Intention} of a
+  {POMDP} {Agent}.
+\newblock In {\em Twenty-second international joint conference on artificial
+  intelligence}, page~6, 2011.
+
+\bibitem{rueda_combining_2019}
+Fernando~Moya Rueda, Stefan Lüdtke, Max Schröder, Kristina Yordanova, Thomas
+  Kirste, and Gernot~A. Fink.
+\newblock Combining {Symbolic} {Reasoning} and {Deep} {Learning} for {Human}
+  {Activity} {Recognition}.
+\newblock In {\em 2019 {IEEE} {International} {Conference} on {Pervasive}
+  {Computing} and {Communications} {Workshops} ({PerCom} {Workshops})}, pages
+  22--27, March 2019.
+
+\end{thebibliography}

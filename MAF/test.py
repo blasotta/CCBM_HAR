@@ -1,6 +1,6 @@
 import torch
 from torch.nn import functional as F
-from torchvision.utils import save_image
+#from torchvision.utils import save_image
 import numpy as np
 import os
 import matplotlib.pyplot as plt
@@ -13,14 +13,44 @@ from utils.test import test_maf
 from utils.plot import sample_digits_maf
 from datasets.data_loaders import get_data_loaders, get_data
 
-string = "maf_mnist_512"
-dataset = "mnist"
+import sys
+sys.path.insert(1, 'C:/Users/bened/PythonWork/CCBM_HAR/carrots/eval')
+from loaders import load_dataset, load_config
+
+string = "maf_carrots_512"
+dataset = "carrots"
 batch_size = 128
 
 model = torch.load("model_saves/" + string + ".pt")
-data = get_data(dataset)
-train = torch.from_numpy(data.train.x)
-train_loader, val_loader, test_loader = get_data_loaders(data, batch_size)
+
+#adapt this block
+#data = get_data(dataset)
+#train = torch.from_numpy(data.train.x)
+#train_loader, val_loader, test_loader = get_data_loaders(data, batch_size)
+
+#New Block#####################################################################
+X_1, y_1,_ = load_dataset(1)
+X_2, y_2,_ = load_dataset(2)
+X_3, y_3,_ = load_dataset(3)
+X_4, y_4,_ = load_dataset(4)
+X_5, y_5,_ = load_dataset(5)
+X_6, y_6,_ = load_dataset(6)
+X_7, y_7,le = load_dataset(7)
+
+X = [X_1, X_2, X_3, X_5, X_6]
+train_x = np.concatenate(X, axis=0)
+val_x = X_4
+test_x = X_7
+
+train = torch.from_numpy(train_x)
+val = torch.from_numpy(val_x)
+test = torch.from_numpy(test_x)
+
+train_loader = torch.utils.data.DataLoader(train, batch_size=batch_size,)
+val_loader = torch.utils.data.DataLoader(val, batch_size=batch_size,)
+test_loader = torch.utils.data.DataLoader(test, batch_size=batch_size,)
+###############################################################################
+
 test_maf(model, train, test_loader)
 val_maf(model, train, val_loader)
 #sample_digits_maf(model, "test")

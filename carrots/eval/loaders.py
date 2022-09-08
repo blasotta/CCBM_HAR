@@ -12,9 +12,10 @@ import os
 import yaml
 
 CONFIG_PATH = '../config/'
+BASEPATH = 'C:/Users/bened/PythonWork/CCBM_HAR/carrots'
 
 def load_dataset(number):
-    dataset, meta = arff.loadarff(f'../data/001-IMU/raw_{number}.arff')
+    dataset, meta = arff.loadarff(BASEPATH + f'/data/001-IMU/raw_{number}.arff')
     labels = dataset['class']
     df = pd.DataFrame(dataset)
     df.drop(columns=['time', 'class'], inplace=True)

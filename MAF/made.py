@@ -79,7 +79,10 @@ class MADE(nn.Module):
         """Forward pass."""
         if self.gaussian:
             # If the output is Gaussan, return raw mus and sigmas.
-            return self.model(x)
+            a = self.model(x) #n
+            print('Shape in Made: ', a.shape)
+            return a #n
+            #return self.model(x)
         else:
             # If the output is Bernoulli, run it trough sigmoid to squash p into (0,1).
             return torch.sigmoid(self.model(x))

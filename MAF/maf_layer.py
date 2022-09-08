@@ -15,6 +15,7 @@ class MAFLayer(nn.Module):
     def forward(self, x: Tensor) -> Tuple[Tensor, Tensor]:
         out = self.made(x.float())
         mu, logp = torch.chunk(out, 2, dim=1)
+        print('Shape in maf_layer: Mu ', mu.shape, '\n logp(x):', logp.shape) #n
         u = (x - mu) * torch.exp(0.5 * logp)
         u = u.flip(dims=(1,)) if self.reverse else u
         log_det = 0.5 * torch.sum(logp, dim=1)
