@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 21.12) (preloaded format=pdflatex 2022.1.27)  8 SEP 2022 09:54
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 21.12) (preloaded format=pdflatex 2022.1.27)  15 SEP 2022 16:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -515,56 +515,56 @@ ne 141.
 Chapter 2.
 [4
 
-]
+] [5]
 Chapter 3.
-[5
-
-]
-Chapter 4.
 [6
 
 ]
-Chapter 5.
-(thesis.bbl [7
-
-] [8
-
-]) [9]
-Appendix A.
-[10
+Chapter 4.
+[7
 
 ]
-Appendix B.
+Chapter 5.
+(thesis.bbl [8
+
+] [9
+
+]) [10]
+Appendix A.
 [11
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 309--318
+Appendix B.
+[12
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 312--321
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 309--318
+Underfull \hbox (badness 10000) in paragraph at lines 312--321
 
  []
 
 \tf@thm=\write8
 \openout8 = `thesis.thm'.
 
-[12] (thesis.aux)
+[13] (thesis.aux)
 
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 8F580AEB14A118317107681E28A2CEFD;2880.
+(rerunfilecheck)             Checksum: 37BAF6F4B229D34E834CA81FCBCE5153;2679.
  ) 
 Here is how much of TeX's memory you used:
- 11696 strings out of 478659
- 188998 string characters out of 2845920
- 473547 words of memory out of 3000000
- 29570 multiletter control sequences out of 15000+600000
+ 11694 strings out of 478659
+ 188971 string characters out of 2845920
+ 473492 words of memory out of 3000000
+ 29568 multiletter control sequences out of 15000+600000
  422410 words of font info for 66 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 60i,5n,63p,2344b,445s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,5n,63p,1650b,445s stack positions out of 5000i,500n,10000p,200000b,80000s
 {C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}<C:
 /Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex1
 0.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
@@ -578,9 +578,9 @@ Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/bened/AppData/
 Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/bened/AppData/
 Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/bened/AppData/
 Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on thesis.pdf (17 pages, 163396 bytes).
+Output written on thesis.pdf (18 pages, 166041 bytes).
 PDF statistics:
  285 PDF objects out of 1000 (max. 8388607)
  56 named destinations out of 1000 (max. 500000)
- 177 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 169 words of extra memory for PDF output out of 10000 (max. 10000000)
 

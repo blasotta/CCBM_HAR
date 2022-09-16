@@ -6,17 +6,16 @@
 \contentsline {section}{\numberline {2.1}Preliminaries}{4}{section.2.1}%
 \contentsline {section}{\numberline {2.2}Distribution Estimation}{4}{section.2.2}%
 \contentsline {section}{\numberline {2.3}Symbolic Reasoning}{4}{section.2.3}%
-\contentsline {section}{\numberline {2.4}Differences and Similarities}{4}{section.2.4}%
-\contentsline {chapter}{\numberline {3}Algorithms}{5}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Computing the Good}{5}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Computing the Evil}{5}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Diagnosis}{5}{section.3.3}%
-\contentsline {chapter}{\numberline {4}Experimental Evaluation}{6}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Settings}{6}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Experiments}{6}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Results}{6}{section.4.3}%
-\contentsline {chapter}{\numberline {5}Conclusion}{7}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Summary}{7}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Future Work}{7}{section.5.2}%
-\contentsline {chapter}{\numberline {A}Program Code / Resources}{10}{appendix.A}%
-\contentsline {chapter}{\numberline {B}Further Experimental Results}{11}{appendix.B}%
+\contentsline {chapter}{\numberline {3}Algorithms}{6}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Computing the Good}{6}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Computing the Evil}{6}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Diagnosis}{6}{section.3.3}%
+\contentsline {chapter}{\numberline {4}Experimental Evaluation}{7}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Settings}{7}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Experiments}{7}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Results}{7}{section.4.3}%
+\contentsline {chapter}{\numberline {5}Conclusion}{8}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Summary}{8}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Future Work}{8}{section.5.2}%
+\contentsline {chapter}{\numberline {A}Program Code / Resources}{11}{appendix.A}%
+\contentsline {chapter}{\numberline {B}Further Experimental Results}{12}{appendix.B}%
