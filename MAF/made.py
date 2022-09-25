@@ -80,7 +80,7 @@ class MADE(nn.Module):
         if self.gaussian:
             # If the output is Gaussan, return raw mus and sigmas.
             a = self.model(x) #n
-            print('Shape in Made: ', a.shape)
+            #print('Shape in Made: ', a.shape)
             return a #n
             #return self.model(x)
         else:

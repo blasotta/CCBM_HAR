@@ -8,6 +8,25 @@ Luca Arrotta, Gabriele Civitarese, and Claudio Bettini.
   {Computing} ({SMARTCOMP})}, pages 1--8, June 2022.
 \newblock ISSN: 2693-8340.
 
+\bibitem{chen_deep_2022}
+Kaixuan Chen, Dalin Zhang, Lina Yao, Bin Guo, Zhiwen Yu, and Yunhao Liu.
+\newblock Deep {Learning} for {Sensor}-based {Human} {Activity} {Recognition}:
+  {Overview}, {Challenges}, and {Opportunities}.
+\newblock {\em ACM Computing Surveys}, 54(4):1--40, May 2022.
+
+\bibitem{chen_sensor-based_2012}
+Liming Chen, Jesse Hoey, Chris~D. Nugent, Diane~J. Cook, and Zhiwen Yu.
+\newblock Sensor-{Based} {Activity} {Recognition}.
+\newblock {\em IEEE Transactions on Systems, Man, and Cybernetics, Part C
+  (Applications and Reviews)}, 42(6):790--808, November 2012.
+\newblock Conference Name: IEEE Transactions on Systems, Man, and Cybernetics,
+  Part C (Applications and Reviews).
+
+\bibitem{germain_made_nodate}
+Mathieu Germain, Karol Gregor, Iain Murray, and Hugo Larochelle.
+\newblock {MADE}: {Masked} {Autoencoder} for {Distribution} {Estimation}.
+\newblock page~9.
+
 \bibitem{kobyzev_normalizing_2021}
 Ivan Kobyzev, Simon~J.D. Prince, and Marcus~A. Brubaker.
 \newblock Normalizing {Flows}: {An} {Introduction} and {Review} of {Current}
@@ -74,5 +93,12 @@ Fernando~Moya Rueda, Stefan Lüdtke, Max Schröder, Kristina Yordanova, Thomas
 \newblock In {\em 2019 {IEEE} {International} {Conference} on {Pervasive}
   {Computing} and {Communications} {Workshops} ({PerCom} {Workshops})}, pages
   22--27, March 2019.
+
+\bibitem{shavit_boosting_2021}
+Yoli Shavit and Itzik Klein.
+\newblock Boosting {Inertial}-{Based} {Human} {Activity} {Recognition} {With}
+  {Transformers}.
+\newblock {\em IEEE Access}, 9:53540--53547, 2021.
+\newblock Conference Name: IEEE Access.
 
 \end{thebibliography}

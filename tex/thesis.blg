@@ -6,47 +6,49 @@ The style file: plain.bst
 Reallocating 'name_of_file' (item size: 1) to 11 items.
 Database file #1: thesis-ref.bib
 Warning--I didn't find a database entry for "kruger2017recognising"
+Warning--empty journal in germain_made_nodate
+Warning--empty year in germain_made_nodate
 Warning--empty journal in raedt_problog_nodate
 Warning--empty year in raedt_problog_nodate
-You've used 10 entries,
+You've used 14 entries,
             2118 wiz_defined-function locations,
-            561 strings with 6569 characters,
-and the built_in function-call counts, 3790 in all, are:
-= -- 348
-> -- 219
-< -- 6
-+ -- 86
-- -- 76
-* -- 286
-:= -- 634
-add.period$ -- 36
-call.type$ -- 10
-change.case$ -- 68
+            583 strings with 7472 characters,
+and the built_in function-call counts, 5379 in all, are:
+= -- 501
+> -- 316
+< -- 7
++ -- 124
+- -- 110
+* -- 422
+:= -- 905
+add.period$ -- 50
+call.type$ -- 14
+change.case$ -- 97
 chr.to.int$ -- 0
-cite$ -- 12
-duplicate$ -- 139
-empty$ -- 281
-format.name$ -- 76
-if$ -- 788
+cite$ -- 18
+duplicate$ -- 186
+empty$ -- 383
+format.name$ -- 110
+if$ -- 1102
 int.to.chr$ -- 0
-int.to.str$ -- 10
-missing$ -- 9
-newline$ -- 57
-num.names$ -- 20
-pop$ -- 82
+int.to.str$ -- 14
+missing$ -- 13
+newline$ -- 79
+num.names$ -- 28
+pop$ -- 108
 preamble$ -- 1
-purify$ -- 58
+purify$ -- 83
 quote$ -- 0
-skip$ -- 91
+skip$ -- 121
 stack$ -- 0
-substring$ -- 152
-swap$ -- 34
-text.length$ -- 6
+substring$ -- 252
+swap$ -- 40
+text.length$ -- 7
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 40
-warning$ -- 2
-while$ -- 32
-width$ -- 12
-write$ -- 119
-(There were 3 warnings)
+type$ -- 56
+warning$ -- 4
+while$ -- 47
+width$ -- 16
+write$ -- 165
+(There were 5 warnings)
