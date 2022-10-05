@@ -43,7 +43,7 @@ class BatchNormLayer(nn.Module):
         return x_hat, log_det
 
     def set_batch_stats_func(self, x):
-        print("setting batch stats for validation")
+        #print("setting batch stats for validation")
         self.batch_mean = x.mean(dim=0)
         self.batch_var = x.var(dim=0) + self.eps
 

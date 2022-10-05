@@ -15,82 +15,104 @@ from datasets.data_loaders import get_data_loaders, get_data
 
 import sys
 sys.path.insert(1, 'C:/Users/bened/PythonWork/CCBM_HAR/carrots/eval')
-from loaders import load_dataset, load_config
+from loaders import load_dataset, load_config, load_conditional_train, load_conditional_val, load_conditional_test
 
-string = "maf_carrots_512"
+from sklearn.metrics import f1_score, accuracy_score
+from sklearn.metrics import confusion_matrix
+import pandas as pd
+
 dataset = "carrots"
 batch_size = 128
 
-model = torch.load("model_saves/" + string + ".pt")
+# #############Concept works#####################################################
+# cn = 15
+# string = f"maf_carrots_{cn}_512"
+# model = torch.load("model_saves/" + string + ".pt")
 
-#adapt this block
-#data = get_data(dataset)
-#train = torch.from_numpy(data.train.x)
-#train_loader, val_loader, test_loader = get_data_loaders(data, batch_size)
+# train_dict, lt = load_conditional_train()
+# val_dict, lv = load_conditional_val()
+# #test_x, test_y, le = load_conditional_test()
+# test_dict, lte = load_conditional_test()
 
-#New Block#####################################################################
-X_1, y_1,_ = load_dataset(1)
-X_2, y_2,_ = load_dataset(2)
-X_3, y_3,_ = load_dataset(3)
-X_4, y_4,_ = load_dataset(4)
-X_5, y_5,_ = load_dataset(5)
-X_6, y_6,_ = load_dataset(6)
-X_7, y_7,le = load_dataset(7)
+# train_x = train_dict[cn].to_numpy()
+# val_x = val_dict[cn].to_numpy()
+# test_x = test_dict[cn].to_numpy()
+# print(test_x.shape)
 
-X = [X_1, X_2, X_3, X_5, X_6]
-train_x = np.concatenate(X, axis=0)
-val_x = X_4
-test_x = X_7
+# train = torch.from_numpy(train_x)
+# val = torch.from_numpy(val_x)
+# test = torch.from_numpy(test_x)
 
-train = torch.from_numpy(train_x)
-val = torch.from_numpy(val_x)
-test = torch.from_numpy(test_x)
+# train_loader = torch.utils.data.DataLoader(train, batch_size=batch_size,)
+# val_loader = torch.utils.data.DataLoader(val, batch_size=batch_size,)
+# test_loader = torch.utils.data.DataLoader(test, batch_size=batch_size,)
 
-train_loader = torch.utils.data.DataLoader(train, batch_size=batch_size,)
-val_loader = torch.utils.data.DataLoader(val, batch_size=batch_size,)
-test_loader = torch.utils.data.DataLoader(test, batch_size=batch_size,)
-###############################################################################
+# test_maf(model, train, test_loader)
+# val_maf(model, train, val_loader)
+# #print(lt, lv, lte, sep=' | ')
+# #############Concept works#####################################################
 
-test_maf(model, train, test_loader)
-val_maf(model, train, val_loader)
-#sample_digits_maf(model, "test")
+train_dict, ltr = load_conditional_train()
+#val_x, val_y, le = load_conditional_val()
+test_x, test_y, le = load_conditional_test()
+val_dict, lt = load_conditional_val()
 
-if dataset == "mnist":
-    if not os.path.exists("figs"):
-        os.makedirs("figs")
-    _, _, test_loader = get_data_loaders(data, batch_size=1000)
-    model.eval()
-    batch = next(iter(test_loader))
-    u = model(batch)[0].detach().numpy()
-    fig, axes = plt.subplots(
-        ncols=6, nrows=4, sharex=True, sharey=True, figsize=(16, 10)
-    )
+N = np.shape(test_x)[0]
 
-    for ax in axes.reshape(-1):
-        dim1 = np.random.randint(28 * 28)
-        dim2 = np.random.randint(28 * 28)
-        ax.scatter(u[:, dim1], u[:, dim2], color="dodgerblue", s=0.5)
-        ax.set_ylabel("dim: " + str(dim2), size=14)
-        ax.set_xlabel("dim: " + str(dim1), size=14)
-        ax.set_xlim(-8, 8)
-        ax.set_ylim(-8, 8)
-        ax.set_aspect(1)
+#array for priors:
+priors = []
+#dictionary for p(x|y) values, where key=class, value=p(x|key) for all x
+lik = {}
 
-    plt.savefig("figs/" + string + "_scatter.png", bbox_inches="tight", dpi=300)
-    plt.savefig("figs/" + string + "_scatter.pdf", bbox_inches="tight", dpi=300)
+cc = len(train_dict.keys()) # classs count (i.e. number of distict classes)
+for j in range(cc): #calculate p(x|y) and p(y) for all of the 16 classes 0 to 15
+    train_x = train_dict[j].to_numpy()
+    val_x = val_dict[j].to_numpy()
+    
+    count = np.shape(train_x)[0]
+    print(f'The count of class {j} is: ', count)
+    prior = count / ltr # calculates prior of class j
+    priors.append(prior)
+    
+    train = torch.from_numpy(train_x)
+    val = torch.from_numpy(val_x)
+    test = torch.from_numpy(test_x)
+    
+    train_loader = torch.utils.data.DataLoader(train, batch_size=batch_size,)
+    val_loader = torch.utils.data.DataLoader(val, batch_size=batch_size,)
+    test_loader = torch.utils.data.DataLoader(test, batch_size=batch_size,)
+    
+    #load correct model of class j as to calculate p(x|j):
+    string = f"maf_carrots_{j}_100"
+    model = torch.load("model_saves/" + string + ".pt")
+    
+    test_loss = test_maf(model, train, test_loader)
+    lik[j]=test_loss
+    #val_maf(model, train, val_loader)
 
-    fig, axes = plt.subplots(
-        ncols=6, nrows=4, sharex=True, sharey=True, figsize=(16, 10)
-    )
+log_priors = np.log(priors)
+print('class priors', priors)
+print('log priors: ', log_priors)
 
-    for ax in axes.reshape(-1):
-        dim1 = np.random.randint(28 * 28)
-        sns.histplot(u[:, dim1], ax=ax, color="darkorange")
-        ax.set_xlabel("dim: " + str(dim1), size=14)
-        ax.set_xlim(-5, 5)
+result = np.zeros((N,cc))
+for i in range(N):
+    for c in range(cc):
+        log_lik = lik[c][i].numpy() * -1
+        result[i,c]= log_lik + 0.1*log_priors[c]
 
-    plt.savefig("figs/" + string + "_marginal.png", bbox_inches="tight", dpi=300)
-    plt.savefig("figs/" + string + "_marginal.pdf", bbox_inches="tight", dpi=300)
+y_pred = np.argmax(result, axis = 1)
+print(result)
+#print(y_pred)
+#print(test_y)
 
-    sample_digits_maf(model, "test")
+print('accuracy: ', accuracy_score(test_y, y_pred))
 
+classes = list(le.classes_)
+cf_matrix = confusion_matrix(test_y, y_pred)
+print('Number of test samples: ', np.sum(cf_matrix))
+df_cm = pd.DataFrame(cf_matrix, index = [i for i in classes],
+                     columns = [i for i in classes])
+plt.figure(figsize = (16,9))
+s = sns.heatmap(df_cm, annot=True, cmap="flare", fmt='g')
+s.set(xlabel='predicted class', ylabel='true class')
+plt.savefig('conf_mat.jpg')

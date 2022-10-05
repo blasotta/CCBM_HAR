@@ -8,6 +8,7 @@ Created on Wed Jul 27 11:43:37 2022
 from scipy.io import arff
 from sklearn import preprocessing
 import pandas as pd
+import numpy as np
 import os
 import yaml
 
@@ -38,3 +39,58 @@ def load_config(config_name):
 
     return config
 
+def load_conditional_train():
+    X_1, y_1,_ = load_dataset(1)
+    X_2, y_2,_ = load_dataset(2)
+    X_3, y_3,_ = load_dataset(3)
+    X_5, y_5,_ = load_dataset(5)
+    X_6, y_6,_ = load_dataset(6)
+    
+    train_x = np.concatenate([X_1, X_2, X_3, X_5, X_6], axis=0)
+    train_y = np.concatenate([y_1, y_2, y_3, y_5, y_6], axis=0)
+    
+    D = np.c_[train_x, train_y]
+    length = np.shape(D)[0]
+    
+    df = pd.DataFrame(D)
+    df.rename(columns={30: "class"}, inplace = True)
+    data = df.astype({'class': 'int32'})
+    
+    #group by class for conditional density estimation.
+    datasets = {} #dictionary with key=class and value=data pairs
+    by_class = df.groupby('class')
+    
+    for groups, data in by_class:
+        d = data.drop(columns='class')
+        datasets[groups] = d
+    
+    
+    return datasets, length
+
+def load_conditional_val():
+    X_4, y_4,_ = load_dataset(4)
+    
+    val_x = X_4
+    val_y = y_4
+    
+    D = np.c_[val_x, val_y]
+    length = np.shape(D)[0]
+    
+    df = pd.DataFrame(D)
+    df.rename(columns={30: "class"}, inplace = True)
+    data = df.astype({'class': 'int32'})
+    
+    #group by class for conditional density estimation.
+    datasets = {} #dictionary with key=class and value=data pairs
+    by_class = df.groupby('class')
+    
+    for groups, data in by_class:
+        d = data.drop(columns='class')
+        datasets[groups] = d
+    
+    
+    return datasets, length
+    #return load_dataset(4)
+
+def load_conditional_test():
+    return load_dataset(7)

@@ -20,12 +20,13 @@ def test_maf(model, train, test_loader):
 
             test_loss.extend(negloglik_loss)
     N = len(test_loss)
-    print('loss length:', N, '\n array: ', test_loss)
-    print(
-        "Test loss: {:.4f} +/- {:.4f}".format(
-            np.mean(test_loss), 2 + np.std(test_loss) / np.sqrt(N)
-        )
-    )
+    print('loss length:', N)
+    # print(
+    #     "Test loss: {:.4f} +/- {:.4f}".format(
+    #         np.mean(test_loss), 2 + np.std(test_loss) / np.sqrt(N)
+    #     )
+    # )
+    return test_loss
 
 
 def test_made(model, test_loader):
