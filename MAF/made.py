@@ -39,7 +39,7 @@ class MADE(nn.Module):
         hidden_dims: List[int],
         gaussian: bool = False,
         random_order: bool = False,
-        seed: Optional[int] = None,
+        seed: Optional[int] = 290713, #was None
     ) -> None:
         """Initalise MADE model.
     

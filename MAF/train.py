@@ -19,12 +19,12 @@ dataset_name = "carrots" # can be 'mnist', 'power', 'hepmass'
 batch_size = 128
 n_mades = 5
 hidden_dims = [100] #1024 or 512 for mnist, 100 for power, 512 for hepmass
-lr = 1e-4
+lr = 1e-4 #5 works well
 random_order = False
-patience = 10  # For early stopping
+patience = 15  # For early stopping
 seed = 290713
 plot = False
-max_epochs = 1000
+max_epochs = 75 #1000
 # -----------------------------------
 
 #train dict is a dictionary of pandas dataframes obtained from the original train data
@@ -60,7 +60,7 @@ for j in range(cc): # Train a MAF per each of 16 classes
     elif model_name.lower() == "made":
         model = MADE(n_in, hidden_dims, random_order=random_order, seed=seed, gaussian=True)
     # Get optimiser.
-    optimiser = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=1e-6)
+    optimiser = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=1e-6) #decay was -6
     
     
     # Format name of model save file.
@@ -105,4 +105,4 @@ for j in range(cc): # Train a MAF per each of 16 classes
             break
     
     print(f'Ending training for class {j}')
-    plot_losses(epochs_list, train_losses, val_losses, title=None)
+    #plot_losses(epochs_list, train_losses, val_losses, title=None)

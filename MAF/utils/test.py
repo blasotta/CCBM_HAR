@@ -51,3 +51,4 @@ def test_made(model, test_loader):
             np.mean(test_loss), 2 + np.std(test_loss) / np.sqrt(N)
         )
     )
+    return test_loss

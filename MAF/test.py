@@ -6,10 +6,12 @@ import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+from scipy.stats import multivariate_normal
+
 from maf import MAF
 
-from utils.validation import val_maf
-from utils.test import test_maf
+from utils.validation import val_maf, val_made
+from utils.test import test_maf, test_made
 from utils.plot import sample_digits_maf
 from datasets.data_loaders import get_data_loaders, get_data
 
@@ -63,11 +65,24 @@ N = np.shape(test_x)[0]
 priors = []
 #dictionary for p(x|y) values, where key=class, value=p(x|key) for all x
 lik = {}
+val_ll = []
+
+lik_MVN = {}
 
 cc = len(train_dict.keys()) # classs count (i.e. number of distict classes)
 for j in range(cc): #calculate p(x|y) and p(y) for all of the 16 classes 0 to 15
     train_x = train_dict[j].to_numpy()
     val_x = val_dict[j].to_numpy()
+    
+    #### compute mu, cov of multivariate normal for comparison with MAF
+    mu = np.mean(train_x, axis=0)
+    co = np.cov(train_x, rowvar=0)
+    # compute fit of val data to MVN
+    ll = multivariate_normal.logpdf(val_x, mean=mu, cov=co)
+    M = len(ll)
+    print(f'Number of validation examples of class {j} are {M}')
+    ll_val = np.sum(ll) / M
+    ####
     
     count = np.shape(train_x)[0]
     print(f'The count of class {j} is: ', count)
@@ -83,29 +98,48 @@ for j in range(cc): #calculate p(x|y) and p(y) for all of the 16 classes 0 to 15
     test_loader = torch.utils.data.DataLoader(test, batch_size=batch_size,)
     
     #load correct model of class j as to calculate p(x|j):
-    string = f"maf_carrots_{j}_100"
+    string = f"maf_carrots_{j}_90"
     model = torch.load("model_saves/" + string + ".pt")
     
+    #pdf MVN
+    logpdf = multivariate_normal.logpdf(test_x, mean=mu, cov=co)
+    lik_MVN[j]=logpdf
+    
     test_loss = test_maf(model, train, test_loader)
+    #test_loss = test_made(model, test_loader)
     lik[j]=test_loss
-    #val_maf(model, train, val_loader)
+    check = val_maf(model, train, val_loader)*-1
+    #check = val_made(model, val_loader)*-1
+    val_ll.append(check)
+    print(f'(MAF) Average validation LL for class {j} is {check}')
+    print(f'(MVN) Average validation LL for class {j} is {ll_val}')
 
 log_priors = np.log(priors)
-print('class priors', priors)
-print('log priors: ', log_priors)
+#print('class priors', priors)
+#print('log priors: ', log_priors)
 
 result = np.zeros((N,cc))
 for i in range(N):
     for c in range(cc):
         log_lik = lik[c][i].numpy() * -1
-        result[i,c]= log_lik + 0.1*log_priors[c]
+        result[i,c]= log_lik + log_priors[c]
+        
+result2 = np.zeros((N,cc))
+for i in range(N):
+    for c in range(cc):
+        log_lik = lik_MVN[c][i]
+        result2[i,c]= log_lik + log_priors[c]
 
 y_pred = np.argmax(result, axis = 1)
-print(result)
-#print(y_pred)
+y_pred2 = np.argmax(result2, axis = 1)
+np.savetxt("MAF_results.txt", result, fmt='%.5f', delimiter=" ")
+np.savetxt("MVN_results.txt", result2, fmt='%.5f', delimiter=" ")
+#print(result)
+#print(y_pred2)
 #print(test_y)
 
 print('accuracy: ', accuracy_score(test_y, y_pred))
+print('accuracy2: ', accuracy_score(test_y, y_pred2))
 
 classes = list(le.classes_)
 cf_matrix = confusion_matrix(test_y, y_pred)
@@ -116,3 +150,11 @@ plt.figure(figsize = (16,9))
 s = sns.heatmap(df_cm, annot=True, cmap="flare", fmt='g')
 s.set(xlabel='predicted class', ylabel='true class')
 plt.savefig('conf_mat.jpg')
+
+cf_matrix2 = confusion_matrix(test_y, y_pred2)
+df_cm2 = pd.DataFrame(cf_matrix2, index = [i for i in classes],
+                     columns = [i for i in classes])
+plt.figure(figsize = (16,9))
+s2 = sns.heatmap(df_cm2, annot=True, cmap="flare", fmt='g')
+s2.set(xlabel='predicted class', ylabel='true class')
+plt.savefig('conf_mat2.jpg')
