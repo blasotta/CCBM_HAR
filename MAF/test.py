@@ -116,7 +116,7 @@ for j in range(cc): #calculate p(x|y) and p(y) for all of the 16 classes 0 to 15
 
 log_priors = np.log(priors)
 #print('class priors', priors)
-#print('log priors: ', log_priors)
+print('log priors: ', log_priors)
 
 result = np.zeros((N,cc))
 for i in range(N):
