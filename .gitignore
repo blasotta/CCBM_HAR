@@ -1,0 +1,4 @@
+pytorch-flows/data/*
+pytorch-flows/runs/*
+pytorch-flows/__pycache__/*
+carrots/data/*

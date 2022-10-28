@@ -19,7 +19,7 @@ import pandas as pd
 
 import sys
 sys.path.insert(1, 'C:/Users/bened/PythonWork/CCBM_HAR/carrots/eval')
-from loaders import load_dataset, load_config, load_conditional_train, load_conditional_val, load_conditional_test, one_hot_encode
+from loaders import *
 
 
 if sys.version_info < (3, 6):
@@ -27,33 +27,50 @@ if sys.version_info < (3, 6):
 
 flow = "maf"  # 'maf' or 'made'
 dataset_name = "CARROTS"  # can be 'mnist', 'power', 'hepmass'
-batch_size = 128
-test_bs = 128
+batch_size = 64 # 128 seems good
+test_bs = 64 # can be 128
 num_blocks = 5  # number of mades in maf
-num_hidden = 90  # 1024 or 512 for mnist, 100 for power, 512 for hepmass
+num_hidden = 180  # 1024 or 512 for mnist, 100 for power, 512 for hepmass
 lr = 1e-5  # 5 works well
 # random_order = False
-patience = 5  # For early stopping
-seed = 1
+patience = 10  # For early stopping
+seed = 42
 # plot = False
-max_epochs = 100  # 1000
+max_epochs = 50  # 1000
 cond = True
 no_cuda = False
-num_cond_inputs = 16
+num_cond_inputs = 16 # 16 for carrots, 8 for LARA, None if cond = False
 
 cuda = not no_cuda and torch.cuda.is_available()
+print('CUDA:', cuda)
 device = torch.device("cuda:0" if cuda else "cpu")
+print('Dveice:', device)
 
 torch.manual_seed(seed)
 
-#dataset = getattr(datasets, dataset)()
-trn_x, trn_y = load_conditional_train()
+#dataset = getattr(datasets, dataset_name)()
+
+# For Carrots
+print('--------Loading and Processing Data--------')
+# trn_x, trn_y = load_conditional_train()
+# v_x, v_y = load_conditional_val()
+# tst_x, tst_y, le = load_conditional_test()
+trn_x, trn_y, v_x, v_y, tst_x, tst_y, le = get_carrots()
 troh_y = one_hot_encode(trn_y, num_cond_inputs)
-v_x, v_y = load_conditional_val()
 vaoh_y = one_hot_encode(v_y, num_cond_inputs)
-tst_x, tst_y, le = load_conditional_test()
 teoh_y = one_hot_encode(tst_y, num_cond_inputs)
 
+# For LARA
+# trn_x, trn_y = cond_lara_trn()
+# v_x, v_y = cond_lara_val()
+# tst_x, tst_y, le = cond_lara_tst()
+
+# troh_y = one_hot_encode(trn_y, num_cond_inputs)
+# vaoh_y = one_hot_encode(v_y, num_cond_inputs)
+# teoh_y = one_hot_encode(tst_y, num_cond_inputs)
+
+
+print('--------Correcting Data Type--------')
 train_x = trn_x.astype('float32')
 train_y = troh_y.astype('int')
 val_x = v_x.astype('float32')
@@ -61,6 +78,8 @@ val_y = vaoh_y.astype('int')
 test_x = tst_x.astype('float32')
 test_y = teoh_y.astype('int')
 
+
+print('Building Data Tensors')
 train_tensor = torch.from_numpy(train_x)
 train_labels = torch.from_numpy(train_y)
 train_dataset = torch.utils.data.TensorDataset(
@@ -75,9 +94,22 @@ test_tensor = torch.from_numpy(test_x)
 test_labels = torch.from_numpy(test_y)
 test_dataset = torch.utils.data.TensorDataset(test_tensor, test_labels)
 
+#Tensor creation for unconditional datasets
+# train_tensor = torch.from_numpy(dataset.trn.x)
+# train_dataset = torch.utils.data.TensorDataset(train_tensor)
 
+# valid_tensor = torch.from_numpy(dataset.val.x)
+# valid_dataset = torch.utils.data.TensorDataset(valid_tensor)
+
+# test_tensor = torch.from_numpy(dataset.tst.x)
+# test_dataset = torch.utils.data.TensorDataset(test_tensor)
+# num_cond_inputs = None
+
+print('Creating Data Loaders')
 train_loader = torch.utils.data.DataLoader(
     train_dataset, batch_size=batch_size, shuffle=True)
+# shuffling of training data is very important, because in the training data
+# classes are grouped together due to temporal structure
 
 valid_loader = torch.utils.data.DataLoader(
     valid_dataset,
@@ -92,7 +124,9 @@ test_loader = torch.utils.data.DataLoader(
     drop_last=False)
 
 
-num_inputs = train_x.shape[1]
+print('Initializing Model')
+num_inputs = trn_x.shape[1]
+# num_inputs = dataset.n_dims
 act = 'tanh' if dataset_name == 'GAS' else 'relu'
 
 modules = []
@@ -158,10 +192,12 @@ for module in model.modules():
 
 model.to(device)
 
-optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=1e-2)
+optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=1e-6)
 
 writer = SummaryWriter(comment=flow + "_" + dataset_name)
 global_step = 0
+
+print('Training Length: ', len(train_loader.dataset))
 
 
 def train(epoch):
@@ -184,6 +220,17 @@ def train(epoch):
         loss = -model.log_probs(data, cond_data).mean()
         train_loss += loss.item()
         loss.backward()
+        # Test
+        # Mhh gradient norms are pretty large, let's try gradient clipping
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=2.0)
+        total_norm = 0
+        for p in model.parameters():
+            param_norm = p.grad.detach().data.norm(2)
+            total_norm += param_norm.item() ** 2
+        total_norm = total_norm ** 0.5
+        if batch_idx % 500 == 0:
+            print(f'Gradient Norm in batch {batch_idx} is {total_norm}')
+        # Test
         optimizer.step()
 
         pbar.update(data.size(0))
@@ -210,9 +257,12 @@ def train(epoch):
     for module in model.modules():
         if isinstance(module, fnn.BatchNormFlow):
             module.momentum = 1
+            
+    print('Epoch Complete')
 
 
 def validate(epoch, model, loader, prefix='Validation'):
+    print(f'Beginning validation epoch {epoch}')
     global global_step, writer
 
     model.eval()
@@ -231,8 +281,20 @@ def validate(epoch, model, loader, prefix='Validation'):
             data = data[0]
         data = data.to(device)
         with torch.no_grad():
-            # sum up batch loss  
-            val_loss += -model.log_probs(data, cond_data).sum().item()
+            # sum up batch loss
+            # val_loss += -model.log_probs(data, cond_data).sum().item() # ORIGINAL LINE
+            batch_log_probs = model.log_probs(data, cond_data)
+            corrected = torch.nan_to_num(batch_log_probs, nan=-100, posinf=1000, neginf=-100)
+            #detect nan or inf values:
+            nan = torch.isnan(batch_log_probs).sum().item()
+            inf = torch.isinf(batch_log_probs).sum().item()
+            if (nan >= 1) or (inf >= 1):
+                print(f'{nan} log densities in batch {batch_idx} are nan {inf} are inf')
+            if batch_idx == 212:
+                print(batch_log_probs)
+            sum_log_prob = -corrected.sum().item()
+            val_loss += sum_log_prob
+            ##### In this sum the value inf appears some time find out why
         pbar.update(data.size(0))
         pbar.set_description('Val, Log likelihood in nats: {:.6f}'.format(
             -val_loss / pbar.n))
@@ -264,7 +326,7 @@ def test_predict(epoch, model, loader, prefix='Predict'):
 
     return log_pxy
 
-
+print('Beginning Training')
 best_validation_loss = float('inf')
 best_validation_epoch = 0
 best_model = model
@@ -287,13 +349,8 @@ for epoch in range(max_epochs):
         'Best validation at epoch {}: Average Log Likelihood in nats: {:.4f}'.
         format(best_validation_epoch, -best_validation_loss))
 
-    # if dataset_name == 'MOONS' and epoch % 10 == 0:
-    #     utils.save_moons_plot(epoch, model, dataset)
-    # elif dataset_name == 'MNIST' and epoch % 1 == 0:
-    #     utils.save_images(epoch, model, cond)
 
-
-# validate(best_validation_epoch, best_model, test_loader, prefix='Test')
+validate(best_validation_epoch, best_model, test_loader, prefix='Test')
 
 # run prediction by calculating p(x|y) for every class y and then Bayes
 log_priors = [-4.02436356958844, -2.55757737723886, -2.62985841995197,
@@ -323,7 +380,7 @@ for i in range(num_cond_inputs):
         drop_last=False)
 
     log_pxy = test_predict(best_validation_epoch, best_model, pred_loader,
-                           prefix='Test')
+                            prefix='Test')
 
     lik[i] = log_pxy
 
@@ -331,7 +388,7 @@ result = np.zeros((N, num_cond_inputs))
 for i in range(N):
     for c in range(num_cond_inputs):
         log_lik = lik[c][i]
-        result[i, c] = log_lik + 5*log_priors[c]
+        result[i, c] = log_lik + log_priors[c]
 
 y_pred = np.argmax(result, axis=1)
 np.savetxt("MAF_results.txt", result, fmt='%.5f', delimiter=" ")
@@ -339,10 +396,11 @@ np.savetxt("MAF_results.txt", result, fmt='%.5f', delimiter=" ")
 print('accuracy: ', accuracy_score(tst_y, y_pred))
 
 classes = list(le.classes_)
+#classes = le
 cf_matrix = confusion_matrix(tst_y, y_pred)
 print('Number of test samples: ', np.sum(cf_matrix))
 df_cm = pd.DataFrame(cf_matrix, index = [i for i in classes],
-                     columns = [i for i in classes])
+                      columns = [i for i in classes])
 plt.figure(figsize = (16,9))
 s = sns.heatmap(df_cm, annot=True, cmap="flare", fmt='g')
 s.set(xlabel='predicted class', ylabel='true class')

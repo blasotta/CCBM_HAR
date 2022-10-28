@@ -17,7 +17,7 @@ from datasets.data_loaders import get_data_loaders, get_data
 
 import sys
 sys.path.insert(1, 'C:/Users/bened/PythonWork/CCBM_HAR/carrots/eval')
-from loaders import load_dataset, load_config, load_conditional_train, load_conditional_val, load_conditional_test
+from loaders import *
 
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.metrics import confusion_matrix
@@ -31,10 +31,10 @@ batch_size = 128
 # string = f"maf_carrots_{cn}_512"
 # model = torch.load("model_saves/" + string + ".pt")
 
-# train_dict, lt = load_conditional_train()
-# val_dict, lv = load_conditional_val()
-# #test_x, test_y, le = load_conditional_test()
-# test_dict, lte = load_conditional_test()
+# train_dict, lt = load_split_train()
+# val_dict, lv = load_split_val()
+# #test_x, test_y, le = load_split_test()
+# test_dict, lte = load_split_test()
 
 # train_x = train_dict[cn].to_numpy()
 # val_x = val_dict[cn].to_numpy()
@@ -54,10 +54,13 @@ batch_size = 128
 # #print(lt, lv, lte, sep=' | ')
 # #############Concept works#####################################################
 
-train_dict, ltr = load_conditional_train()
-#val_x, val_y, le = load_conditional_val()
-test_x, test_y, le = load_conditional_test()
-val_dict, lt = load_conditional_val()
+train_dict, ltr = load_split_train()
+test_x, test_y, le = load_split_test()
+val_dict, lt = load_split_val()
+
+#train_dict, ltr = load_lara_trn()
+#test_x, test_y, le = load_lara_tst()
+#val_dict, lt = load_lara_val()
 
 N = np.shape(test_x)[0]
 
@@ -142,6 +145,7 @@ print('accuracy: ', accuracy_score(test_y, y_pred))
 print('accuracy2: ', accuracy_score(test_y, y_pred2))
 
 classes = list(le.classes_)
+#classes = le
 cf_matrix = confusion_matrix(test_y, y_pred)
 print('Number of test samples: ', np.sum(cf_matrix))
 df_cm = pd.DataFrame(cf_matrix, index = [i for i in classes],

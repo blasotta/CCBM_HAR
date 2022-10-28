@@ -10,30 +10,35 @@ from utils.plot import sample_digits_maf, plot_losses
 
 import sys
 sys.path.insert(1, 'C:/Users/bened/PythonWork/CCBM_HAR/carrots/eval')
-from loaders import load_dataset, load_config, load_conditional_train, load_conditional_val, load_conditional_test
+from loaders import *
 
 
 # --------- SET PARAMETERS ----------
 model_name = "maf"  # 'maf' or 'made'
-dataset_name = "carrots" # can be 'mnist', 'power', 'hepmass'
+dataset_name = "lara" # can be 'mnist', 'power', 'hepmass'
 batch_size = 128
 n_mades = 5
 hidden_dims = [100] #1024 or 512 for mnist, 100 for power, 512 for hepmass
-lr = 1e-4 #5 works well
+lr = 1e-3 #5 works well
 random_order = False
-patience = 15  # For early stopping
+patience = 5  # For early stopping
 seed = 290713
 plot = False
-max_epochs = 75 #1000
+max_epochs = 15 #1000
 # -----------------------------------
 
 #train dict is a dictionary of pandas dataframes obtained from the original train data
 #via grouping by class, for conditional density estimation. The keys are the classes
 #(integers 0 to 15) and the value is the dataframe containing all examples of this class
-train_dict,_ = load_conditional_train()
-val_dict,_ = load_conditional_val()
-#val_x, val_y, le = load_conditional_val()
-#test_x, test_y, le = load_conditional_test()
+
+#CARROTS
+train_dict,_ = load_split_train()
+val_dict,_ = load_split_val()
+
+# LARA
+# train_dict,_ = load_lara_trn()
+# val_dict,_ = load_lara_val()
+
 
 
 cc = len(train_dict.keys()) # classs count (i.e. number of distict classes)
