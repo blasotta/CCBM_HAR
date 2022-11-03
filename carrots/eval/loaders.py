@@ -273,22 +273,6 @@ def load_conditional_val():
 
     return val_x, val_y
 
-def load_conditional_test():
-    X_7, y_7, le = load_dataset(7)
-
-    tst_x = X_7
-    tst_y = y_7
-    
-    df = pd.DataFrame(tst_x)
-    df_norm = df.copy()
-    
-    for column in df_norm.columns:
-        df_norm[column] = (df_norm[column] - c_mean[column]) / c_std[column]
-        
-    tst_x = df_norm.to_numpy()
-
-    return tst_x, tst_y, le
-
 def get_carrots():
     X_1, y_1, _ = load_dataset(1)
     X_2, y_2, _ = load_dataset(2)
@@ -296,26 +280,51 @@ def get_carrots():
     X_4, y_4, _ = load_dataset(4)
     X_5, y_5, _ = load_dataset(5)
     X_6, y_6, _ = load_dataset(6)
-    X_7, y_7, le = load_dataset(7)
+    #X_7, y_7, le = load_dataset(7)
     
-    x = np.concatenate([X_1, X_2, X_3, X_4, X_5, X_6, X_7], axis=0)
-    y = np.concatenate([y_1, y_2, y_3, y_4, y_5, y_6, y_7], axis=0)
+    x = np.concatenate([X_1, X_2, X_3, X_4, X_5, X_6], axis=0)
+    y = np.concatenate([y_1, y_2, y_3, y_4, y_5, y_6], axis=0)
     
-    x_trn, x_split, y_trn, y_split = train_test_split(x,y,test_size=0.3,
-                                                      train_size=0.7,
+    x_trn, x_val, y_trn, y_val = train_test_split(x,y,test_size=0.2,
+                                                      train_size=0.8,
                                                       random_state=42,
                                                       shuffle=True)
-    x_tst, x_val, y_tst, y_val = train_test_split(x_split, y_split,
-                                                  test_size=0.5,train_size=0.5,
-                                                  random_state=42,
-                                                  shuffle=True)
+    # x_tst, x_val, y_tst, y_val = train_test_split(x_split, y_split,
+    #                                               test_size=0.5,train_size=0.5,
+    #                                               random_state=42,
+    #                                               shuffle=True)
     
+    priors = []
+    N = y_trn.size
+    for i in range(16):
+        count = 0
+        count = np.count_nonzero(y_trn == i)
+        priors.append(count/N)
+    
+    log_priors = np.log(priors)
+    
+    global scaler
     scaler = preprocessing.StandardScaler()
     train_X = scaler.fit_transform(x_trn)
     valid_X = scaler.transform(x_val)
-    test_X = scaler.transform(x_tst)
+    #test_X = scaler.transform(x_tst)
     
-    return train_X, y_trn, valid_X, y_val, test_X, y_tst, le   
+    #add noise to train
+    noise = np.random.normal(0, 0.33, size=(train_X.shape[0], train_X.shape[1]))
+    train_X = train_X + noise
+    #df = pd.DataFrame(train_X)
+    # print(df.describe())
+    
+    return train_X, y_trn, valid_X, y_val, log_priors
+
+# train_X, y_trn, valid_X, y_val, log_priors = get_carrots()
+
+def load_conditional_test():
+    X, y, le = load_dataset(7)
+    
+    tst_x = scaler.transform(X)
+
+    return tst_x, y, le
 
 def load_split_train():
     X_1, y_1, _ = load_dataset(1)

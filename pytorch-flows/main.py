@@ -27,16 +27,17 @@ if sys.version_info < (3, 6):
 
 flow = "maf"  # 'maf' or 'made'
 dataset_name = "CARROTS"  # can be 'mnist', 'power', 'hepmass'
-batch_size = 64 # 128 seems good
-test_bs = 64 # can be 128
-num_blocks = 5  # number of mades in maf
-num_hidden = 180  # 1024 or 512 for mnist, 100 for power, 512 for hepmass
+batch_size = 128 # 128 seems good
+test_bs = 128 # can be 128
+num_blocks = 5  # number of mades in maf, default 5
+num_hidden = 512  # 1024 or 512 for mnist, 100 for power, 512 for hepmass
 lr = 1e-5  # 5 works well
+weight_decay = 0
 # random_order = False
-patience = 10  # For early stopping
+patience = 20  # For early stopping
 seed = 42
 # plot = False
-max_epochs = 50  # 1000
+max_epochs = 150  # 1000
 cond = True
 no_cuda = False
 num_cond_inputs = 16 # 16 for carrots, 8 for LARA, None if cond = False
@@ -44,7 +45,7 @@ num_cond_inputs = 16 # 16 for carrots, 8 for LARA, None if cond = False
 cuda = not no_cuda and torch.cuda.is_available()
 print('CUDA:', cuda)
 device = torch.device("cuda:0" if cuda else "cpu")
-print('Dveice:', device)
+print('Device:', device)
 
 torch.manual_seed(seed)
 
@@ -55,7 +56,8 @@ print('--------Loading and Processing Data--------')
 # trn_x, trn_y = load_conditional_train()
 # v_x, v_y = load_conditional_val()
 # tst_x, tst_y, le = load_conditional_test()
-trn_x, trn_y, v_x, v_y, tst_x, tst_y, le = get_carrots()
+trn_x, trn_y, v_x, v_y, log_priors = get_carrots()
+tst_x, tst_y, le = load_conditional_test()
 troh_y = one_hot_encode(trn_y, num_cond_inputs)
 vaoh_y = one_hot_encode(v_y, num_cond_inputs)
 teoh_y = one_hot_encode(tst_y, num_cond_inputs)
@@ -114,7 +116,7 @@ train_loader = torch.utils.data.DataLoader(
 valid_loader = torch.utils.data.DataLoader(
     valid_dataset,
     batch_size=test_bs,
-    shuffle=False,
+    shuffle=True,
     drop_last=False)
 
 test_loader = torch.utils.data.DataLoader(
@@ -192,7 +194,7 @@ for module in model.modules():
 
 model.to(device)
 
-optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=1e-6)
+optimizer = optim.AdamW(model.parameters(), lr=lr, weight_decay=weight_decay) #was ADAM
 
 writer = SummaryWriter(comment=flow + "_" + dataset_name)
 global_step = 0
@@ -220,16 +222,8 @@ def train(epoch):
         loss = -model.log_probs(data, cond_data).mean()
         train_loss += loss.item()
         loss.backward()
-        # Test
-        # Mhh gradient norms are pretty large, let's try gradient clipping
-        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=2.0)
-        total_norm = 0
-        for p in model.parameters():
-            param_norm = p.grad.detach().data.norm(2)
-            total_norm += param_norm.item() ** 2
-        total_norm = total_norm ** 0.5
-        if batch_idx % 500 == 0:
-            print(f'Gradient Norm in batch {batch_idx} is {total_norm}')
+        # Gradient Norm clipping Test
+        #torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=15.0)
         # Test
         optimizer.step()
 
@@ -290,8 +284,8 @@ def validate(epoch, model, loader, prefix='Validation'):
             inf = torch.isinf(batch_log_probs).sum().item()
             if (nan >= 1) or (inf >= 1):
                 print(f'{nan} log densities in batch {batch_idx} are nan {inf} are inf')
-            if batch_idx == 212:
-                print(batch_log_probs)
+            # if batch_idx == 212:
+            #     print(batch_log_probs)
             sum_log_prob = -corrected.sum().item()
             val_loss += sum_log_prob
             ##### In this sum the value inf appears some time find out why
@@ -304,7 +298,7 @@ def validate(epoch, model, loader, prefix='Validation'):
     pbar.close()
     return val_loss / len(loader.dataset)
 
-def test_predict(epoch, model, loader, prefix='Predict'):
+def get_log_pxy(epoch, model, loader):
     global global_step, writer
 
     log_pxy = []
@@ -326,74 +320,123 @@ def test_predict(epoch, model, loader, prefix='Predict'):
 
     return log_pxy
 
+def evaluate(data, labels, epoch, model):
+    # run prediction by calculating p(x|y) for every class y and then Bayes
+    lik = {}
+    N = labels.shape[0]
+
+    for i in range(num_cond_inputs):
+        # iterate through the classes to calculate p(x|y)
+        # first one hot encode class to use for prediction
+        a = np.full(N, i, dtype=int)
+        pred_y = one_hot_encode(a, num_cond_inputs)
+        pred_labels = torch.from_numpy(pred_y)
+        pred_dataset = torch.utils.data.TensorDataset(data, pred_labels)
+
+        pred_loader = torch.utils.data.DataLoader(
+            pred_dataset,
+            batch_size=test_bs,
+            shuffle=False,
+            drop_last=False)
+
+        log_pxy = get_log_pxy(epoch, model, pred_loader)
+
+        lik[i] = log_pxy
+
+    result = np.zeros((N, num_cond_inputs))
+    for i in range(N):
+        for c in range(num_cond_inputs):
+            log_lik = lik[c][i]
+            result[i, c] = log_lik + log_priors[c]
+
+    y_pred = np.argmax(result, axis=1)
+    #np.savetxt("MAF_results.txt", result, fmt='%.5f', delimiter=" ")
+
+    accuracy = accuracy_score(labels, y_pred)
+    return accuracy, y_pred
+
 print('Beginning Training')
 best_validation_loss = float('inf')
 best_validation_epoch = 0
 best_model = model
+
+best_validation_acc = 0
 
 for epoch in range(max_epochs):
     print('\nEpoch: {}'.format(epoch))
 
     train(epoch)
     validation_loss = validate(epoch, model, valid_loader)
+    
+    #change
+    print('-----Validating Model in terms of prediction accuracy-----')
+    val_acc, val_pred = evaluate(valid_tensor, v_y, epoch, model)
+    print(f'Validation accuracy at epoch {epoch} is {val_acc}')
+    #change
 
     if epoch - best_validation_epoch >= patience:
         break
 
-    if validation_loss < best_validation_loss:
+    # if validation_loss < best_validation_loss: # Select best model not from validation loss but validation accuracy
+    #     best_validation_epoch = epoch
+    #     best_validation_loss = validation_loss
+    #     best_model = copy.deepcopy(model)
+    
+    # other variant, selecting model with validation accuracy:
+    if val_acc > best_validation_acc:
         best_validation_epoch = epoch
-        best_validation_loss = validation_loss
+        best_validation_acc = val_acc
         best_model = copy.deepcopy(model)
 
     print(
         'Best validation at epoch {}: Average Log Likelihood in nats: {:.4f}'.
         format(best_validation_epoch, -best_validation_loss))
+    ##### remove
+    print('Test Set Accuracy Validation:')
+    accuracy, y_pred = evaluate(test_tensor, tst_y, best_validation_epoch, model)
+    print('Accuracy', accuracy)
+    print('New epoch')
+    ##### remove
 
 
 validate(best_validation_epoch, best_model, test_loader, prefix='Test')
 
-# run prediction by calculating p(x|y) for every class y and then Bayes
-log_priors = [-4.02436356958844, -2.55757737723886, -2.62985841995197,
-              -4.2595164232987, -2.49782943305708, -3.22986596419542,
-              -2.48440939847247, -4.06681863851865, -2.16177315429147,
-              -4.5156852300444, -5.62729572375705, -2.21563000487893,
-              -5.27438211097532, -5.30111517317238, -2.03730365915227,
-              -1.52852411531259]
+accuracy, y_pred = evaluate(test_tensor, tst_y, best_validation_epoch, best_model)
+print(f'Accuracy on Test set is {accuracy}')
+# # run prediction by calculating p(x|y) for every class y and then Bayes
+# lik = {}
+# N = test_x.shape[0]
 
-lik = {}
-N = test_x.shape[0]
-print(f'N is {N}')
-print(f'num_inputs is {num_inputs}')
+# for i in range(num_cond_inputs):
+#     # iterate through the classes to calculate p(x|y)
+#     # first one hot encode class to use for prediction
+#     a = np.full(N, i, dtype=int)
+#     pred_y = one_hot_encode(a, num_cond_inputs)
+#     pred_labels = torch.from_numpy(pred_y)
+#     pred_dataset = torch.utils.data.TensorDataset(test_tensor, pred_labels)
 
-for i in range(num_cond_inputs):
-    # iterate through the classes to calculate p(x|y)
-    # first one hot encode class to use for prediction
-    a = np.full(N, i, dtype=int)
-    pred_y = one_hot_encode(a, num_cond_inputs)
-    pred_labels = torch.from_numpy(pred_y)
-    pred_dataset = torch.utils.data.TensorDataset(test_tensor, pred_labels)
+#     pred_loader = torch.utils.data.DataLoader(
+#         pred_dataset,
+#         batch_size=test_bs,
+#         shuffle=False,
+#         drop_last=False)
 
-    pred_loader = torch.utils.data.DataLoader(
-        pred_dataset,
-        batch_size=test_bs,
-        shuffle=False,
-        drop_last=False)
+#     log_pxy = get_log_pxy(best_validation_epoch, best_model, pred_loader)
 
-    log_pxy = test_predict(best_validation_epoch, best_model, pred_loader,
-                            prefix='Test')
+#     lik[i] = log_pxy
 
-    lik[i] = log_pxy
+# result = np.zeros((N, num_cond_inputs))
+# for i in range(N):
+#     for c in range(num_cond_inputs):
+#         log_lik = lik[c][i]
+#         result[i, c] = log_lik + log_priors[c]
 
-result = np.zeros((N, num_cond_inputs))
-for i in range(N):
-    for c in range(num_cond_inputs):
-        log_lik = lik[c][i]
-        result[i, c] = log_lik + log_priors[c]
+# y_pred = np.argmax(result, axis=1)
+# np.savetxt("MAF_results.txt", result, fmt='%.5f', delimiter=" ")
 
-y_pred = np.argmax(result, axis=1)
-np.savetxt("MAF_results.txt", result, fmt='%.5f', delimiter=" ")
+# print('accuracy: ', accuracy_score(tst_y, y_pred))
 
-print('accuracy: ', accuracy_score(tst_y, y_pred))
+
 
 classes = list(le.classes_)
 #classes = le
