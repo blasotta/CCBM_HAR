@@ -19,7 +19,7 @@ import pandas as pd
 
 import sys
 sys.path.insert(1, 'C:/Users/bened/PythonWork/CCBM_HAR/carrots/eval')
-from loaders import *
+from loaders import one_hot_encode, get_carrots, load_conditional_test, get_UCIHAR
 
 
 if sys.version_info < (3, 6):
@@ -31,16 +31,16 @@ batch_size = 128 # 128 seems good
 test_bs = 128 # can be 128
 num_blocks = 5  # number of mades in maf, default 5
 num_hidden = 512  # 1024 or 512 for mnist, 100 for power, 512 for hepmass
-lr = 1e-5  # 5 works well
-weight_decay = 0
+lr = 1e-3  # 5 works well
+weight_decay = 1e-5
 # random_order = False
 patience = 20  # For early stopping
 seed = 42
 # plot = False
-max_epochs = 150  # 1000
+max_epochs = 200  # 1000
 cond = True
 no_cuda = False
-num_cond_inputs = 16 # 16 for carrots, 8 for LARA, None if cond = False
+num_cond_inputs = 6 # 16 for carrots, 6 for UCIHAR, None if cond = False
 
 cuda = not no_cuda and torch.cuda.is_available()
 print('CUDA:', cuda)
@@ -53,23 +53,20 @@ torch.manual_seed(seed)
 
 # For Carrots
 print('--------Loading and Processing Data--------')
-# trn_x, trn_y = load_conditional_train()
-# v_x, v_y = load_conditional_val()
+# trn_x, trn_y, v_x, v_y, log_priors = get_carrots()
 # tst_x, tst_y, le = load_conditional_test()
-trn_x, trn_y, v_x, v_y, log_priors = get_carrots()
-tst_x, tst_y, le = load_conditional_test()
-troh_y = one_hot_encode(trn_y, num_cond_inputs)
-vaoh_y = one_hot_encode(v_y, num_cond_inputs)
-teoh_y = one_hot_encode(tst_y, num_cond_inputs)
-
-# For LARA
-# trn_x, trn_y = cond_lara_trn()
-# v_x, v_y = cond_lara_val()
-# tst_x, tst_y, le = cond_lara_tst()
-
 # troh_y = one_hot_encode(trn_y, num_cond_inputs)
 # vaoh_y = one_hot_encode(v_y, num_cond_inputs)
 # teoh_y = one_hot_encode(tst_y, num_cond_inputs)
+
+# For UCI HAR
+trn_x, trn_y, v_x, v_y, log_priors, tst_x, tst_y, classes = get_UCIHAR()
+trn_y = trn_y.astype('int')
+v_y = v_y.astype('int')
+tst_y = tst_y.astype('int')
+troh_y = one_hot_encode(trn_y, num_cond_inputs)
+vaoh_y = one_hot_encode(v_y, num_cond_inputs)
+teoh_y = one_hot_encode(tst_y, num_cond_inputs)
 
 
 print('--------Correcting Data Type--------')
@@ -368,78 +365,39 @@ for epoch in range(max_epochs):
     train(epoch)
     validation_loss = validate(epoch, model, valid_loader)
     
-    #change
+    #new
     print('-----Validating Model in terms of prediction accuracy-----')
     val_acc, val_pred = evaluate(valid_tensor, v_y, epoch, model)
     print(f'Validation accuracy at epoch {epoch} is {val_acc}')
-    #change
+    #new
 
     if epoch - best_validation_epoch >= patience:
         break
 
-    # if validation_loss < best_validation_loss: # Select best model not from validation loss but validation accuracy
-    #     best_validation_epoch = epoch
-    #     best_validation_loss = validation_loss
-    #     best_model = copy.deepcopy(model)
-    
-    # other variant, selecting model with validation accuracy:
-    if val_acc > best_validation_acc:
+    if validation_loss < best_validation_loss: # Select best model not from validation loss but validation accuracy
         best_validation_epoch = epoch
-        best_validation_acc = val_acc
+        best_validation_loss = validation_loss
         best_model = copy.deepcopy(model)
+    
+    # other variant, selecting model with validation accuracy not best likelihood:
+    # if val_acc > best_validation_acc:
+    #     best_validation_epoch = epoch
+    #     best_validation_acc = val_acc
+    #     best_model = copy.deepcopy(model)
 
     print(
-        'Best validation at epoch {}: Average Log Likelihood in nats: {:.4f}'.
-        format(best_validation_epoch, -best_validation_loss))
-    ##### remove
-    print('Test Set Accuracy Validation:')
-    accuracy, y_pred = evaluate(test_tensor, tst_y, best_validation_epoch, model)
-    print('Accuracy', accuracy)
-    print('New epoch')
-    ##### remove
+        'Best validation at epoch {}, with validation Accuracy: {:.4f}'.
+        format(best_validation_epoch, best_validation_acc))
 
-
+# After training evaluate best model in terms of likelihood and prediction accuracy on
+# test data
 validate(best_validation_epoch, best_model, test_loader, prefix='Test')
-
 accuracy, y_pred = evaluate(test_tensor, tst_y, best_validation_epoch, best_model)
 print(f'Accuracy on Test set is {accuracy}')
-# # run prediction by calculating p(x|y) for every class y and then Bayes
-# lik = {}
-# N = test_x.shape[0]
-
-# for i in range(num_cond_inputs):
-#     # iterate through the classes to calculate p(x|y)
-#     # first one hot encode class to use for prediction
-#     a = np.full(N, i, dtype=int)
-#     pred_y = one_hot_encode(a, num_cond_inputs)
-#     pred_labels = torch.from_numpy(pred_y)
-#     pred_dataset = torch.utils.data.TensorDataset(test_tensor, pred_labels)
-
-#     pred_loader = torch.utils.data.DataLoader(
-#         pred_dataset,
-#         batch_size=test_bs,
-#         shuffle=False,
-#         drop_last=False)
-
-#     log_pxy = get_log_pxy(best_validation_epoch, best_model, pred_loader)
-
-#     lik[i] = log_pxy
-
-# result = np.zeros((N, num_cond_inputs))
-# for i in range(N):
-#     for c in range(num_cond_inputs):
-#         log_lik = lik[c][i]
-#         result[i, c] = log_lik + log_priors[c]
-
-# y_pred = np.argmax(result, axis=1)
-# np.savetxt("MAF_results.txt", result, fmt='%.5f', delimiter=" ")
-
-# print('accuracy: ', accuracy_score(tst_y, y_pred))
 
 
 
-classes = list(le.classes_)
-#classes = le
+#classes = list(le.classes_)
 cf_matrix = confusion_matrix(tst_y, y_pred)
 print('Number of test samples: ', np.sum(cf_matrix))
 df_cm = pd.DataFrame(cf_matrix, index = [i for i in classes],
