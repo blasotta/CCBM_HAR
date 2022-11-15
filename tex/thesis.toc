@@ -1,15 +1,15 @@
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Related Work}{2}{section.1.1}%
-\contentsline {chapter}{\numberline {2}Theoretical Framework}{4}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Distribution Estimation with Masked Autoregressive Flow}{4}{section.2.1}%
+\contentsline {chapter}{\numberline {2}Theoretical Framework}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Distribution Estimation with Masked Autoregressive Flow}{3}{section.2.1}%
 \contentsline {section}{\numberline {2.2}Introduction to Computational State Space Models}{6}{section.2.2}%
-\contentsline {chapter}{\numberline {3}Construction of the Hybrid Model}{8}{chapter.3}%
-\contentsline {chapter}{\numberline {4}Experimental Evaluation}{9}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Settings}{9}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Experiments}{9}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Results}{9}{section.4.3}%
-\contentsline {chapter}{\numberline {5}Conclusion}{10}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Summary}{10}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Future Work}{10}{section.5.2}%
-\contentsline {chapter}{\numberline {A}Program Code / Resources}{13}{appendix.A}%
-\contentsline {chapter}{\numberline {B}Further Experimental Results}{14}{appendix.B}%
+\contentsline {chapter}{\numberline {3}Related Work}{8}{chapter.3}%
+\contentsline {chapter}{\numberline {4}Construction of the Hybrid Model}{10}{chapter.4}%
+\contentsline {chapter}{\numberline {5}Experimental Evaluation}{11}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Settings}{11}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Experiments}{11}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Results}{11}{section.5.3}%
+\contentsline {chapter}{\numberline {6}Conclusion}{12}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Summary}{12}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Future Work}{12}{section.6.2}%
+\contentsline {chapter}{\numberline {A}Program Code / Resources}{15}{appendix.A}%
+\contentsline {chapter}{\numberline {B}Further Experimental Results}{16}{appendix.B}%
