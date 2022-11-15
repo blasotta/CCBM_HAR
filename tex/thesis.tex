@@ -207,16 +207,16 @@ To illustrate the principle of a masked autoencoder which fulfills the autoregre
 	\end{cases}
 \end{equation}
 
-\noindent Figure \ref{fig:MADE} illustrates this masking for a simple autoencoder with $D=3$ and one hidden layer with $K=5$ hidden units. However, the process can be extended to autoencoders with multiple hidden layers.
+\noindent Figure \ref{fig:MADE} illustrates this masking for a simple autoencoder with $D=3$ and one hidden layer with $K=5$ hidden units. However, the process can be extended to autoencoders with multiple hidden layers. Furthermore it is not necessary that the order of inputs is kept. In fact, Germain et al. suggest that order-agnostic training, in which multiple MADEs are trained on different random orderings, may be beneficial \cite{germain_made_nodate}.
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=\linewidth]{MADE_vis.jpg}
-	\caption[Illustration of MADE]{Illustration of the effect of masking matrices on the graph structure of an autoencoder. The digits inside the hidden layer nodes are the $m(k)$ values that were used to calculate $\mathbf{M}^W$ and $\mathbf{M}^V$. Connections where the masking matrix is 0 are dropped while others are retained (own figure).}
+	\caption[Illustration of MADE]{Illustration of the effect of masking matrices on the graph structure of an autoencoder. The digits inside the hidden layer nodes are the $m(k)$ values that were used to calculate $\mathbf{M}^W$ and $\mathbf{M}^V$, the digits inside input / output nodes indicate the ordering. Connections where the masking matrix is 0 are dropped while others are retained (own figure).}
 	\label{fig:MADE}
 \end{figure}
 
-A main disadvantage of MADE is that the order of the conditionals has a large impact on the quality of the learned density. With the correct order it may be possible to learn the density perfectly while for other orders this is not the case. To remedy this, MAF stacks $L$ MADEs and models the random numbers which are used by the MADE in layer $l$ with the model in layer $l+1$ and so on, until the random numbers of the model in the last layer are modeled by a standard Gaussian. Although each individual MADE unit has unimodal conditionals the authors of MAF argue that such a model can learn multimodal conditionals \cite{papamakarios_masked_2017}. According to them, this added flexibility improves model fit.
+\noindent A main disadvantage of MADE is that the order of the conditionals has a large impact on the quality of the learned density. With the correct order it may be possible to learn the density perfectly while for other orders this is not the case. To remedy this, MAF stacks $L$ MADEs and models the random numbers which are used by the MADE in layer $l$ with the model in layer $l+1$ and so on, until the random numbers of the model in the last layer are modeled by a standard Gaussian. Although each individual MADE unit has unimodal conditionals the authors of MAF argue that such a model can learn multimodal conditionals \cite{papamakarios_masked_2017}. According to them, this added flexibility improves model fit.
 
 The central idea behind MAF is, that the distribution to be learned is viewed as a transformation of a base density $\pi_{u} (\pmb{u})$ to the target distribution via a differentiable and invertible transformation $f$. The base density should be simple in the sense that $\pi_{u} (\pmb{u})$ can be easily evaluated for all inputs $\pmb{u}$. For example the standard multivariate Gaussian where $\pmb{u} \sim \mathcal{N}(0, I)$ is a common choice. This means that $f$ takes an input $\pmb{u}$, which follows the base density distribution $\pmb{u} \sim \pi_{u} (\pmb{u})$ and transforms it to data space via the invertible function $\pmb{x}=f(\pmb{u})$. As $f$ is invertible it holds that $\pmb{u} = f^{-1}(\pmb{x})$, and the density $p(\pmb{x})$ can be calculated as
 
@@ -241,7 +241,28 @@ In general the model should allow tractable inference in the sense that the hidd
 	p(x_{1:t}, y_{1:t}) = p(y_1|x_1)p(x_1) \prod_{i=2}^{t} (p(y_i|x_i)p(x_i|x_{i-1})),
 \end{equation}
 
-\noindent the joint distribution can be described by a state space model. The underlying idea of this thesis is to obtain the observation model via a neural density estimator like MAF as outlined in the section \ref{sec:maf}, and then apply an implementation of CSSM known as CCBM to this observation data.
+\noindent the joint distribution can be described by a state space model. The underlying idea of this thesis is to obtain the observation model $p(y_t|x_t)$ via a neural density estimator like MAF as outlined in section \ref{sec:maf}, and then apply an implementation of CSSM known as CCBM to this observation data.
+
+CCBM follows a symbolic approach that uses precondition-effect rules to define the causal model of the domain it operates on. The computational action language used in CCBM is an extension of the planning domain definition language (PDDL). This makes it possible to specify the causal structure of a domain with its actions, preconditions and effects. The observation model describes which expected observation $y_t$ is caused by any given state $x_t$ at time $t$, while the transition model describes how states change over time. The rules that govern an action, i.e., what are the parameters of an action, which preconditions have to be fulfilled, what is the effect and duration of the action, are defined for every possible action in a so called action template which is written in the action language. Given all action templates, an initial state distribution and the goal(s), a directed graph from the initial to the goal state(s) can be generated. In particular, given some state $x$ the probability of selecting action $a$ in CCBM is defined by a Log-Linear model with features $f_1, f_2, f_3$ in the following way \cite{rueda_combining_2019}:
+
+\begin{align}
+	&p(a|x) \propto 	\exp(\sum_{k=1}^{3} \lambda_k f_k(a,x)) \label{func:ccbm} \\
+	&f_1(a,x) = 		\log \gamma(a(x)) \\
+	&f_2(a,x) = 		\log s(a) \\
+	&f_3(a,x) = 		\delta(a(x))
+\end{align}
+
+\noindent As per the formula each of the features can be weighted by a scalar $\lambda_k$. The first feature $\gamma(a(x))$ is the revisiting factor, which is 0 if the state resulting from taking action $a$ in state $x$ has already been visited. It controls if already visited states can be visited again. The parameter $s(a)$ is the saliency of action $a$ which is a weight that can be assigned to any action. A higher saliency indicates the action is more likely to be selected with respect to actions with lower saliency. Lastly, $\delta(a(x))$ is the goal distance of the state $x'$ that results from performing action $a$ in state $x$. The underlying assumption is, that actions which lead to states that are closer to the goal are selected with a higher probability.
+
+The CCBM system is used to compile a filter from which it is possible to perform inference about the most probable action given a system sate. Due to the large state space exact inference is computationally infeasible. Hence, particle and marginal filters are used to perform approximate inference. In categorical domains the marginal filter has been shown to outperform the particle filter \cite{kruger_computational_2014}, which is why it is often used in those instances. Standard Bayesian filtering methods are then employed to reason about state and action sequences from sensor data. To do this, first the prediction of the current state $x_t$ is calculated based on the previous state $x_{t-1}$ and transition probabilities, which are obtained by plugging in equation \ref{func:ccbm} into equation \ref{func:traprob} below.
+
+\begin{align}
+	p(x_t|x_{t-1}) &= \sum_{x_t = a(x_{t-1})}^{} p(a|x_t) \label{func:traprob} \\
+	p(x_t|y_{1:t-1}) &= \int_{X}^{} p(x_t|x_{t-1}) p(x_{t-1}|y_{1:t-1}) dx \label{func:pred} \\
+	p(x_t|y_1:t) &= \frac{p(y_t|x_t) p(x_t|y_{1:t-1})}{p(y_t|y_{1:t-1})} \label{func:cor}
+\end{align}
+The transition probabilities $p(x_t|x_{t-1})$ are then used for the actual \emph{prediction} step of Bayesian filtering in equation \ref{func:pred}, producing an estimated state. Using the observation model $p(y_t|x_t)$, the \emph{correction} step then corrects this estimated state by taking into account the most recent observation as shown in equation \ref{func:cor}
+
 
 \chapter{Related Work}
 \label{cha:rel}
