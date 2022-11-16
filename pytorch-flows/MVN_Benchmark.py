@@ -10,23 +10,23 @@ import sys
 sys.path.insert(1, 'C:/Users/bened/PythonWork/CCBM_HAR/carrots/eval')
 from loaders import one_hot_encode, get_carrots, load_conditional_test, get_UCIHAR
 
-num_cond_inputs = 6
+num_cond_inputs = 16
 
 # Loading and preprocessing data CARROTS
-# trn_x, trn_y, v_x, v_y, log_priors = get_carrots()
-# tst_x, tst_y, le = load_conditional_test()
-# troh_y = one_hot_encode(trn_y, num_cond_inputs)
-# vaoh_y = one_hot_encode(v_y, num_cond_inputs)
-# teoh_y = one_hot_encode(tst_y, num_cond_inputs)
-
-# For UCI HAR
-trn_x, trn_y, v_x, v_y, log_priors, tst_x, tst_y, classes = get_UCIHAR()
-trn_y = trn_y.astype('int')
-v_y = v_y.astype('int')
-tst_y = tst_y.astype('int')
+trn_x, trn_y, v_x, v_y, log_priors = get_carrots()
+tst_x, tst_y, le = load_conditional_test()
 troh_y = one_hot_encode(trn_y, num_cond_inputs)
 vaoh_y = one_hot_encode(v_y, num_cond_inputs)
 teoh_y = one_hot_encode(tst_y, num_cond_inputs)
+
+# For UCI HAR
+# trn_x, trn_y, v_x, v_y, log_priors, tst_x, tst_y, classes = get_UCIHAR()
+# trn_y = trn_y.astype('int')
+# v_y = v_y.astype('int')
+# tst_y = tst_y.astype('int')
+# troh_y = one_hot_encode(trn_y, num_cond_inputs)
+# vaoh_y = one_hot_encode(v_y, num_cond_inputs)
+# teoh_y = one_hot_encode(tst_y, num_cond_inputs)
 
 # No need to change this
 train_x = trn_x.astype('float32')
@@ -68,7 +68,7 @@ result = np.zeros((N, num_cond_inputs))
 for i in range(N):
     for c in range(num_cond_inputs):
         log_lik = lik[c][i]
-        result[i, c] = log_lik + log_priors[c]
+        result[i, c] = log_lik + 0*log_priors[c]
 
 y_pred = np.argmax(result, axis=1)
 
@@ -82,9 +82,10 @@ D = np.c_[trn_x, trn_y]
 
 df = pd.DataFrame(D)
 # FOR CARROTS
-# df.rename(columns={30: "class"}, inplace = True)
+df.rename(columns={30: "class"}, inplace = True)
 # FOR UCIHAR
-df.rename(columns={561: "class"}, inplace = True)
+# df.rename(columns={561: "class"}, inplace = True)
+
 data = df.astype({'class': 'int32'})
 
 #group by class for conditional density estimation.
@@ -117,7 +118,7 @@ np.savetxt("MVN_Benchmark_results.txt", result2, fmt='%.5f', delimiter=" ")
 y_pred2 = np.argmax(result2, axis = 1)
 print('Split MVN accuracy: ', accuracy_score(tst_y, y_pred2))
 
-#classes = list(le.classes_)
+classes = list(le.classes_)
 cf_matrix = confusion_matrix(tst_y, y_pred2)
 df_cm = pd.DataFrame(cf_matrix, index = [i for i in classes],
                      columns = [i for i in classes])

@@ -9,6 +9,7 @@ from scipy.io import arff
 from sklearn import preprocessing
 import pandas as pd
 import numpy as np
+from numpy.lib.stride_tricks import as_strided
 import os
 import yaml
 from pathlib import Path
@@ -51,6 +52,27 @@ def one_hot_encode(targets, nb_classes):
     res = np.eye(nb_classes)[np.array(targets).reshape(-1)]
     return res.reshape(list(targets.shape)+[nb_classes])
 
+def make_views(arr, win_size, step_size, writeable = False):
+  """
+  arr: input 2d array to be windowed
+  win_size: size of data window (given in data points)
+  step_size: size of window step (given in data point)
+  writable: if True, elements can be modified in new data structure, which will affect
+    original array (defaults to False)
+  """
+  
+  n_records = arr.shape[0]
+  n_columns = arr.shape[1]
+  remainder = (n_records - win_size) % step_size 
+  num_windows = 1 + int((n_records - win_size - remainder) / step_size)
+  new_view_structure = as_strided(
+    arr,
+    shape = (num_windows, win_size, n_columns),
+    strides = (8 * step_size * n_columns, 8 * n_columns, 8),
+    writeable = False,
+  )
+  return new_view_structure
+
 # Load carrots Dataset, it has 16 distinct classes 0-15
 def get_carrots():
     X_1, y_1, _ = load_dataset(1)
@@ -84,6 +106,8 @@ def get_carrots():
     valid_X = scaler.transform(x_val)
     
     #add noise to train to improve robustness
+    # mehr daten erzeugen
+    np.random.seed(42)
     noise = np.random.normal(0, 0.35, size=(train_X.shape[0], train_X.shape[1]))
     train_X = train_X + noise
     
@@ -119,6 +143,7 @@ def get_UCIHAR():
     log_priors = np.log(priors)
     
     # Maybe add noise:
+    np.random.seed(42)
     noise = np.random.normal(0, 0.05, size=(x_trn.shape[0], x_trn.shape[1]))
     x_trn += noise
     

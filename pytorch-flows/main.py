@@ -31,16 +31,16 @@ batch_size = 128 # 128 seems good
 test_bs = 128 # can be 128
 num_blocks = 5  # number of mades in maf, default 5
 num_hidden = 512  # 1024 or 512 for mnist, 100 for power, 512 for hepmass
-lr = 1e-3  # 5 works well
-weight_decay = 1e-5
+lr = 1e-4  # 5 works well
+weight_decay = 1e-4
 # random_order = False
-patience = 20  # For early stopping
+patience = 2  # For early stopping
 seed = 42
 # plot = False
-max_epochs = 200  # 1000
+max_epochs = 5  # 1000
 cond = True
 no_cuda = False
-num_cond_inputs = 6 # 16 for carrots, 6 for UCIHAR, None if cond = False
+num_cond_inputs = 16 # 16 for carrots, 6 for UCIHAR, None if cond = False
 
 cuda = not no_cuda and torch.cuda.is_available()
 print('CUDA:', cuda)
@@ -53,20 +53,20 @@ torch.manual_seed(seed)
 
 # For Carrots
 print('--------Loading and Processing Data--------')
-# trn_x, trn_y, v_x, v_y, log_priors = get_carrots()
-# tst_x, tst_y, le = load_conditional_test()
-# troh_y = one_hot_encode(trn_y, num_cond_inputs)
-# vaoh_y = one_hot_encode(v_y, num_cond_inputs)
-# teoh_y = one_hot_encode(tst_y, num_cond_inputs)
-
-# For UCI HAR
-trn_x, trn_y, v_x, v_y, log_priors, tst_x, tst_y, classes = get_UCIHAR()
-trn_y = trn_y.astype('int')
-v_y = v_y.astype('int')
-tst_y = tst_y.astype('int')
+trn_x, trn_y, v_x, v_y, log_priors = get_carrots()
+tst_x, tst_y, le = load_conditional_test()
 troh_y = one_hot_encode(trn_y, num_cond_inputs)
 vaoh_y = one_hot_encode(v_y, num_cond_inputs)
 teoh_y = one_hot_encode(tst_y, num_cond_inputs)
+
+# For UCI HAR
+# trn_x, trn_y, v_x, v_y, log_priors, tst_x, tst_y, classes = get_UCIHAR()
+# trn_y = trn_y.astype('int')
+# v_y = v_y.astype('int')
+# tst_y = tst_y.astype('int')
+# troh_y = one_hot_encode(trn_y, num_cond_inputs)
+# vaoh_y = one_hot_encode(v_y, num_cond_inputs)
+# teoh_y = one_hot_encode(tst_y, num_cond_inputs)
 
 
 print('--------Correcting Data Type--------')
@@ -386,8 +386,8 @@ for epoch in range(max_epochs):
     #     best_model = copy.deepcopy(model)
 
     print(
-        'Best validation at epoch {}, with validation Accuracy: {:.4f}'.
-        format(best_validation_epoch, best_validation_acc))
+        'Best validation at epoch {}, with avg. Log likelihood: {:.4f}'.
+        format(best_validation_epoch, -best_validation_loss))
 
 # After training evaluate best model in terms of likelihood and prediction accuracy on
 # test data
@@ -397,7 +397,7 @@ print(f'Accuracy on Test set is {accuracy}')
 
 
 
-#classes = list(le.classes_)
+classes = list(le.classes_)
 cf_matrix = confusion_matrix(tst_y, y_pred)
 print('Number of test samples: ', np.sum(cf_matrix))
 df_cm = pd.DataFrame(cf_matrix, index = [i for i in classes],
