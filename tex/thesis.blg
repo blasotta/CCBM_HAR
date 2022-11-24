@@ -10,45 +10,45 @@ Warning--empty journal in germain_made_nodate
 Warning--empty year in germain_made_nodate
 Warning--empty journal in raedt_problog_nodate
 Warning--empty year in raedt_problog_nodate
-You've used 14 entries,
+You've used 17 entries,
             2118 wiz_defined-function locations,
-            583 strings with 7472 characters,
-and the built_in function-call counts, 5379 in all, are:
-= -- 501
-> -- 316
+            601 strings with 8184 characters,
+and the built_in function-call counts, 6441 in all, are:
+= -- 600
+> -- 380
 < -- 7
-+ -- 124
-- -- 110
-* -- 422
-:= -- 905
-add.period$ -- 50
-call.type$ -- 14
-change.case$ -- 97
++ -- 150
+- -- 132
+* -- 509
+:= -- 1085
+add.period$ -- 59
+call.type$ -- 17
+change.case$ -- 117
 chr.to.int$ -- 0
-cite$ -- 18
-duplicate$ -- 186
-empty$ -- 383
-format.name$ -- 110
-if$ -- 1102
+cite$ -- 21
+duplicate$ -- 215
+empty$ -- 459
+format.name$ -- 132
+if$ -- 1314
 int.to.chr$ -- 0
-int.to.str$ -- 14
-missing$ -- 13
-newline$ -- 79
-num.names$ -- 28
-pop$ -- 108
+int.to.str$ -- 17
+missing$ -- 15
+newline$ -- 94
+num.names$ -- 34
+pop$ -- 129
 preamble$ -- 1
-purify$ -- 83
+purify$ -- 100
 quote$ -- 0
-skip$ -- 121
+skip$ -- 143
 stack$ -- 0
-substring$ -- 252
-swap$ -- 40
+substring$ -- 317
+swap$ -- 43
 text.length$ -- 7
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 56
+type$ -- 68
 warning$ -- 4
-while$ -- 47
-width$ -- 16
-write$ -- 165
+while$ -- 56
+width$ -- 19
+write$ -- 197
 (There were 5 warnings)

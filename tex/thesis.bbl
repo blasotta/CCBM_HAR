@@ -8,6 +8,12 @@ Luca Arrotta, Gabriele Civitarese, and Claudio Bettini.
   {Computing} ({SMARTCOMP})}, pages 1--8, June 2022.
 \newblock ISSN: 2693-8340.
 
+\bibitem{bettini_caviar_2020}
+Claudio Bettini, Gabriele Civitarese, and Riccardo Presotto.
+\newblock {CAVIAR}: {Context}-driven {Active} and {Incremental} {Activity}
+  {Recognition}.
+\newblock {\em Knowledge-Based Systems}, 196:105816, May 2020.
+
 \bibitem{chen_deep_2022}
 Kaixuan Chen, Dalin Zhang, Lina Yao, Bin Guo, Zhiwen Yu, and Yunhao Liu.
 \newblock Deep {Learning} for {Sensor}-based {Human} {Activity} {Recognition}:
@@ -21,6 +27,11 @@ Liming Chen, Jesse Hoey, Chris~D. Nugent, Diane~J. Cook, and Zhiwen Yu.
   (Applications and Reviews)}, 42(6):790--808, November 2012.
 \newblock Conference Name: IEEE Transactions on Systems, Man, and Cybernetics,
   Part C (Applications and Reviews).
+
+\bibitem{garcez_neurosymbolic_2020}
+Artur~d'Avila Garcez and Luis~C. Lamb.
+\newblock Neurosymbolic {AI}: {The} 3rd {Wave}, December 2020.
+\newblock arXiv:2012.05876 [cs].
 
 \bibitem{germain_made_nodate}
 Mathieu Germain, Karol Gregor, Iain Murray, and Hugo Larochelle.
@@ -100,5 +111,13 @@ Yoli Shavit and Itzik Klein.
   {Transformers}.
 \newblock {\em IEEE Access}, 9:53540--53547, 2021.
 \newblock Conference Name: IEEE Access.
+
+\bibitem{sukor_hybrid_2019}
+Abdul Syafiq~Abdull Sukor, Ammar Zakaria, Norasmadi~Abdul Rahim,
+  Latifah~Munirah Kamarudin, Rossi Setchi, and Hiromitsu Nishizaki.
+\newblock A hybrid approach of knowledge-driven and data-driven reasoning for
+  activity recognition in smart homes.
+\newblock {\em Journal of Intelligent \& Fuzzy Systems}, 36(5):4177--4188, May
+  2019.
 
 \end{thebibliography}
