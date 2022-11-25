@@ -265,7 +265,8 @@ A very recent approach that shows promising results for HAR is DUSTIN \cite{arro
 \label{cha:alg}
 
 Important notes:
-It is important that examples are shuffled to ensure that they are independent and identically distributed. If this is not done the samples are not independent, e.g. first action is much more likely 
+It is important that examples are shuffled to ensure that they are independent and identically distributed. If this is not done the samples are not independent, e.g. first action is much more likely.
+For segementing small values work much better, in Literature often we see window sizes of 0.5 ms to 2 s, but MAF does not seem to cope well with high dimensional inputs, maybe try out 16 samples or so (~128 ms)
 %\begin{algorithm}{\MYCALL{EfficientLOD}{$\ALI$, $\ONT_1$, $\ONT_2$}}
 %\caption[Efficient Local Optimal Diagnosis]{}
 %\label{alg:efficient-lod}

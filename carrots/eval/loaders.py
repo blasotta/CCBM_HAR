@@ -6,6 +6,7 @@ Created on Wed Jul 27 11:43:37 2022
 """
 
 from scipy.io import arff
+from scipy import stats
 from sklearn import preprocessing
 import pandas as pd
 import numpy as np
@@ -59,6 +60,7 @@ def make_views(arr, win_size, step_size, writeable = False):
   step_size: size of window step (given in data point)
   writable: if True, elements can be modified in new data structure, which will affect
     original array (defaults to False)
+  Note that data should be of type 64 bit (8 byte)
   """
   
   n_records = arr.shape[0]
@@ -85,6 +87,22 @@ def get_carrots():
     
     x = np.concatenate([X_1, X_2, X_3, X_4, X_5, X_6], axis=0)
     y = np.concatenate([y_1, y_2, y_3, y_4, y_5, y_6], axis=0)
+
+    # Segementing the DATA into windows of size 128 / ca. 1 second
+    x = np.ascontiguousarray(x)
+    views = make_views(x, 4, 1)
+    x_newshape = (views.shape[0], views.shape[1]*views.shape[2])
+    x = np.reshape(views, newshape=x_newshape)
+        
+    y = y.astype('int64') # change labels to int64 for windowing correctly
+    y = np.ascontiguousarray(y)
+    y_2d = np.reshape(y, (y.shape[0],1))
+    y_views = make_views(y_2d, 4, 1)
+    y_newshape = (y_views.shape[0], y_views.shape[1]*y_views.shape[2])
+    y_new = np.reshape(y_views, newshape=y_newshape)
+    
+    # Choosing most common value of a window as label
+    y,_ = stats.mode(y_new, axis=1, keepdims=False)
     
     x_trn, x_val, y_trn, y_val = train_test_split(x,y,test_size=0.2,
                                                       train_size=0.8,
@@ -114,12 +132,29 @@ def get_carrots():
     return train_X, y_trn, valid_X, y_val, log_priors
 
 
+
 def load_conditional_test():
     X, y, le = load_dataset(7)
     
-    tst_x = scaler.transform(X)
+    x = np.ascontiguousarray(X)
+    views = make_views(x, 4, 4)
+    x_newshape = (views.shape[0], views.shape[1]*views.shape[2])
+    x = np.reshape(views, newshape=x_newshape)
+        
+    y = y.astype('int64') # change labels to int64 for windowing correctly
+    y = np.ascontiguousarray(y)
+    y_2d = np.reshape(y, (y.shape[0],1))
+    y_views = make_views(y_2d, 4, 4)
+    y_newshape = (y_views.shape[0], y_views.shape[1]*y_views.shape[2])
+    y_new = np.reshape(y_views, newshape=y_newshape)
+    
+    # Choosing most common value of a window as label
+    y,_ = stats.mode(y_new, axis=1, keepdims=False)
+    
+    tst_x = scaler.transform(x)
 
     return tst_x, y, le
+
 
 # Load the UCI HAR Dataset, it has 6 distinct classes 1-6
 def get_UCIHAR():

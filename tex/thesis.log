@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 21.12) (preloaded format=pdflatex 2022.1.27)  24 NOV 2022 18:38
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 21.12) (preloaded format=pdflatex 2022.1.27)  25 NOV 2022 14:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -565,12 +565,12 @@ Appendix B.
 [20
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 369--378
+Underfull \hbox (badness 10000) in paragraph at lines 370--379
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 369--378
+Underfull \hbox (badness 10000) in paragraph at lines 370--379
 
  []
 
@@ -611,7 +611,7 @@ ts/symbols/msbm10.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1
 /urw/times/utmr8a.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1
 /urw/times/utmr8a.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1
 /urw/times/utmri8a.pfb>
-Output written on thesis.pdf (26 pages, 348467 bytes).
+Output written on thesis.pdf (26 pages, 348673 bytes).
 PDF statistics:
  371 PDF objects out of 1000 (max. 8388607)
  77 named destinations out of 1000 (max. 500000)

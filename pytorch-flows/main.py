@@ -34,10 +34,10 @@ num_hidden = 512  # 1024 or 512 for mnist, 100 for power, 512 for hepmass
 lr = 1e-4  # 5 works well
 weight_decay = 1e-4
 # random_order = False
-patience = 2  # For early stopping
+patience = 10  # For early stopping
 seed = 42
 # plot = False
-max_epochs = 5  # 1000
+max_epochs = 10  # 1000
 cond = True
 no_cuda = False
 num_cond_inputs = 16 # 16 for carrots, 6 for UCIHAR, None if cond = False
