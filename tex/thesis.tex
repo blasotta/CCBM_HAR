@@ -267,6 +267,8 @@ A very recent approach that shows promising results for HAR is DUSTIN \cite{arro
 Important notes:
 It is important that examples are shuffled to ensure that they are independent and identically distributed. If this is not done the samples are not independent, e.g. first action is much more likely.
 For segementing small values work much better, in Literature often we see window sizes of 0.5 ms to 2 s, but MAF does not seem to cope well with high dimensional inputs, maybe try out 16 samples or so (~128 ms)
+
+Observation: using z-score over normalizing every individual sample in the range [0.1] often results in inf or -inf densities on validation samples. Somehow the learned distribution becomes unimodal and only has not-nan densities on one class and nan densities everywhere else. This problem can be solved by the following measures: With H=1024, jitter the training set enough $\sigma=0.35$. With H=512, we don't need to jitter. With a small learning rate $lr=1e-5$ no jittering is needed and H=1024 works
 %\begin{algorithm}{\MYCALL{EfficientLOD}{$\ALI$, $\ONT_1$, $\ONT_2$}}
 %\caption[Efficient Local Optimal Diagnosis]{}
 %\label{alg:efficient-lod}

@@ -53,6 +53,19 @@ def one_hot_encode(targets, nb_classes):
     res = np.eye(nb_classes)[np.array(targets).reshape(-1)]
     return res.reshape(list(targets.shape)+[nb_classes])
 
+# Data Augmentation functions from https://github.com/terryum/Data-Augmentation-For-Wearable-Sensor-Data
+def DA_Scaling(X, sigma=0.1):
+    np.random.seed(42)
+    scalingFactor = np.random.normal(loc=1.0, scale=sigma, size=(1,X.shape[1]))
+    myNoise = np.matmul(np.ones((X.shape[0],1)), scalingFactor)
+    return X*myNoise
+
+def DA_Jitter(X, sigma=0.05):
+    np.random.seed(42)
+    myNoise = np.random.normal(loc=0, scale=sigma, size=X.shape)
+    return X+myNoise
+# End DA functions
+
 def make_views(arr, win_size, step_size, writeable = False):
   """
   arr: input 2d array to be windowed
@@ -75,39 +88,74 @@ def make_views(arr, win_size, step_size, writeable = False):
   )
   return new_view_structure
 
-# Load carrots Dataset, it has 16 distinct classes 0-15
-def get_carrots():
-    X_1, y_1, _ = load_dataset(1)
-    X_2, y_2, _ = load_dataset(2)
-    X_3, y_3, _ = load_dataset(3)
-    X_4, y_4, _ = load_dataset(4)
-    X_5, y_5, _ = load_dataset(5)
-    X_6, y_6, _ = load_dataset(6)
-    #X_7, y_7, le = load_dataset(7)
-    
-    x = np.concatenate([X_1, X_2, X_3, X_4, X_5, X_6], axis=0)
-    y = np.concatenate([y_1, y_2, y_3, y_4, y_5, y_6], axis=0)
-
-    # Segementing the DATA into windows of size 128 / ca. 1 second
-    x = np.ascontiguousarray(x)
-    views = make_views(x, 4, 1)
+def get_windows(X,y, win_size, step_size):
+    X = np.ascontiguousarray(X)
+    views = make_views(X, win_size, step_size)
     x_newshape = (views.shape[0], views.shape[1]*views.shape[2])
     x = np.reshape(views, newshape=x_newshape)
         
     y = y.astype('int64') # change labels to int64 for windowing correctly
     y = np.ascontiguousarray(y)
     y_2d = np.reshape(y, (y.shape[0],1))
-    y_views = make_views(y_2d, 4, 1)
+    y_views = make_views(y_2d, win_size, step_size)
     y_newshape = (y_views.shape[0], y_views.shape[1]*y_views.shape[2])
     y_new = np.reshape(y_views, newshape=y_newshape)
-    
-    # Choosing most common value of a window as label
     y,_ = stats.mode(y_new, axis=1, keepdims=False)
+    
+    assert (y.shape[0] == x.shape[0])
+    
+    return x,y
+
+def augment_data(X, y, p=0.5, jitter=0.05, scale=0.1):
+    # augment training samples with noisy samples, here jittering and scaling
+    augment_X = DA_Jitter(X, sigma=jitter) # std: 0.09 for windowed, 0.35 for non-windowed
+    # augment_X = DA_Scaling(augment_X, sigma=scale)
+    
+    idx = np.random.choice(augment_X.shape[0], int(augment_X.shape[0]*p), replace=False)
+    augment_X = augment_X[idx]
+    augment_y = y[idx]
+    return augment_X, augment_y
+
+# Load carrots Dataset, it has 16 distinct classes 0-15
+def get_carrots(window=True, win_size=32, step_size=16, augment=True):
+    X_1, y_1, _ = load_dataset(1)
+    X_2, y_2, _ = load_dataset(2)
+    X_3, y_3, _ = load_dataset(3)
+    X_4, y_4, _ = load_dataset(4)
+    X_5, y_5, _ = load_dataset(5)
+    X_6, y_6, _ = load_dataset(6)
+    
+    if window:
+        X_1,y_1 = get_windows(X_1, y_1, win_size, step_size)
+        X_2,y_2 = get_windows(X_2, y_2, win_size, step_size)
+        X_3,y_3 = get_windows(X_3, y_3, win_size, step_size)
+        X_4,y_4 = get_windows(X_4, y_4, win_size, step_size)
+        X_5,y_5 = get_windows(X_5, y_5, win_size, step_size)
+        X_6,y_6 = get_windows(X_6, y_6, win_size, step_size)
+    
+    x = np.concatenate([X_1, X_2, X_3, X_4, X_5, X_6], axis=0)
+    y = np.concatenate([y_1, y_2, y_3, y_4, y_5, y_6], axis=0)
+    
+    # MHH maybe try scaling each subject individually and then concatenating??
+    global scaler
+    # scaler = preprocessing.Normalizer()
+    # scaler = preprocessing.StandardScaler() # seems to work better than [0.1], but check both it's instable in some cases
+    scaler = preprocessing.MinMaxScaler() # looks like the best option 
+    x = scaler.fit_transform(x)
+    
     
     x_trn, x_val, y_trn, y_val = train_test_split(x,y,test_size=0.2,
                                                       train_size=0.8,
                                                       random_state=42,
                                                       shuffle=True)
+    
+    x_trn = DA_Jitter(x_trn, sigma=0.05) # simulating sensor noise
+    # x_trn = DA_Jitter(x_trn, sigma=0.0005)
+    
+    if augment:
+        augment_X, augment_y = augment_data(x_trn, y_trn,p=0.5, jitter=0.05, scale=0.1)
+        x_trn = np.concatenate((x_trn, augment_X), axis=0)
+        y_trn = np.concatenate((y_trn, augment_y), axis=0)
     
     priors = []
     N = y_trn.size
@@ -118,42 +166,18 @@ def get_carrots():
     
     log_priors = np.log(priors)
     
-    global scaler
-    scaler = preprocessing.StandardScaler()
-    train_X = scaler.fit_transform(x_trn)
-    valid_X = scaler.transform(x_val)
-    
-    #add noise to train to improve robustness
-    # mehr daten erzeugen
-    np.random.seed(42)
-    noise = np.random.normal(0, 0.35, size=(train_X.shape[0], train_X.shape[1]))
-    train_X = train_X + noise
-    
-    return train_X, y_trn, valid_X, y_val, log_priors
+    return x_trn, y_trn, x_val, y_val, log_priors
 
 
+def load_conditional_test(window=True, win_size=32, step_size=32):
+    tst_x, tst_y, le = load_dataset(7)
+    
+    if window:
+        tst_x,tst_y = get_windows(tst_x, tst_y, win_size, step_size)
+    
+    tst_x = scaler.transform(tst_x)
 
-def load_conditional_test():
-    X, y, le = load_dataset(7)
-    
-    x = np.ascontiguousarray(X)
-    views = make_views(x, 4, 4)
-    x_newshape = (views.shape[0], views.shape[1]*views.shape[2])
-    x = np.reshape(views, newshape=x_newshape)
-        
-    y = y.astype('int64') # change labels to int64 for windowing correctly
-    y = np.ascontiguousarray(y)
-    y_2d = np.reshape(y, (y.shape[0],1))
-    y_views = make_views(y_2d, 4, 4)
-    y_newshape = (y_views.shape[0], y_views.shape[1]*y_views.shape[2])
-    y_new = np.reshape(y_views, newshape=y_newshape)
-    
-    # Choosing most common value of a window as label
-    y,_ = stats.mode(y_new, axis=1, keepdims=False)
-    
-    tst_x = scaler.transform(x)
-
-    return tst_x, y, le
+    return tst_x, tst_y, le
 
 
 # Load the UCI HAR Dataset, it has 6 distinct classes 1-6

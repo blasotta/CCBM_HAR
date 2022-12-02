@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.metrics import confusion_matrix
+from torch.utils.data import WeightedRandomSampler
 import pandas as pd
 
 import sys
@@ -31,13 +32,13 @@ batch_size = 128 # 128 seems good
 test_bs = 128 # can be 128
 num_blocks = 5  # number of mades in maf, default 5
 num_hidden = 512  # 1024 or 512 for mnist, 100 for power, 512 for hepmass
-lr = 1e-4  # 5 works well
-weight_decay = 1e-4
+lr = 5e-5  # 5 works well
+weight_decay = 1e-6
 # random_order = False
-patience = 10  # For early stopping
+patience = 5  # For early stopping
 seed = 42
 # plot = False
-max_epochs = 10  # 1000
+max_epochs = 15  # 1000
 cond = True
 no_cuda = False
 num_cond_inputs = 16 # 16 for carrots, 6 for UCIHAR, None if cond = False
@@ -53,8 +54,8 @@ torch.manual_seed(seed)
 
 # For Carrots
 print('--------Loading and Processing Data--------')
-trn_x, trn_y, v_x, v_y, log_priors = get_carrots()
-tst_x, tst_y, le = load_conditional_test()
+trn_x, trn_y, v_x, v_y, log_priors = get_carrots(window=False, win_size=26, step_size=13, augment=False)
+tst_x, tst_y, le = load_conditional_test(window=False, win_size=26, step_size=26)
 troh_y = one_hot_encode(trn_y, num_cond_inputs)
 vaoh_y = one_hot_encode(v_y, num_cond_inputs)
 teoh_y = one_hot_encode(tst_y, num_cond_inputs)
@@ -104,9 +105,17 @@ test_dataset = torch.utils.data.TensorDataset(test_tensor, test_labels)
 # test_dataset = torch.utils.data.TensorDataset(test_tensor)
 # num_cond_inputs = None
 
+# Because of strong class imbalance a weighted sampler is created, this means that
+# each batch will roughly contain a similar number of samples from all classes
+class_sample_count = np.array([len(np.where(trn_y == t)[0]) for t in np.unique(trn_y)])
+weight = 1. / class_sample_count
+samples_weight = np.array([weight[t] for t in trn_y])
+samples_weight = torch.from_numpy(samples_weight)
+sampler = WeightedRandomSampler(samples_weight.type('torch.DoubleTensor'), len(samples_weight))
+
 print('Creating Data Loaders')
 train_loader = torch.utils.data.DataLoader(
-    train_dataset, batch_size=batch_size, shuffle=True)
+    train_dataset, batch_size=batch_size, sampler=sampler)
 # shuffling of training data is very important, because in the training data
 # classes are grouped together due to temporal structure
 
@@ -125,6 +134,7 @@ test_loader = torch.utils.data.DataLoader(
 
 print('Initializing Model')
 num_inputs = trn_x.shape[1]
+print('Number of features:', num_inputs)
 # num_inputs = dataset.n_dims
 act = 'tanh' if dataset_name == 'GAS' else 'relu'
 
