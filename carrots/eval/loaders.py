@@ -66,6 +66,7 @@ def DA_Jitter(X, sigma=0.05):
     return X+myNoise
 # End DA functions
 
+
 def make_views(arr, win_size, step_size, writeable = False):
   """
   arr: input 2d array to be windowed
@@ -108,8 +109,8 @@ def get_windows(X,y, win_size, step_size):
 
 def augment_data(X, y, p=0.5, jitter=0.05, scale=0.1):
     # augment training samples with noisy samples, here jittering and scaling
-    augment_X = DA_Jitter(X, sigma=jitter) # std: 0.09 for windowed, 0.35 for non-windowed
-    # augment_X = DA_Scaling(augment_X, sigma=scale)
+    augment_X = DA_Jitter(X, sigma=jitter)
+    augment_X = DA_Scaling(augment_X, sigma=scale)
     
     idx = np.random.choice(augment_X.shape[0], int(augment_X.shape[0]*p), replace=False)
     augment_X = augment_X[idx]
@@ -117,7 +118,7 @@ def augment_data(X, y, p=0.5, jitter=0.05, scale=0.1):
     return augment_X, augment_y
 
 # Load carrots Dataset, it has 16 distinct classes 0-15
-def get_carrots(window=True, win_size=32, step_size=16, augment=True):
+def get_carrots(window=True, win_size=32, step_size=16, augment=True, noise=True):
     X_1, y_1, _ = load_dataset(1)
     X_2, y_2, _ = load_dataset(2)
     X_3, y_3, _ = load_dataset(3)
@@ -136,11 +137,8 @@ def get_carrots(window=True, win_size=32, step_size=16, augment=True):
     x = np.concatenate([X_1, X_2, X_3, X_4, X_5, X_6], axis=0)
     y = np.concatenate([y_1, y_2, y_3, y_4, y_5, y_6], axis=0)
     
-    # MHH maybe try scaling each subject individually and then concatenating??
     global scaler
-    # scaler = preprocessing.Normalizer()
-    # scaler = preprocessing.StandardScaler() # seems to work better than [0.1], but check both it's instable in some cases
-    scaler = preprocessing.MinMaxScaler() # looks like the best option 
+    scaler = preprocessing.MinMaxScaler() # scales variables in Interval [0.1]
     x = scaler.fit_transform(x)
     
     
@@ -149,11 +147,11 @@ def get_carrots(window=True, win_size=32, step_size=16, augment=True):
                                                       random_state=42,
                                                       shuffle=True)
     
-    x_trn = DA_Jitter(x_trn, sigma=0.05) # simulating sensor noise
-    # x_trn = DA_Jitter(x_trn, sigma=0.0005)
+    if noise:
+        x_trn = DA_Jitter(x_trn, sigma=0.025)  # simulating sensor noise
     
     if augment:
-        augment_X, augment_y = augment_data(x_trn, y_trn,p=0.5, jitter=0.05, scale=0.1)
+        augment_X, augment_y = augment_data(x_trn, y_trn,p=1., jitter=0.05, scale=0.1)
         x_trn = np.concatenate((x_trn, augment_X), axis=0)
         y_trn = np.concatenate((y_trn, augment_y), axis=0)
     
@@ -167,6 +165,8 @@ def get_carrots(window=True, win_size=32, step_size=16, augment=True):
     log_priors = np.log(priors)
     
     return x_trn, y_trn, x_val, y_val, log_priors
+
+x_trn, y_trn, x_val, y_val, log_priors = get_carrots()
 
 
 def load_conditional_test(window=True, win_size=32, step_size=32):
