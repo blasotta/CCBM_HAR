@@ -9,6 +9,7 @@ from sklearn.metrics import confusion_matrix
 import sys
 sys.path.insert(1, 'C:/Users/bened/PythonWork/CCBM_HAR/carrots/eval')
 from loaders import one_hot_encode, get_carrots, load_conditional_test, get_UCIHAR
+from preprocess_motion_sense import get_moSense
 
 
 def mvn_loader(dataset_name, cond_inputs, window, win_size, trn_step, augment, noise):
@@ -18,6 +19,11 @@ def mvn_loader(dataset_name, cond_inputs, window, win_size, trn_step, augment, n
         tst_x, tst_y, le = load_conditional_test(window, win_size, win_size)
     elif dataset_name == 'UCIHAR':
         trn_x, trn_y, v_x, v_y, log_priors, tst_x, tst_y, le = get_UCIHAR()
+        trn_y = trn_y.astype('int')
+        v_y = v_y.astype('int')
+        tst_y = tst_y.astype('int')
+    elif dataset_name == 'MOSENSE':
+        trn_x, trn_y, v_x, v_y, log_priors, tst_x, tst_y, le = get_moSense(window, win_size, trn_step, augment, noise)
         trn_y = trn_y.astype('int')
         v_y = v_y.astype('int')
         tst_y = tst_y.astype('int')
@@ -76,8 +82,3 @@ def run_mvn(dataset_name, cond_inputs, window, win_size, trn_step, augment, nois
     trn_x, trn_y, tst_x, tst_y, N, log_priors, le, num_cond_inputs = mvn_loader(dataset_name, cond_inputs, window, win_size, trn_step, augment, noise)
     acc, ll = mvn_bench(trn_x, trn_y, tst_x, tst_y, N, log_priors, num_cond_inputs)
     return acc, ll
-
-
-acc, ll = run_mvn('UCIHAR', 6, False, 16, 8, False, False)
-print('MVN accuracy: ', acc)
-print('avg. LL over test samples:', ll)

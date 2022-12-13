@@ -22,6 +22,7 @@ import pandas as pd
 import sys
 sys.path.insert(1, 'C:/Users/bened/PythonWork/CCBM_HAR/carrots/eval')
 from loaders import one_hot_encode, get_carrots, load_conditional_test, get_UCIHAR
+from preprocess_motion_sense import get_moSense
 
 
 if sys.version_info < (3, 6):
@@ -37,7 +38,7 @@ lr = 5e-5  # 5 works well
 weight_decay = 1e-6 # 1e-3 # default 6
 patience = 5  # For early stopping
 seed = 42
-max_epochs = 100  # 1000
+max_epochs = 50  # 1000
 cond = True
 no_cuda = False
 # num_cond_inputs = 16 # 16 for carrots, 6 for UCIHAR, None if cond = False
@@ -75,7 +76,15 @@ def load_data(dataset_name, num_cond_inputs, window, win_size, trn_step, augment
         vaoh_y = one_hot_encode(v_y, num_cond_inputs)
         teoh_y = one_hot_encode(tst_y, num_cond_inputs)
     elif dataset_name == 'UCIHAR':
-        trn_x, trn_y, v_x, v_y, log_priors, tst_x, tst_y, le = get_UCIHAR()
+        trn_x, trn_y, v_x, v_y, log_priors, tst_x, tst_y, le = get_UCIHAR(noise)
+        trn_y = trn_y.astype('int')
+        v_y = v_y.astype('int')
+        tst_y = tst_y.astype('int')
+        troh_y = one_hot_encode(trn_y, num_cond_inputs)
+        vaoh_y = one_hot_encode(v_y, num_cond_inputs)
+        teoh_y = one_hot_encode(tst_y, num_cond_inputs)
+    elif dataset_name == 'MOSENSE':
+        trn_x, trn_y, v_x, v_y, log_priors, tst_x, tst_y, le = get_moSense(window, win_size, trn_step, augment, noise)
         trn_y = trn_y.astype('int')
         v_y = v_y.astype('int')
         tst_y = tst_y.astype('int')
@@ -83,7 +92,7 @@ def load_data(dataset_name, num_cond_inputs, window, win_size, trn_step, augment
         vaoh_y = one_hot_encode(v_y, num_cond_inputs)
         teoh_y = one_hot_encode(tst_y, num_cond_inputs)
     else:
-        print('Only the datasets CARROTS and UCIHAR are supported currently')
+        print('Only the datasets CARROTS, UCIHAR and MOSENSE are supported currently')
         
     print('--------Correcting Data Type--------')
     train_x = trn_x.astype('float32')
@@ -537,7 +546,11 @@ def evaluate(data, labels, epoch, model, log_priors, num_cond_inputs):
 
 
 def plot_confMat(le, tst_y, y_pred):
-    classes = list(le.classes_)
+    try:
+        classes = list(le.classes_)
+    except:
+        classes = le
+    
     cf_matrix = confusion_matrix(tst_y, y_pred)
     print('Number of test samples: ', np.sum(cf_matrix))
     df_cm = pd.DataFrame(cf_matrix, index = [i for i in classes],
@@ -557,7 +570,7 @@ def plot_confMat(le, tst_y, y_pred):
 # s.set(xlabel='predicted class', ylabel='true class')
 # plt.savefig('conf_mat.jpg')
 
-def run(dataset, cond_inputs, window, win_size, trn_step, augment, noise):
+def run(dataset, cond_inputs, window, win_size, trn_step, augment, noise, plot=False):
     train_loader, valid_loader, test_loader, test_tensor, tst_y, D, log_priors, le = load_data(dataset, cond_inputs, window, win_size, trn_step, augment, noise)
     model = initialize_model('maf', D, cond_inputs)
     model.to(device)
@@ -599,19 +612,33 @@ def run(dataset, cond_inputs, window, win_size, trn_step, augment, noise):
     nll = validate(best_validation_epoch, best_model, test_loader, prefix='Test')
     ll = -nll
     acc, y_pred = evaluate(test_tensor, tst_y, best_validation_epoch, best_model, log_priors, cond_inputs)
+    
+    if plot:
+        plot_confMat(le, tst_y, y_pred)
+    
     return acc, ll
 
-experiments = [['CARROTS', 16, False, 0, 0, False, False],
-               ['CARROTS', 16, False, 0, 0, False, True],
-               ['CARROTS', 16, False, 0, 0, True, False],
-               ['CARROTS', 16, False, 0, 0, True, True],
-               ['CARROTS', 16, True, 26, 13, False, False],
-               ['CARROTS', 16, True, 26, 13, False, True],
-               ['CARROTS', 16, True, 26, 13, True, False],
-               ['CARROTS', 16, True, 26, 13, True, True],
-               ['CARROTS', 16, True, 8, 4, True, False],
-               ['CARROTS', 16, True, 64, 32, True, False],
-               ['UCIHAR', 6, True, 0, 0, False, False]]
+# experiments = [['CARROTS', 16, False, 0, 0, False, False],
+#                ['CARROTS', 16, False, 0, 0, False, True],
+#                ['CARROTS', 16, False, 0, 0, True, False],
+#                ['CARROTS', 16, False, 0, 0, True, True],
+#                ['CARROTS', 16, True, 26, 13, False, False],
+#                ['CARROTS', 16, True, 26, 13, False, True],
+#                ['CARROTS', 16, True, 26, 13, True, False],
+#                ['CARROTS', 16, True, 26, 13, True, True],
+#                ['CARROTS', 16, True, 8, 4, True, False],
+#                ['CARROTS', 16, True, 64, 32, True, False],
+#                ['UCIHAR', 6, True, 0, 0, False, False]]
+
+experiments = [['MOSENSE', 6, True, 128, 64, False, False],
+               ['MOSENSE', 6, True, 128, 64, False, True],
+               ['MOSENSE', 6, True, 128, 64, True, False],
+               ['MOSENSE', 6, True, 128, 64, True, True],
+               ['MOSENSE', 6, True, 64, 32, True, True],
+               ['MOSENSE', 6, True, 32, 16, True, True],
+               ['UCIHAR', 6, True, 0, 0, False, False],
+               ['UCIHAR', 6, True, 0, 0, False, True]]
+
 
 df = pd.DataFrame(experiments, columns=['Dataset', '# classes', 'Window',
                                         'W_size', 'W_step', 'Augment', 'Noise'])
@@ -630,6 +657,6 @@ df.to_csv('Experiment_results.csv', index=False)
 df.to_csv('Experiment_results_format.csv', float_format="%.4f", index=False)
 
 with open('resultstable.tex', 'w') as tf:
-     tf.write(df.to_latex(columns=['Dataset', 'Window', 'W_size', 'W_step',
-                                   'Augment', 'Noise', 'MVN LL', 'MAF LL', 'MVN ACC', 'MAF ACC'],
+      tf.write(df.to_latex(columns=['Dataset', 'Window', 'W_size', 'W_step',
+                                    'Augment', 'Noise', 'MVN LL', 'MAF LL', 'MVN ACC', 'MAF ACC'],
                           index=False, float_format="%.4f"))

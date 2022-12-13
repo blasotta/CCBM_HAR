@@ -117,6 +117,12 @@ def augment_data(X, y, p=0.5, jitter=0.05, scale=0.1):
     augment_y = y[idx]
     return augment_X, augment_y
 
+def calc_logpriors(y_trn):
+    N = len(y_trn)
+    priors = np.array([len(np.where(y_trn == t)[0]) for t in np.unique(y_trn)])
+    priors = priors/N
+    return np.log(priors)
+
 # Load carrots Dataset, it has 16 distinct classes 0-15
 def get_carrots(window=True, win_size=32, step_size=16, augment=True, noise=True):
     X_1, y_1, _ = load_dataset(1)
@@ -155,18 +161,9 @@ def get_carrots(window=True, win_size=32, step_size=16, augment=True, noise=True
         x_trn = np.concatenate((x_trn, augment_X), axis=0)
         y_trn = np.concatenate((y_trn, augment_y), axis=0)
     
-    priors = []
-    N = y_trn.size
-    for i in range(16):
-        count = 0
-        count = np.count_nonzero(y_trn == i)
-        priors.append(count/N)
-    
-    log_priors = np.log(priors)
+    log_priors = calc_logpriors(y_trn)
     
     return x_trn, y_trn, x_val, y_val, log_priors
-
-x_trn, y_trn, x_val, y_val, log_priors = get_carrots()
 
 
 def load_conditional_test(window=True, win_size=32, step_size=32):
@@ -181,7 +178,7 @@ def load_conditional_test(window=True, win_size=32, step_size=32):
 
 
 # Load the UCI HAR Dataset, it has 6 distinct classes 1-6
-def get_UCIHAR():
+def get_UCIHAR(noise=True):
     classes = ['WALKING', 'WALKING_UP', 'WALKING_DOWN', 'SITTING', 'STANDING', 'LAYING']
     train_x = np.loadtxt(BASEPATH+'/data/UCI HAR Dataset/train/X_train.txt')
     train_y = np.loadtxt(BASEPATH+'/data/UCI HAR Dataset/train/y_train.txt')
@@ -192,19 +189,11 @@ def get_UCIHAR():
                                                   test_size=0.2,
                                                   random_state=42,
                                                   shuffle=True)
+
+    log_priors = calc_logpriors(y_trn)
     
-    priors = []
-    N = y_trn.size
-    for i in range(6):
-        count = 0
-        count = np.count_nonzero(y_trn == i)
-        priors.append(count/N)
-    log_priors = np.log(priors)
-    
-    # Maybe add noise:
-    np.random.seed(42)
-    noise = np.random.normal(0, 0.05, size=(x_trn.shape[0], x_trn.shape[1]))
-    x_trn += noise
+    if noise:
+        x_trn = DA_Jitter(x_trn, sigma=0.025)  # simulating sensor noise sigma: 0.025 - 0.05
     
     x_tst = np.loadtxt(BASEPATH+'/data/UCI HAR Dataset/test/X_test.txt')
     y_tst = np.loadtxt(BASEPATH+'/data/UCI HAR Dataset/test/y_test.txt')

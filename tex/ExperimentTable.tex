@@ -58,4 +58,44 @@ All experiments were run with the same hyperparameters for MAF, only varying the
 	\end{table}
 \end{landscape}
 
+\begin{landscape}
+	\begin{table}
+		\begin{tabularx}{18 cm}{llrrllrrrr}
+			\toprule
+			Dataset &  Window &  W\_size &  W\_step &  Augment &  Noise &    MVN LL &    MAF LL &  MVN ACC &  MAF ACC \\
+			\midrule
+			MOSENSE &    True &     128 &      64 &    False &  False & -242.2431 &  815.8154 &   0.4966 &   0.6375 \\
+			MOSENSE &    True &     128 &      64 &    False &   True &  435.8816 &  718.1713 &   0.6580 &   0.7351 \\
+			MOSENSE &    True &     128 &      64 &     True &  False &  587.4257 & 1080.5599 &   0.6731 &   0.7287 \\
+			MOSENSE &    True &     128 &      64 &     True &   True &  210.0161 &  911.7357 &   0.6544 &   0.8089 \\
+			MOSENSE &    True &      64 &      32 &     True &  False &  746.5845 &  721.6906 &   0.8182 &   0.7725 \\
+			MOSENSE &    True &      32 &      16 &     True &  False &  371.3542 &  489.9848 &   0.7379 &   0.7393 \\
+			UCIHAR &    True &       0 &       0 &    False &  False &  846.4878 &  913.8025 &   0.9474 &   0.8341 \\
+			UCIHAR &    True &       0 &       0 &    False &   True &  846.4878 &  706.9777 &   0.9474 &   0.8456 \\
+			\bottomrule
+		\end{tabularx}
+		\caption{\label{tab:mosense} Log likelihoods and prediction accuracies of MAF and a baseline multivariate normal distribution trained per class with unconstrained covariance matrix. The Settings of the experiments are reported in the first 6 columns, the results in the remaining four. MAF was trained for a maximum of 10 epochs with the settings described above.}
+	\end{table}
+\end{landscape}
+
+\begin{landscape}
+	\begin{table}
+		\begin{tabularx}{18 cm}{llrrllrrrr}
+			\toprule
+			Dataset &  Window &  W\_size &  W\_step &  Augment &  Noise &    MVN LL &    MAF LL &  MVN ACC &  MAF ACC \\
+			\midrule
+			MOSENSE &    True &     128 &      64 &    False &  False & -242.2431 & 1264.8010 &   0.4966 &   0.7487 \\
+			MOSENSE &    True &     128 &      64 &    False &   True &  435.8816 & 1200.5637 &   0.6580 &   0.8254 \\
+			MOSENSE &    True &     128 &      64 &     True &  False &  587.4257 & 1582.0021 &   0.6731 &   0.8030 \\
+			MOSENSE &    True &     128 &      64 &     True &   True &  210.0161 & 1284.2458 &   0.6544 &   0.7916 \\
+			MOSENSE &    True &      64 &      32 &     True &   True &  579.2101 &  868.5525 &   0.8166 &   0.8046 \\
+			MOSENSE &    True &      32 &      16 &     True &   True &  289.0209 &  516.7429 &   0.7376 &   0.7864 \\
+			UCIHAR &    True &       0 &       0 &    False &  False &  846.4878 & 1256.1664 &   0.9474 &   0.8792 \\
+			UCIHAR &    True &       0 &       0 &    False &   True &  846.4878 &  868.8217 &   0.9474 &   0.9433 \\
+			\bottomrule
+		\end{tabularx}
+		\caption{\label{tab:eps50} Log likelihoods and prediction accuracies of MAF and a baseline multivariate normal distribution trained per class with unconstrained covariance matrix. The Settings of the experiments are reported in the first 6 columns, the results in the remaining four. MAF was trained for a maximum of 50 epochs with the settings described above.}
+	\end{table}
+\end{landscape}
+
 \end{document}
