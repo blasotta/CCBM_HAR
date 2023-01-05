@@ -165,6 +165,10 @@ def get_carrots(window=True, win_size=32, step_size=16, augment=True, noise=True
     
     return x_trn, y_trn, x_val, y_val, log_priors
 
+x_trn, y_trn, x_val, y_val, log_priors = get_carrots(window=False, augment=False)
+print('Carrots trn:',y_trn.shape)
+print('Carrots val:',y_val.shape)
+
 
 def load_conditional_test(window=True, win_size=32, step_size=32):
     tst_x, tst_y, le = load_dataset(7)
@@ -175,6 +179,9 @@ def load_conditional_test(window=True, win_size=32, step_size=32):
     tst_x = scaler.transform(tst_x)
 
     return tst_x, tst_y, le
+
+tst_x, tst_y, le = load_conditional_test(window=False)
+print('Carrots tst:',tst_y.shape)
 
 
 # Load the UCI HAR Dataset, it has 6 distinct classes 1-6
@@ -201,6 +208,11 @@ def get_UCIHAR(noise=True):
     y_tst -= np.min(y_tst)
     
     return x_trn, y_trn, x_val, y_val, log_priors, x_tst, y_tst, classes
+
+x_trn, y_trn, x_val, y_val, log_priors, x_tst, y_tst, classes = get_UCIHAR()
+print('UCI trn:',y_trn.shape)
+print('UCI val:',y_val.shape)
+print('UCI tst:',y_tst.shape)
 
 # def load_conditional_train():
 #     X_1, y_1, _ = load_dataset(1)
