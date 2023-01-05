@@ -1,5 +1,14 @@
 \begin{thebibliography}{10}
 
+\bibitem{anguita_public_2013}
+Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra, and Jorge~L.
+  Reyes-Ortiz.
+\newblock A {Public} {Domain} {Dataset} for {Human} {Activity} {Recognition}
+  {Using} {Smartphones}.
+\newblock In {\em 21th {European} {Symposium} on {Artificial} {Neural}
+  {Networks}, {Computational} {Intelligence} and {Machine} {Learning}}, Bruges,
+  Belgium, April 2013.
+
 \bibitem{arrotta_knowledge_2022}
 Luca Arrotta, Gabriele Civitarese, and Claudio Bettini.
 \newblock Knowledge {Infusion} for {Context}-{Aware} {Sensor}-{Based} {Human}
@@ -28,6 +37,21 @@ Liming Chen, Jesse Hoey, Chris~D. Nugent, Diane~J. Cook, and Zhiwen Yu.
 \newblock Conference Name: IEEE Transactions on Systems, Man, and Cybernetics,
   Part C (Applications and Reviews).
 
+\bibitem{dinh_density_2017}
+Laurent Dinh, Jascha Sohl-Dickstein, and Samy Bengio.
+\newblock Density estimation using {Real} {NVP}, February 2017.
+\newblock arXiv:1605.08803 [cs, stat].
+
+\bibitem{eldele_time-series_2021}
+Emadeldeen Eldele, Mohamed Ragab, Zhenghua Chen, Min Wu, Chee~Keong Kwoh,
+  Xiaoli Li, and Cuntai Guan.
+\newblock Time-{Series} {Representation} {Learning} via {Temporal} and
+  {Contextual} {Contrasting}.
+\newblock In {\em Proceedings of the {Thirtieth} {International} {Joint}
+  {Conference} on {Artificial} {Intelligence}}, pages 2352--2359, Montreal,
+  Canada, August 2021. International Joint Conferences on Artificial
+  Intelligence Organization.
+
 \bibitem{garcez_neurosymbolic_2020}
 Artur~d'Avila Garcez and Luis~C. Lamb.
 \newblock Neurosymbolic {AI}: {The} 3rd {Wave}, December 2020.
@@ -38,6 +62,12 @@ Mathieu Germain, Karol Gregor, Iain Murray, and Hugo Larochelle.
 \newblock {MADE}: {Masked} {Autoencoder} for {Distribution} {Estimation}.
 \newblock page~9.
 
+\bibitem{kingma_glow_2018}
+Diederik~P. Kingma and Prafulla Dhariwal.
+\newblock Glow: {Generative} {Flow} with {Invertible} 1x1 {Convolutions}, July
+  2018.
+\newblock arXiv:1807.03039 [cs, stat].
+
 \bibitem{kobyzev_normalizing_2021}
 Ivan Kobyzev, Simon~J.D. Prince, and Marcus~A. Brubaker.
 \newblock Normalizing {Flows}: {An} {Introduction} and {Review} of {Current}
@@ -46,6 +76,17 @@ Ivan Kobyzev, Simon~J.D. Prince, and Marcus~A. Brubaker.
   43(11):3964--3979, November 2021.
 \newblock Conference Name: IEEE Transactions on Pattern Analysis and Machine
   Intelligence.
+
+\bibitem{kostrikov_pytorch-flows_2022}
+Ilya Kostrikov.
+\newblock pytorch-flows, December 2022.
+\newblock original-date: 2018-09-01T19:58:17Z.
+
+\bibitem{kruger_recognising_2011}
+Frank Krüger, Albert Hein, Kristina Yordanova, and Thomas Kirste.
+\newblock Recognising user actions during cooking task ({Cooking} task dataset)
+  : {IMU} {Data}, 2011.
+\newblock Publisher: University of Rostock Rostock.
 
 \bibitem{kruger_computational_2014}
 Frank Krüger, Martin Nyolt, Kristina Yordanova, Albert Hein, and Thomas
@@ -61,6 +102,13 @@ Stefan Lüdtke, Fernando~Moya Rueda, Waqas Ahmed, Gernot~A. Fink, and Thomas
 \newblock Human {Activity} {Recognition} using {Attribute}-{Based} {Neural}
   {Networks} and {Context} {Information}, October 2021.
 \newblock arXiv:2111.04564 [cs, eess].
+
+\bibitem{malekzadeh_mobile_2019}
+Mohammad Malekzadeh, Richard~G. Clegg, Andrea Cavallaro, and Hamed Haddadi.
+\newblock Mobile {Sensor} {Data} {Anonymization}.
+\newblock In {\em Proceedings of the {International} {Conference} on {Internet}
+  of {Things} {Design} and {Implementation}}, pages 49--58, Montreal, Quebec,
+  Canada, 2019. ACM.
 
 \bibitem{manhaeve_deepproblog_2018}
 Robin Manhaeve, Sebastijan Dumancic, Angelika Kimmig, Thomas Demeester, and Luc
@@ -119,5 +167,14 @@ Abdul Syafiq~Abdull Sukor, Ammar Zakaria, Norasmadi~Abdul Rahim,
   activity recognition in smart homes.
 \newblock {\em Journal of Intelligent \& Fuzzy Systems}, 36(5):4177--4188, May
   2019.
+
+\bibitem{um_data_2017}
+Terry~Taewoong Um, Franz Michael~Josef Pfister, Daniel Pichler, Satoshi Endo,
+  Muriel Lang, Sandra Hirche, Urban Fietzek, and Dana Kulić.
+\newblock Data {Augmentation} of {Wearable} {Sensor} {Data} for {Parkinson}'s
+  {Disease} {Monitoring} using {Convolutional} {Neural} {Networks}.
+\newblock In {\em Proceedings of the 19th {ACM} {International} {Conference} on
+  {Multimodal} {Interaction}}, pages 216--220, November 2017.
+\newblock arXiv:1706.00527 [cs].
 
 \end{thebibliography}

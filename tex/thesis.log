@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 21.12) (preloaded format=pdflatex 2022.1.27)  7 DEC 2022 22:26
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 21.12) (preloaded format=pdflatex 2022.1.27)  5 JAN 2023 09:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -527,21 +527,12 @@ l.96 \newpage
 Chapter 1.
 [1
 
-]
-
-LaTeX Warning: Citation `kruger2017recognising' on page 2 undefined on input li
-ne 143.
-
-[2]
+] [2]
 Chapter 2.
 [3
 
-]
-
-LaTeX Warning: Reference `label' on page 4 undefined on input line 175.
-
-[4] [5] [6] [7]
-<MADE_vis.jpg, id=207, 840.13875pt x 387.69844pt>
+] [4] [5] [6] [7]
+<MADE_vis.jpg, id=228, 840.13875pt x 387.69844pt>
 File: MADE_vis.jpg Graphic file (type jpg)
 <use MADE_vis.jpg>
 Package pdftex.def Info: MADE_vis.jpg  used on input line 234.
@@ -558,65 +549,78 @@ Chapter 3.
 
 ] [11] [12]
 Chapter 4.
+<Hybrid_schmeatic.jpg, id=267, 944.7797pt x 405.76593pt>
+File: Hybrid_schmeatic.jpg Graphic file (type jpg)
+<use Hybrid_schmeatic.jpg>
+Package pdftex.def Info: Hybrid_schmeatic.jpg  used on input line 272.
+(pdftex.def)             Requested size: 360.0pt x 154.61368pt.
 [13
 
-]
+ <./Hybrid_schmeatic.jpg>] [14] [15] [16] [17]
 Chapter 5.
+[18
 
-Underfull \hbox (badness 10000) in alignment at lines 352--352
+]
+Underfull \hbox (badness 10000) in alignment at lines 396--396
 [][][][][][][][][][] 
  []
 
-[14
 
-]
+Underfull \hbox (badness 10000) in alignment at lines 414--414
+[][][][][][][][][][] 
+ []
+
+[19] [20]
 Chapter 6.
-(thesis.bbl [15
+(thesis.bbl [21
 
 ]
-Underfull \hbox (badness 1132) in paragraph at lines 18--22
+Underfull \hbox (badness 1132) in paragraph at lines 27--31
 \OT1/ptm/m/n/10.95 hao Liu.  Deep Learn-ing for Sensor-based Hu-man Ac-tiv-ity 
 Recog-ni-
  []
 
-[16
 
-] [17]) [18]
+Underfull \hbox (badness 6542) in paragraph at lines 46--54
+[]\OT1/ptm/m/n/10.95 Emadeldeen El-dele, Mo-hamed Ragab, Zhenghua Chen, Min Wu,
+
+ []
+
+[22
+
+] [23]) [24]
 Appendix A.
-[19
+[25
 
 ]
 Appendix B.
-[20
+[26
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 396--405
+Underfull \hbox (badness 10000) in paragraph at lines 459--468
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 396--405
+Underfull \hbox (badness 10000) in paragraph at lines 459--468
 
  []
 
 \tf@thm=\write8
 \openout8 = `thesis.thm'.
 
-[21] (thesis.aux)
-
-LaTeX Warning: There were undefined references.
-
+[27] (thesis.aux)
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: D41495F60C9E1296CEF14B81FE19B501;2207.
+(rerunfilecheck)             Checksum: EECC4B78AE1A1FD3B3D4D3E1B5023343;2307.
  ) 
 Here is how much of TeX's memory you used:
- 11832 strings out of 478659
- 191225 string characters out of 2845920
- 480265 words of memory out of 3000000
- 29670 multiletter control sequences out of 15000+600000
+ 11874 strings out of 478659
+ 191970 string characters out of 2845920
+ 488077 words of memory out of 3000000
+ 29688 multiletter control sequences out of 15000+600000
  426491 words of font info for 77 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 60i,12n,63p,2176b,445s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,12n,63p,2977b,443s stack positions out of 5000i,500n,10000p,200000b,80000s
 {C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}<C:
 /Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx1
 0.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
@@ -636,9 +640,9 @@ ts/symbols/msbm10.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1
 /urw/times/utmr8a.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1
 /urw/times/utmr8a.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1
 /urw/times/utmri8a.pfb>
-Output written on thesis.pdf (26 pages, 350518 bytes).
+Output written on thesis.pdf (32 pages, 508331 bytes).
 PDF statistics:
- 372 PDF objects out of 1000 (max. 8388607)
- 78 named destinations out of 1000 (max. 500000)
- 126 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 451 PDF objects out of 1000 (max. 8388607)
+ 101 named destinations out of 1000 (max. 500000)
+ 139 words of extra memory for PDF output out of 10000 (max. 10000000)
 

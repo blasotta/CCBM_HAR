@@ -23,7 +23,7 @@ def get_ds_infos():
     """ 
 
     dss = pd.read_csv(BASEPATH+"data_subjects_info.csv")
-    print("[INFO] -- Data subjects' information is imported.")
+    # print("[INFO] -- Data subjects' information is imported.")
     
     return dss
 
@@ -72,7 +72,7 @@ def creat_time_series(dt_list, act_labels, trial_codes, mode="mag", labeled=True
         
     ds_list = get_ds_infos()
     
-    print("[INFO] -- Creating Time-Series")
+    # print("[INFO] -- Creating Time-Series")
     for sub_id in ds_list["code"]:
         for act_id, act in enumerate(act_labels):
             for trial in trial_codes[act_id]:

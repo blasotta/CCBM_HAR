@@ -9,13 +9,11 @@ import torch.nn.functional as F
 import torch.nn as nn
 import torch
 import numpy as np
-# import math
 import copy
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.metrics import confusion_matrix
-# from torch.utils.data import WeightedRandomSampler
 from MVN_Benchmark import run_mvn
 import pandas as pd
 
@@ -38,7 +36,7 @@ lr = 5e-5  # 5 works well
 weight_decay = 1e-6 # 1e-3 # default 6
 patience = 5  # For early stopping
 seed = 42
-max_epochs = 50  # 1000
+max_epochs = 25  # 1000
 cond = True
 no_cuda = False
 # num_cond_inputs = 16 # 16 for carrots, 6 for UCIHAR, None if cond = False
@@ -49,23 +47,6 @@ device = torch.device("cuda:0" if cuda else "cpu")
 print('Device:', device)
 
 torch.manual_seed(seed)
-
-# # For Carrots
-# print('--------Loading and Processing Data--------')
-# trn_x, trn_y, v_x, v_y, log_priors = get_carrots(window=True, win_size=2, step_size=1, augment=True, noise=False)
-# tst_x, tst_y, le = load_conditional_test(window=True, win_size=2, step_size=2)
-# troh_y = one_hot_encode(trn_y, num_cond_inputs)
-# vaoh_y = one_hot_encode(v_y, num_cond_inputs)
-# teoh_y = one_hot_encode(tst_y, num_cond_inputs)
-
-# # For UCI HAR
-# # trn_x, trn_y, v_x, v_y, log_priors, tst_x, tst_y, classes = get_UCIHAR()
-# # trn_y = trn_y.astype('int')
-# # v_y = v_y.astype('int')
-# # tst_y = tst_y.astype('int')
-# # troh_y = one_hot_encode(trn_y, num_cond_inputs)
-# # vaoh_y = one_hot_encode(v_y, num_cond_inputs)
-# # teoh_y = one_hot_encode(tst_y, num_cond_inputs)
 
 def load_data(dataset_name, num_cond_inputs, window, win_size, trn_step, augment, noise):
     print('--------Loading and Processing Data--------')
@@ -118,8 +99,6 @@ def load_data(dataset_name, num_cond_inputs, window, win_size, trn_step, augment
     test_tensor = torch.from_numpy(test_x)
     test_labels = torch.from_numpy(test_y)
     test_dataset = torch.utils.data.TensorDataset(test_tensor, test_labels)
-    
-    # sampler = get_sampler(trn_y)
 
     print('Creating Data Loaders')
     train_loader = torch.utils.data.DataLoader(
@@ -132,80 +111,6 @@ def load_data(dataset_name, num_cond_inputs, window, win_size, trn_step, augment
         test_dataset, batch_size=test_bs, shuffle=False, drop_last=False)
     
     return train_loader, valid_loader, test_loader, test_tensor, tst_y, D, log_priors, le
-    
-# def get_sampler(trn_y):
-#     # Because of strong class imbalance a weighted sampler is created, this means that
-#     # each batch will roughly contain a similar number of samples from all classes
-#     class_sample_count = np.array([len(np.where(trn_y == t)[0]) for t in np.unique(trn_y)])
-#     weight = 1. / class_sample_count
-#     samples_weight = np.array([weight[t] for t in trn_y])
-#     samples_weight = torch.from_numpy(samples_weight)
-#     sampler = WeightedRandomSampler(samples_weight.type('torch.DoubleTensor'), len(samples_weight))
-#     return sampler
-    
-
-
-# print('--------Correcting Data Type--------')
-# train_x = trn_x.astype('float32')
-# train_y = troh_y.astype('int')
-# val_x = v_x.astype('float32')
-# val_y = vaoh_y.astype('int')
-# test_x = tst_x.astype('float32')
-# test_y = teoh_y.astype('int')
-
-
-# print('Building Data Tensors')
-# train_tensor = torch.from_numpy(train_x)
-# train_labels = torch.from_numpy(train_y)
-# train_dataset = torch.utils.data.TensorDataset(
-#     train_tensor, train_labels)
-
-# valid_tensor = torch.from_numpy(val_x)
-# valid_labels = torch.from_numpy(val_y)
-# valid_dataset = torch.utils.data.TensorDataset(
-#     valid_tensor, valid_labels)
-
-# test_tensor = torch.from_numpy(test_x)
-# test_labels = torch.from_numpy(test_y)
-# test_dataset = torch.utils.data.TensorDataset(test_tensor, test_labels)
-
-# #Tensor creation for unconditional datasets
-# # train_tensor = torch.from_numpy(dataset.trn.x)
-# # train_dataset = torch.utils.data.TensorDataset(train_tensor)
-
-# # valid_tensor = torch.from_numpy(dataset.val.x)
-# # valid_dataset = torch.utils.data.TensorDataset(valid_tensor)
-
-# # test_tensor = torch.from_numpy(dataset.tst.x)
-# # test_dataset = torch.utils.data.TensorDataset(test_tensor)
-# # num_cond_inputs = None
-
-# # Because of strong class imbalance a weighted sampler is created, this means that
-# # each batch will roughly contain a similar number of samples from all classes
-# class_sample_count = np.array([len(np.where(trn_y == t)[0]) for t in np.unique(trn_y)])
-# weight = 1. / class_sample_count
-# samples_weight = np.array([weight[t] for t in trn_y])
-# samples_weight = torch.from_numpy(samples_weight)
-# sampler = WeightedRandomSampler(samples_weight.type('torch.DoubleTensor'), len(samples_weight))
-
-# print('Creating Data Loaders')
-# train_loader = torch.utils.data.DataLoader(
-#     train_dataset, batch_size=batch_size, shuffle=True)
-# # shuffling of training data is very important, because in the training data
-# # classes are grouped together due to temporal structure
-
-
-# valid_loader = torch.utils.data.DataLoader(
-#     valid_dataset,
-#     batch_size=test_bs,
-#     shuffle=True,
-#     drop_last=False)
-
-# test_loader = torch.utils.data.DataLoader(
-#     test_dataset,
-#     batch_size=test_bs,
-#     shuffle=False,
-#     drop_last=False)
 
 
 def initialize_model(flow, num_inputs, num_cond_inputs):
@@ -277,84 +182,6 @@ def initialize_model(flow, num_inputs, num_cond_inputs):
     return model
 
 
-# print('Initializing Model')
-# num_inputs = trn_x.shape[1]
-# print('Number of features:', num_inputs)
-# # num_inputs = dataset.n_dims
-# act = 'relu'
-
-# modules = []
-
-# assert flow in ['maf', 'maf-split', 'maf-split-glow', 'realnvp', 'glow']
-# if flow == 'glow':
-#     mask = torch.arange(0, num_inputs) % 2
-#     mask = mask.to(device).float()
-
-#     print("Warning: Results for GLOW are not as good as for MAF yet.")
-#     for _ in range(num_blocks):
-#         modules += [
-#             fnn.BatchNormFlow(num_inputs),
-#             fnn.LUInvertibleMM(num_inputs),
-#             fnn.CouplingLayer(
-#                 num_inputs, num_hidden, mask, num_cond_inputs,
-#                 s_act='tanh', t_act='relu')
-#         ]
-#         mask = 1 - mask
-# elif flow == 'realnvp':
-#     mask = torch.arange(0, num_inputs) % 2
-#     mask = mask.to(device).float()
-
-#     for _ in range(num_blocks):
-#         modules += [
-#             fnn.CouplingLayer(
-#                 num_inputs, num_hidden, mask, num_cond_inputs,
-#                 s_act='tanh', t_act='relu'),
-#             fnn.BatchNormFlow(num_inputs)
-#         ]
-#         mask = 1 - mask
-# elif flow == 'maf':
-#     for _ in range(num_blocks):
-#         modules += [
-#             fnn.MADE(num_inputs, num_hidden, num_cond_inputs, act=act),
-#             fnn.BatchNormFlow(num_inputs),
-#             fnn.Reverse(num_inputs)
-#         ]
-# elif flow == 'maf-split':
-#     for _ in range(num_blocks):
-#         modules += [
-#             fnn.MADESplit(num_inputs, num_hidden, num_cond_inputs,
-#                           s_act='tanh', t_act='relu'),
-#             fnn.BatchNormFlow(num_inputs),
-#             fnn.Reverse(num_inputs)
-#         ]
-# elif flow == 'maf-split-glow':
-#     for _ in range(num_blocks):
-#         modules += [
-#             fnn.MADESplit(num_inputs, num_hidden, num_cond_inputs,
-#                           s_act='tanh', t_act='relu'),
-#             fnn.BatchNormFlow(num_inputs),
-#             fnn.InvertibleMM(num_inputs)
-#         ]
-
-# model = fnn.FlowSequential(*modules)
-
-# for module in model.modules():
-#     if isinstance(module, nn.Linear):
-#         nn.init.orthogonal_(module.weight)
-#         if hasattr(module, 'bias') and module.bias is not None:
-#             module.bias.data.fill_(0)
-
-# train_loader, valid_loader, test_loader, M, log_priors, le = load_data('CARROTS')
-# model = initialize_model('maf', M)
-# model.to(device)
-# optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
-
-# writer = SummaryWriter(comment=flow + "_" + dataset_name)
-# global_step = 0
-
-# print('Training Length: ', len(train_loader.dataset))
-
-
 def train(epoch, model, train_loader, optimizer):
     # global global_step, writer
     model.train()
@@ -407,6 +234,7 @@ def train(epoch, model, train_loader, optimizer):
             
     print('Epoch Complete')
 
+
 def validate(epoch, model, loader, prefix='Validation'):
     print(f'Beginning validation epoch {epoch}')
     # global global_step, writer
@@ -450,6 +278,7 @@ def validate(epoch, model, loader, prefix='Validation'):
     pbar.close()
     return val_loss / len(loader.dataset)
 
+
 def get_log_pxy(epoch, model, loader):
     # global global_step, writer
 
@@ -471,6 +300,7 @@ def get_log_pxy(epoch, model, loader):
             log_pxy.extend(a)
 
     return log_pxy
+
 
 def evaluate(data, labels, epoch, model, log_priors, num_cond_inputs):
     # run prediction by calculating p(x|y) for every class y and then Bayes
@@ -507,43 +337,6 @@ def evaluate(data, labels, epoch, model, log_priors, num_cond_inputs):
     accuracy = accuracy_score(labels, y_pred)
     return accuracy, y_pred
 
-# print('Beginning Training')
-# best_validation_loss = float('inf')
-# best_validation_epoch = 0
-# best_model = model
-
-# best_validation_acc = 0
-
-# for epoch in range(max_epochs):
-#     print('\nEpoch: {}'.format(epoch))
-
-#     train(epoch)
-#     validation_loss = validate(epoch, model, valid_loader)
-    
-#     # #new
-#     # print('-----Validating Model in terms of prediction accuracy-----')
-#     # val_acc, val_pred = evaluate(valid_tensor, v_y, epoch, model)
-#     # print(f'Validation accuracy at epoch {epoch} is {val_acc}')
-#     # #new
-
-#     if epoch - best_validation_epoch >= patience:
-#         break
-
-#     if validation_loss < best_validation_loss: # Select best model not from validation loss but validation accuracy
-#         best_validation_epoch = epoch
-#         best_validation_loss = validation_loss
-#         best_model = copy.deepcopy(model)
-
-#     print(
-#         'Best validation at epoch {}, with avg. Log likelihood: {:.4f}'.
-#         format(best_validation_epoch, -best_validation_loss))
-
-# # After training evaluate best model in terms of likelihood and prediction accuracy on
-# # test data
-# validate(best_validation_epoch, best_model, test_loader, prefix='Test')
-# accuracy, y_pred = evaluate(test_tensor, tst_y, best_validation_epoch, best_model)
-# print(f'Accuracy on Test set is {accuracy}')
-
 
 def plot_confMat(le, tst_y, y_pred):
     try:
@@ -560,15 +353,6 @@ def plot_confMat(le, tst_y, y_pred):
     s.set(xlabel='predicted class', ylabel='true class')
     plt.savefig('conf_mat.jpg')
 
-# classes = list(le.classes_)
-# cf_matrix = confusion_matrix(tst_y, y_pred)
-# print('Number of test samples: ', np.sum(cf_matrix))
-# df_cm = pd.DataFrame(cf_matrix, index = [i for i in classes],
-#                       columns = [i for i in classes])
-# plt.figure(figsize = (16,9))
-# s = sns.heatmap(df_cm, annot=True, cmap="flare", fmt='g')
-# s.set(xlabel='predicted class', ylabel='true class')
-# plt.savefig('conf_mat.jpg')
 
 def run(dataset, cond_inputs, window, win_size, trn_step, augment, noise, plot=False):
     train_loader, valid_loader, test_loader, test_tensor, tst_y, D, log_priors, le = load_data(dataset, cond_inputs, window, win_size, trn_step, augment, noise)
@@ -582,19 +366,12 @@ def run(dataset, cond_inputs, window, win_size, trn_step, augment, noise, plot=F
     best_validation_epoch = 0
     best_model = model
 
-    # best_validation_acc = 0
-
     for epoch in range(max_epochs):
         print('\nEpoch: {}'.format(epoch))
 
         train(epoch, model, train_loader, optimizer)
         validation_loss = validate(epoch, model, valid_loader)
         
-        # #new
-        # print('-----Validating Model in terms of prediction accuracy-----')
-        # val_acc, val_pred = evaluate(valid_tensor, v_y, epoch, model)
-        # print(f'Validation accuracy at epoch {epoch} is {val_acc}')
-        # #new
         if epoch - best_validation_epoch >= patience:
             break
 
@@ -630,33 +407,38 @@ def run(dataset, cond_inputs, window, win_size, trn_step, augment, noise, plot=F
 #                ['CARROTS', 16, True, 64, 32, True, False],
 #                ['UCIHAR', 6, True, 0, 0, False, False]]
 
-experiments = [['MOSENSE', 6, True, 128, 64, False, False],
-               ['MOSENSE', 6, True, 128, 64, False, True],
-               ['MOSENSE', 6, True, 128, 64, True, False],
-               ['MOSENSE', 6, True, 128, 64, True, True],
-               ['MOSENSE', 6, True, 64, 32, True, True],
-               ['MOSENSE', 6, True, 32, 16, True, True],
-               ['UCIHAR', 6, True, 0, 0, False, False],
-               ['UCIHAR', 6, True, 0, 0, False, True]]
+# experiments = [['MOSENSE', 6, True, 128, 64, False, False],
+#                ['MOSENSE', 6, True, 128, 64, False, True],
+#                ['MOSENSE', 6, True, 128, 64, True, False],
+#                ['MOSENSE', 6, True, 128, 64, True, True],
+#                ['MOSENSE', 6, True, 64, 32, True, True],
+#                ['MOSENSE', 6, True, 32, 16, True, True],
+#                ['UCIHAR', 6, True, 0, 0, False, False],
+#                ['UCIHAR', 6, True, 0, 0, False, True]]
 
 
-df = pd.DataFrame(experiments, columns=['Dataset', '# classes', 'Window',
-                                        'W_size', 'W_step', 'Augment', 'Noise'])
+# df = pd.DataFrame(experiments, columns=['Dataset', '# classes', 'Window',
+#                                         'W_size', 'W_step', 'Augment', 'Noise'])
 
-results = []
+# results = []
 
-for i in range(len(experiments)):
-    maf_acc, maf_ll = run(*experiments[i])
-    mvn_acc, mvn_ll = run_mvn(*experiments[i])
-    results.append({'MVN LL': mvn_ll, 'MAF LL': maf_ll, 'MVN ACC': mvn_acc, 'MAF ACC': maf_acc})
+# for i in range(len(experiments)):
+#     maf_acc, maf_ll = run(*experiments[i])
+#     mvn_acc, mvn_ll = run_mvn(*experiments[i])
+#     results.append({'MVN LL': mvn_ll, 'MAF LL': maf_ll, 'MVN ACC': mvn_acc, 'MAF ACC': maf_acc})
     
-rf = pd.DataFrame(results)
+# rf = pd.DataFrame(results)
 
-df = pd.concat([df, rf], axis=1)
-df.to_csv('Experiment_results.csv', index=False)
-df.to_csv('Experiment_results_format.csv', float_format="%.4f", index=False)
+# df = pd.concat([df, rf], axis=1)
+# df.to_csv('Experiment_results.csv', index=False)
+# df.to_csv('Experiment_results_format.csv', float_format="%.4f", index=False)
 
-with open('resultstable.tex', 'w') as tf:
-      tf.write(df.to_latex(columns=['Dataset', 'Window', 'W_size', 'W_step',
-                                    'Augment', 'Noise', 'MVN LL', 'MAF LL', 'MVN ACC', 'MAF ACC'],
-                          index=False, float_format="%.4f"))
+# with open('resultstable.tex', 'w') as tf:
+#       tf.write(df.to_latex(columns=['Dataset', 'Window', 'W_size', 'W_step',
+#                                     'Augment', 'Noise', 'MVN LL', 'MAF LL', 'MVN ACC', 'MAF ACC'],
+#                           index=False, float_format="%.4f"))
+
+acc, ll = run('CARROTS', 16, False, 0, 0, False, True)
+
+print(acc)
+print(ll)

@@ -1,15 +1,22 @@
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
-\contentsline {chapter}{\numberline {2}Theoretical Framework}{3}{chapter.2}%
+\contentsline {chapter}{\numberline {2}Theoretical Background}{3}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Introduction to Computational State Space Models}{3}{section.2.1}%
 \contentsline {section}{\numberline {2.2}Distribution Estimation with Masked Autoregressive Flow}{6}{section.2.2}%
 \contentsline {chapter}{\numberline {3}Related Work}{10}{chapter.3}%
 \contentsline {chapter}{\numberline {4}Methods}{13}{chapter.4}%
-\contentsline {chapter}{\numberline {5}Experimental Evaluation}{14}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Settings}{14}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Experiments}{14}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Results}{14}{section.5.3}%
-\contentsline {chapter}{\numberline {6}Conclusion}{15}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Summary}{15}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Future Work}{15}{section.6.2}%
-\contentsline {chapter}{\numberline {A}Program Code / Resources}{19}{appendix.A}%
-\contentsline {chapter}{\numberline {B}Further Experimental Results}{20}{appendix.B}%
+\contentsline {paragraph}{Data pre-processing}{14}{section*.7}%
+\contentsline {paragraph}{Density estimation}{16}{section*.8}%
+\contentsline {paragraph}{Recognition model}{17}{section*.9}%
+\contentsline {chapter}{\numberline {5}Experimental Evaluation}{18}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Datasets}{18}{section.5.1}%
+\contentsline {paragraph}{Carrots}{18}{section*.10}%
+\contentsline {paragraph}{MotionSense}{18}{section*.11}%
+\contentsline {paragraph}{UCI HAR}{19}{section*.12}%
+\contentsline {section}{\numberline {5.2}Settings}{19}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Experiments}{19}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Results}{19}{section.5.4}%
+\contentsline {chapter}{\numberline {6}Conclusion}{21}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Summary}{21}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Future Work}{21}{section.6.2}%
+\contentsline {chapter}{\numberline {A}Program Code / Resources}{25}{appendix.A}%
+\contentsline {chapter}{\numberline {B}Further Experimental Results}{26}{appendix.B}%

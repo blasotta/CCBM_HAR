@@ -20,16 +20,16 @@ TRIAL_CODES = {
 # select sensor data types, typically all are wanted so set them all
 # attitude(roll, pitch, yaw); gravity(x, y, z); rotationRate(x, y, z); userAcceleration(x,y,z)
 sdt = ["attitude", "gravity", "rotationRate", "userAcceleration"]
-print("[INFO] -- Selected sensor data types: "+str(sdt))    
+# print("[INFO] -- Selected sensor data types: "+str(sdt))    
 act_labels = ACT_LABELS [0:6]
-print("[INFO] -- Selected activites: "+str(act_labels))    
+# print("[INFO] -- Selected activites: "+str(act_labels))    
 trial_codes = [TRIAL_CODES[act] for act in act_labels]
 dt_list = set_data_types(sdt)
 dataset = creat_time_series(dt_list, act_labels, trial_codes, mode="raw", labeled=True)
-print("[INFO] -- Shape of time-Series dataset:"+str(dataset.shape))    
+# print("[INFO] -- Shape of time-Series dataset:"+str(dataset.shape))    
 
 
-print("[INFO] -- Splitting into train, val, test") 
+# print("[INFO] -- Splitting into train, val, test") 
 dfs = DataFrameSplitter(method="subject")
 subject_col = "id"
 # These are the subjects for the train and validation set, the subjects not in
@@ -61,7 +61,7 @@ train_data, val_data = dfs2.train_test_split(dataset = split_data,
                                               train_subjects=train_subjects,
                                               verbose=0)
 
-print("[INFO] -- Segmenting data into windows")
+# print("[INFO] -- Segmenting data into windows")
 
 """
 Creation of windowed data for MotionSense:
