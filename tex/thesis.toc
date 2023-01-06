@@ -2,20 +2,32 @@
 \contentsline {chapter}{\numberline {2}Theoretical Background}{3}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Introduction to Computational State Space Models}{3}{section.2.1}%
 \contentsline {section}{\numberline {2.2}Distribution Estimation with Masked Autoregressive Flow}{6}{section.2.2}%
-\contentsline {chapter}{\numberline {3}Related Work}{10}{chapter.3}%
-\contentsline {chapter}{\numberline {4}Methods}{13}{chapter.4}%
-\contentsline {paragraph}{Data pre-processing}{14}{section*.6}%
-\contentsline {paragraph}{Density estimation}{16}{section*.7}%
-\contentsline {paragraph}{Recognition model}{17}{section*.8}%
-\contentsline {chapter}{\numberline {5}Experimental Evaluation}{19}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Datasets}{19}{section.5.1}%
-\contentsline {paragraph}{Carrots}{19}{section*.10}%
-\contentsline {paragraph}{MotionSense}{20}{section*.11}%
-\contentsline {paragraph}{UCI HAR}{20}{section*.12}%
-\contentsline {section}{\numberline {5.2}Experiments}{20}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Results}{21}{section.5.3}%
-\contentsline {chapter}{\numberline {6}Conclusion}{22}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Summary}{22}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Future Work}{22}{section.6.2}%
-\contentsline {chapter}{\numberline {A}Program Code / Resources}{26}{appendix.A}%
-\contentsline {chapter}{\numberline {B}Further Experimental Results}{27}{appendix.B}%
+\contentsline {paragraph}{Distribution Estimation with MADE}{7}{section*.4}%
+\contentsline {paragraph}{Advantages of MAF}{8}{section*.6}%
+\contentsline {paragraph}{Conditional MAF}{9}{section*.7}%
+\contentsline {chapter}{\numberline {3}Related Work}{11}{chapter.3}%
+\contentsline {chapter}{\numberline {4}Methods}{14}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Data pre-processing}{15}{section.4.1}%
+\contentsline {paragraph}{Normalization}{15}{section*.9}%
+\contentsline {paragraph}{Windowing}{15}{section*.10}%
+\contentsline {paragraph}{Data Augmentation}{16}{section*.11}%
+\contentsline {paragraph}{Input Noise Injection}{16}{section*.12}%
+\contentsline {paragraph}{Pre-Processing Alternatives}{16}{section*.13}%
+\contentsline {section}{\numberline {4.2}Density Estimation}{17}{section.4.2}%
+\contentsline {paragraph}{Multivariate Normal Distribution}{17}{section*.14}%
+\contentsline {paragraph}{Advanced Density Estimation Methods}{17}{section*.15}%
+\contentsline {section}{\numberline {4.3}Recognition Model}{18}{section.4.3}%
+\contentsline {paragraph}{Bayes' Theorem and Argmax}{18}{section*.16}%
+\contentsline {paragraph}{Hidden Markov Model}{19}{section*.17}%
+\contentsline {chapter}{\numberline {5}Experimental Evaluation}{20}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Datasets}{20}{section.5.1}%
+\contentsline {paragraph}{Carrots}{20}{section*.19}%
+\contentsline {paragraph}{MotionSense}{21}{section*.20}%
+\contentsline {paragraph}{UCI HAR}{21}{section*.21}%
+\contentsline {section}{\numberline {5.2}Experiments}{21}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Results}{22}{section.5.3}%
+\contentsline {chapter}{\numberline {6}Conclusion}{23}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Summary}{23}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Future Work}{23}{section.6.2}%
+\contentsline {chapter}{\numberline {A}Program Code / Resources}{27}{appendix.A}%
+\contentsline {chapter}{\numberline {B}Further Experimental Results}{28}{appendix.B}%

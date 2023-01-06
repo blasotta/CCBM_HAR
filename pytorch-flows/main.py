@@ -57,7 +57,7 @@ def load_data(dataset_name, num_cond_inputs, window, win_size, trn_step, augment
         vaoh_y = one_hot_encode(v_y, num_cond_inputs)
         teoh_y = one_hot_encode(tst_y, num_cond_inputs)
     elif dataset_name == 'UCIHAR':
-        trn_x, trn_y, v_x, v_y, log_priors, tst_x, tst_y, le = get_UCIHAR(noise)
+        trn_x, trn_y, v_x, v_y, log_priors, tst_x, tst_y, le = get_UCIHAR()
         trn_y = trn_y.astype('int')
         v_y = v_y.astype('int')
         tst_y = tst_y.astype('int')

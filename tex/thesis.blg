@@ -6,39 +6,38 @@ The style file: plain.bst
 Reallocating 'name_of_file' (item size: 1) to 11 items.
 Database file #1: thesis-ref.bib
 Warning--empty journal in germain_made_nodate
-Warning--empty year in germain_made_nodate
 Warning--empty journal in raedt_problog_nodate
 Warning--empty year in raedt_problog_nodate
 You've used 25 entries,
             2118 wiz_defined-function locations,
-            642 strings with 10229 characters,
-and the built_in function-call counts, 9639 in all, are:
-= -- 904
+            643 strings with 10233 characters,
+and the built_in function-call counts, 9638 in all, are:
+= -- 905
 > -- 573
 < -- 10
 + -- 227
 - -- 200
-* -- 729
-:= -- 1593
+* -- 727
+:= -- 1594
 add.period$ -- 86
 call.type$ -- 25
 change.case$ -- 175
 chr.to.int$ -- 0
-cite$ -- 29
+cite$ -- 28
 duplicate$ -- 326
 empty$ -- 692
 format.name$ -- 200
-if$ -- 1998
+if$ -- 1999
 int.to.chr$ -- 0
 int.to.str$ -- 25
 missing$ -- 19
 newline$ -- 135
 num.names$ -- 50
-pop$ -- 217
+pop$ -- 215
 preamble$ -- 1
 purify$ -- 150
 quote$ -- 0
-skip$ -- 233
+skip$ -- 234
 stack$ -- 0
 substring$ -- 454
 swap$ -- 79
@@ -46,8 +45,8 @@ text.length$ -- 10
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 100
-warning$ -- 4
+warning$ -- 3
 while$ -- 81
 width$ -- 27
-write$ -- 287
-(There were 4 warnings)
+write$ -- 288
+(There were 3 warnings)

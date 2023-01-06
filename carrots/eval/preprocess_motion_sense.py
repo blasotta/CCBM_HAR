@@ -129,9 +129,3 @@ def get_moSense(window=True, win_size=32, step_size=16, augment=True, noise=True
     
     log_priors = calc_logpriors(y_trn)
     return x_trn, y_trn, x_val, y_val, log_priors, x_tst, y_tst, ACT_LABELS
-
-x_trn, y_trn, x_val, y_val, log_priors, x_tst, y_tst, ACT_LABELS = get_moSense(window=True, win_size=1, step_size=1, augment=False)
-
-print('MOS trn:',y_trn.shape)
-print('MOS val:',y_val.shape)
-print('MOS tst:',y_tst.shape)
