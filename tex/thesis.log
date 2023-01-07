@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 21.12) (preloaded format=pdflatex 2022.1.27)  6 JAN 2023 17:09
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 21.12) (preloaded format=pdflatex 2022.1.27)  7 JAN 2023 17:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -559,19 +559,19 @@ e-vi-ously dis-cussed MADE/MAF
 [17] [18] [19]
 Chapter 5.
 
-Overfull \hbox (4.78755pt too wide) in alignment at lines 379--379
+Overfull \hbox (4.78755pt too wide) in alignment at lines 387--387
 [][][][][][][] 
  []
 
 [20
 
 ] [21]
-Underfull \hbox (badness 10000) in alignment at lines 445--445
+Underfull \hbox (badness 10000) in alignment at lines 453--453
 [][][][][][][][][][] 
  []
 
 
-Underfull \hbox (badness 10000) in alignment at lines 464--464
+Underfull \hbox (badness 10000) in alignment at lines 472--472
 [][][][][][][][][][] 
  []
 
@@ -593,39 +593,39 @@ Underfull \hbox (badness 6542) in paragraph at lines 46--54
 
 [24
 
-] [25]) [26]
+] [25] [26]) [27]
 Appendix A.
-[27
-
-]
-Appendix B.
 [28
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 509--518
+Appendix B.
+[29
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 517--526
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 509--518
+Underfull \hbox (badness 10000) in paragraph at lines 517--526
 
  []
 
 \tf@thm=\write7
 \openout7 = `thesis.thm'.
 
-[29] (thesis.aux)
+[30] (thesis.aux)
 Package rerunfilecheck Info: File `thesis.out' has not changed.
 (rerunfilecheck)             Checksum: 22CFB8F2915FAF7D656286B1DC890049;2656.
  ) 
 Here is how much of TeX's memory you used:
- 11888 strings out of 478659
- 192024 string characters out of 2845920
- 489894 words of memory out of 3000000
- 29693 multiletter control sequences out of 15000+600000
+ 11896 strings out of 478659
+ 192131 string characters out of 2845920
+ 490036 words of memory out of 3000000
+ 29696 multiletter control sequences out of 15000+600000
  426491 words of font info for 77 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 60i,12n,63p,2176b,443s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,12n,63p,2176b,446s stack positions out of 5000i,500n,10000p,200000b,80000s
 {C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}<C:
 /Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx1
 0.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
@@ -645,9 +645,9 @@ ts/symbols/msbm10.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1
 /urw/times/utmr8a.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1
 /urw/times/utmr8a.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1
 /urw/times/utmri8a.pfb>
-Output written on thesis.pdf (33 pages, 509575 bytes).
+Output written on thesis.pdf (34 pages, 513956 bytes).
 PDF statistics:
- 477 PDF objects out of 1000 (max. 8388607)
- 113 named destinations out of 1000 (max. 500000)
+ 490 PDF objects out of 1000 (max. 8388607)
+ 118 named destinations out of 1000 (max. 500000)
  155 words of extra memory for PDF output out of 10000 (max. 10000000)
 
