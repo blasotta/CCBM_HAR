@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.metrics import confusion_matrix
+from scipy.special import logsumexp
 from MVN_Benchmark import run_mvn
 import pandas as pd
 
@@ -21,7 +22,6 @@ import sys
 sys.path.insert(1, 'C:/Users/bened/PythonWork/CCBM_HAR/carrots/eval')
 from loaders import one_hot_encode, get_carrots, load_conditional_test, get_UCIHAR
 from preprocess_motion_sense import get_moSense
-
 
 if sys.version_info < (3, 6):
     print('Sorry, this code might need Python 3.6 or higher')
@@ -36,7 +36,7 @@ lr = 5e-5  # 5 works well
 weight_decay = 1e-6 # 1e-3 # default 6
 patience = 5  # For early stopping
 seed = 42
-max_epochs = 25  # 1000
+max_epochs = 2  # 1000
 cond = True
 no_cuda = False
 # num_cond_inputs = 16 # 16 for carrots, 6 for UCIHAR, None if cond = False
@@ -110,7 +110,7 @@ def load_data(dataset_name, num_cond_inputs, window, win_size, trn_step, augment
     test_loader = torch.utils.data.DataLoader(
         test_dataset, batch_size=test_bs, shuffle=False, drop_last=False)
     
-    return train_loader, valid_loader, test_loader, test_tensor, tst_y, D, log_priors, le
+    return train_loader, valid_loader, test_loader, test_tensor, tst_y, D, log_priors, le, trn_y
 
 
 def initialize_model(flow, num_inputs, num_cond_inputs):
@@ -280,7 +280,6 @@ def validate(epoch, model, loader, prefix='Validation'):
 
 
 def get_log_pxy(epoch, model, loader):
-    # global global_step, writer
 
     log_pxy = []
     model.eval()
@@ -301,9 +300,23 @@ def get_log_pxy(epoch, model, loader):
 
     return log_pxy
 
+def get_transition_matrix(transitions):
+    n = 1+ max(transitions) #number of states
 
-def evaluate(data, labels, epoch, model, log_priors, num_cond_inputs):
-    # run prediction by calculating p(x|y) for every class y and then Bayes
+    M = [[0]*n for _ in range(n)]
+
+    for (i,j) in zip(transitions,transitions[1:]):
+        M[i][j] += 1
+
+    #now convert to probabilities:
+    for row in M:
+        s = sum(row)
+        if s > 0:
+            row[:] = [f/s for f in row]
+    return M
+
+def evaluate(data, labels, trn_y, epoch, model, log_priors, num_cond_inputs):
+    # run Bayes classifier prediction
     lik = {}
     N = labels.shape[0]
 
@@ -325,16 +338,40 @@ def evaluate(data, labels, epoch, model, log_priors, num_cond_inputs):
 
         lik[i] = log_pxy
 
-    result = np.zeros((N, num_cond_inputs))
-    for i in range(N):
-        for c in range(num_cond_inputs):
-            log_lik = lik[c][i]
-            result[i, c] = log_lik + log_priors[c]
+    # actual Bayes classifier
+    # LL is the classes x N array containing log p(x|y=c) for all classes c in C over all samples 
+    LL = np.array(list(lik.values()))
+    # calculate numerator of Bayes' as likelihood + prior in log space for all samples and classes
+    result = LL + log_priors.reshape(-1,1)
+    # get prediction as argmax over each column
+    y_pred = np.argmax(result, axis=0)
+    
+    # result = np.zeros((N, num_cond_inputs))
+    # for i in range(N):
+    #     for c in range(num_cond_inputs):
+    #         log_lik = lik[c][i]
+    #         #calculate numerator of Bayes' as likelihood + prior in log space
+    #         result[i, c] = log_lik + log_priors[c]
 
-    y_pred = np.argmax(result, axis=1)
-    #np.savetxt("MAF_results.txt", result, fmt='%.5f', delimiter=" ")
+    # y_pred = np.argmax(result, axis=1)
+    np.savetxt("MAF_pxy.txt", LL, fmt='%.2f', delimiter=" ")
+    
+    # HMM classifier
+    trajectory = []
+    pi = np.exp(log_priors)
+    A = get_transition_matrix(trn_y)
+    for t in range(N):
+        log_pred = np.log(pi.T@A)
+        log_num = log_pred + LL[:,t]
+        log_res = log_num - logsumexp(log_num)
+        trajectory.append(np.argmax(log_res))
+        pi = np.exp(log_res)
+        
+    s = np.array(trajectory)
 
     accuracy = accuracy_score(labels, y_pred)
+    accuracy_hmm = accuracy_score(labels, s)
+    print(accuracy_hmm)
     return accuracy, y_pred
 
 
@@ -355,7 +392,7 @@ def plot_confMat(le, tst_y, y_pred):
 
 
 def run(dataset, cond_inputs, window, win_size, trn_step, augment, noise, plot=False):
-    train_loader, valid_loader, test_loader, test_tensor, tst_y, D, log_priors, le = load_data(dataset, cond_inputs, window, win_size, trn_step, augment, noise)
+    train_loader, valid_loader, test_loader, test_tensor, tst_y, D, log_priors, le, trn_y = load_data(dataset, cond_inputs, window, win_size, trn_step, augment, noise)
     model = initialize_model('maf', D, cond_inputs)
     model.to(device)
     optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
@@ -388,7 +425,7 @@ def run(dataset, cond_inputs, window, win_size, trn_step, augment, noise, plot=F
     # test data
     nll = validate(best_validation_epoch, best_model, test_loader, prefix='Test')
     ll = -nll
-    acc, y_pred = evaluate(test_tensor, tst_y, best_validation_epoch, best_model, log_priors, cond_inputs)
+    acc, y_pred = evaluate(test_tensor, tst_y, trn_y, best_validation_epoch, best_model, log_priors, cond_inputs)
     
     if plot:
         plot_confMat(le, tst_y, y_pred)
@@ -438,7 +475,7 @@ def run(dataset, cond_inputs, window, win_size, trn_step, augment, noise, plot=F
 #                                     'Augment', 'Noise', 'MVN LL', 'MAF LL', 'MVN ACC', 'MAF ACC'],
 #                           index=False, float_format="%.4f"))
 
-acc, ll = run('CARROTS', 16, False, 0, 0, False, True)
+acc, ll = run('CARROTS', 16, False, 0, 0, False, False)
 
 print(acc)
 print(ll)

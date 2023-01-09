@@ -79,14 +79,18 @@ Ivan Kobyzev, Simon~J.D. Prince, and Marcus~A. Brubaker.
 
 \bibitem{kostrikov_pytorch-flows_2022}
 Ilya Kostrikov.
-\newblock pytorch-flows, December 2022.
-\newblock original-date: 2018-09-01T19:58:17Z.
+\newblock pytorch-flows.
+\newblock \url{https://github.com/ikostrikov/pytorch-flows}, September 2018.
+\newblock Online; accessed 2022-10-14.
 
 \bibitem{kruger_recognising_2011}
 Frank Krüger, Albert Hein, Kristina Yordanova, and Thomas Kirste.
-\newblock Recognising user actions during cooking task ({Cooking} task dataset)
-  : {IMU} {Data}, 2011.
-\newblock Publisher: University of Rostock Rostock.
+\newblock Recognising user actions during cooking task ({Cooking} task
+  dataset): {IMU} {Data}.
+\newblock
+  \url{https://rosdok.uni-rostock.de/resolve/id/rosdok_document_0000010639},
+  2011.
+\newblock Publisher: University of Rostock.
 
 \bibitem{kruger_computational_2014}
 Frank Krüger, Martin Nyolt, Kristina Yordanova, Albert Hein, and Thomas
@@ -165,7 +169,6 @@ Yoli Shavit and Itzik Klein.
 \newblock Boosting {Inertial}-{Based} {Human} {Activity} {Recognition} {With}
   {Transformers}.
 \newblock {\em IEEE Access}, 9:53540--53547, 2021.
-\newblock Conference Name: IEEE Access.
 
 \bibitem{sukor_hybrid_2019}
 Abdul Syafiq~Abdull Sukor, Ammar Zakaria, Norasmadi~Abdul Rahim,
@@ -174,6 +177,14 @@ Abdul Syafiq~Abdull Sukor, Ammar Zakaria, Norasmadi~Abdul Rahim,
   activity recognition in smart homes.
 \newblock {\em Journal of Intelligent \& Fuzzy Systems}, 36(5):4177--4188, May
   2019.
+
+\bibitem{um_augmentation_2017}
+Terry~Taewoong Um.
+\newblock Python implementation of data augmentation for wearable sensor data.
+\newblock
+  \url{https://github.com/terryum/Data-Augmentation-For-Wearable-Sensor-Data},
+  August 2017.
+\newblock Online; accessed 2022-12-01.
 
 \bibitem{um_data_2017}
 Terry~Taewoong Um, Franz Michael~Josef Pfister, Daniel Pichler, Satoshi Endo,

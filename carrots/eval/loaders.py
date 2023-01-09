@@ -123,6 +123,7 @@ def calc_logpriors(y_trn):
     priors = priors/N
     return np.log(priors)
 
+
 # Load carrots Dataset, it has 16 distinct classes 0-15
 def get_carrots(window=True, win_size=32, step_size=16, augment=True, noise=True):
     X_1, y_1, _ = load_dataset(1)
@@ -163,6 +164,7 @@ def get_carrots(window=True, win_size=32, step_size=16, augment=True, noise=True
     
     log_priors = calc_logpriors(y_trn)
     
+    
     return x_trn, y_trn, x_val, y_val, log_priors
 
 
@@ -175,9 +177,6 @@ def load_conditional_test(window=True, win_size=32, step_size=32):
     tst_x = scaler.transform(tst_x)
 
     return tst_x, tst_y, le
-
-tst_x, tst_y, le = load_conditional_test(window=False)
-print('Carrots tst:',tst_y.shape)
 
 
 # Load the UCI HAR Dataset, it has 6 distinct classes 1-6

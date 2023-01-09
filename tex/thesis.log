@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 21.12) (preloaded format=pdflatex 2022.1.27)  7 JAN 2023 17:05
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 21.12) (preloaded format=pdflatex 2022.1.27)  9 JAN 2023 17:24
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -306,64 +306,69 @@ Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \@thisruleclass=\count286
 \@lastruleclass=\count287
 \@thisrulewidth=\dimen174
-) (C:\Users\bened\AppData\Local\Programs\MiKTeX\tex/latex/ntheorem\ntheorem.sty
+) (C:\Users\bened\AppData\Local\Programs\MiKTeX\tex/latex/makecell\makecell.sty
+Package: makecell 2009/08/03 V0.1e Managing of Tab Column Heads and Cells
 
+(C:\Users\bened\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty
+Package: array 2021/10/04 v2.5f Tabular extension package (FMi)
+\col@sep=\dimen175
+\ar@mcellbox=\box52
+\extrarowheight=\dimen176
+\NC@list=\toks22
+\extratabsurround=\skip53
+\backup@length=\skip54
+\ar@cellbox=\box53
+)
+\rotheadsize=\dimen177
+\c@nlinenum=\count288
+\TeXr@lab=\toks23
+)
+(C:\Users\bened\AppData\Local\Programs\MiKTeX\tex/latex/ntheorem\ntheorem.sty
 Style `ntheorem', Version 1.33 <2011/08/15>
 Package: ntheorem 2011/08/15 1.33
 (C:\Users\bened\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty
 Package: ifthen 2020/11/24 v1.1c Standard LaTeX ifthen package (DPC)
 )
-\theorem@style=\toks22
-\theorem@@style=\toks23
-\theorembodyfont=\toks24
-\theoremnumbering=\toks25
-\theorempreskipamount=\skip53
-\theorempostskipamount=\skip54
-\theoremframepreskipamount=\skip55
-\theoremframepostskipamount=\skip56
-\theoreminframepreskipamount=\skip57
-\theoreminframepostskipamount=\skip58
-\theorem@preskip=\toks26
-\theorem@postskip=\toks27
-\theorem@framepreskip=\toks28
-\theorem@framepostskip=\toks29
-\theorem@inframepreskip=\toks30
-\theorem@inframepostskip=\toks31
-\theoremindent=\dimen175
-\theorem@indent=\dimen176
-\theoremrightindent=\dimen177
-\theorem@rightindent=\dimen178
-\theoremheaderfont=\toks32
-\theoremseparator=\toks33
-\theoremprework=\toks34
-\theorempostwork=\toks35
-\theoremsymbol=\toks36
-\qedsymbol=\toks37
-\theoremkeyword=\toks38
+\theorem@style=\toks24
+\theorem@@style=\toks25
+\theorembodyfont=\toks26
+\theoremnumbering=\toks27
+\theorempreskipamount=\skip55
+\theorempostskipamount=\skip56
+\theoremframepreskipamount=\skip57
+\theoremframepostskipamount=\skip58
+\theoreminframepreskipamount=\skip59
+\theoreminframepostskipamount=\skip60
+\theorem@preskip=\toks28
+\theorem@postskip=\toks29
+\theorem@framepreskip=\toks30
+\theorem@framepostskip=\toks31
+\theorem@inframepreskip=\toks32
+\theorem@inframepostskip=\toks33
+\theoremindent=\dimen178
+\theorem@indent=\dimen179
+\theoremrightindent=\dimen180
+\theorem@rightindent=\dimen181
+\theoremheaderfont=\toks34
+\theoremseparator=\toks35
+\theoremprework=\toks36
+\theorempostwork=\toks37
+\theoremsymbol=\toks38
 \qedsymbol=\toks39
-\thm@topsep=\skip59
-\thm@topsepadd=\skip60
+\theoremkeyword=\toks40
+\qedsymbol=\toks41
+\thm@topsep=\skip61
+\thm@topsepadd=\skip62
 )
 (C:\Users\bened\AppData\Local\Programs\MiKTeX\tex/latex/tools\tabularx.sty
 Package: tabularx 2020/01/15 v2.11c `tabularx' package (DPC)
-
-(C:\Users\bened\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty
-Package: array 2021/10/04 v2.5f Tabular extension package (FMi)
-\col@sep=\dimen179
-\ar@mcellbox=\box52
-\extrarowheight=\dimen180
-\NC@list=\toks40
-\extratabsurround=\skip61
-\backup@length=\skip62
-\ar@cellbox=\box53
-)
-\TX@col@width=\dimen181
-\TX@old@table=\dimen182
-\TX@old@col=\dimen183
-\TX@target=\dimen184
-\TX@delta=\dimen185
-\TX@cols=\count288
-\TX@ftn=\toks41
+\TX@col@width=\dimen182
+\TX@old@table=\dimen183
+\TX@old@col=\dimen184
+\TX@target=\dimen185
+\TX@delta=\dimen186
+\TX@cols=\count289
+\TX@ftn=\toks42
 )
 (C:\Users\bened\AppData\Local\Programs\MiKTeX\tex/latex/algorithms\algorithm.st
 y
@@ -371,73 +376,73 @@ Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
 nment
  (C:\Users\bened\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count289
-\float@exts=\toks42
+\c@float@type=\count290
+\float@exts=\toks43
 \float@box=\box54
-\@float@everytoks=\toks43
+\@float@everytoks=\toks44
 \@floatcapt=\box55
 )
-\@float@every@algorithm=\toks44
-\c@algorithm=\count290
+\@float@every@algorithm=\toks45
+\c@algorithm=\count291
 )
 (C:\Users\bened\AppData\Local\Programs\MiKTeX\tex/latex/algorithms\algorithmic.
 sty
 Package: algorithmic 2009/08/24 v0.1 Document Style `algorithmic'
-\c@ALC@unique=\count291
-\c@ALC@line=\count292
-\c@ALC@rem=\count293
-\c@ALC@depth=\count294
+\c@ALC@unique=\count292
+\c@ALC@line=\count293
+\c@ALC@rem=\count294
+\c@ALC@depth=\count295
 \ALC@tlm=\skip63
 \algorithmicindent=\skip64
 )
-\c@definition=\count295
-\c@proposition=\count296
+\c@definition=\count296
+\c@proposition=\count297
 LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 7
-3.
+4.
  (C:\Users\bened\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
 (C:\Users\bened\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdf
 tex.def
 File: l3backend-pdftex.def 2021-10-18 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count297
+\l__color_backend_stack_int=\count298
 \l__pdf_internal_box=\box56
 ) (thesis.aux)
 \openout1 = `thesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 73.
-LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
 
 (C:\Users\bened\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
 ii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count298
-\scratchdimen=\dimen186
+\scratchcounter=\count299
+\scratchdimen=\dimen187
 \scratchbox=\box57
-\nofMPsegments=\count299
-\nofMParguments=\count300
-\everyMPshowfont=\toks45
-\MPscratchCnt=\count301
-\MPscratchDim=\dimen187
-\MPnumerator=\count302
-\makeMPintoPDFobject=\count303
-\everyMPtoPDFconversion=\toks46
+\nofMPsegments=\count300
+\nofMParguments=\count301
+\everyMPshowfont=\toks46
+\MPscratchCnt=\count302
+\MPscratchDim=\dimen188
+\MPnumerator=\count303
+\makeMPintoPDFobject=\count304
+\everyMPtoPDFconversion=\toks47
 )
 (C:\Users\bened\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-b
 ase.sty
@@ -453,7 +458,7 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
 Package caption Info: hyperref package is loaded.
 Package caption Info: End \AtBeginDocument code.
-Package hyperref Info: Link coloring OFF on input line 73.
+Package hyperref Info: Link coloring OFF on input line 74.
 
 (C:\Users\bened\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
@@ -465,11 +470,11 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 lestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count304
+\c@section@level=\count305
 )
-LaTeX Info: Redefining \ref on input line 73.
-LaTeX Info: Redefining \pageref on input line 73.
-LaTeX Info: Redefining \nameref on input line 73.
+LaTeX Info: Redefining \ref on input line 74.
+LaTeX Info: Redefining \pageref on input line 74.
+LaTeX Info: Redefining \nameref on input line 74.
  (thesis.out) (thesis.out)
 \@outlinefile=\write3
 \openout3 = `thesis.out'.
@@ -502,8 +507,8 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.i}) has
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.99 \newpage
-              [1
+l.100 \newpage
+               [1
 
 ] (thesis.lof)
 \tf@lof=\write5
@@ -529,10 +534,10 @@ Chapter 2.
 <MADE_vis.jpg, id=231, 840.13875pt x 387.69844pt>
 File: MADE_vis.jpg Graphic file (type jpg)
 <use MADE_vis.jpg>
-Package pdftex.def Info: MADE_vis.jpg  used on input line 238.
+Package pdftex.def Info: MADE_vis.jpg  used on input line 239.
 (pdftex.def)             Requested size: 360.0pt x 166.12732pt.
  [8 <./MADE_vis.jpg>]
-Overfull \hbox (3.60138pt too wide) in paragraph at lines 253--255
+Overfull \hbox (3.60138pt too wide) in paragraph at lines 254--256
 \OT1/ptm/m/n/10.95 According to Pa-pa-makar-ios et al. [[]] the com-pu-ta-tion 
 of this ex-pres-sion is tractable
  []
@@ -546,38 +551,32 @@ Chapter 4.
 <Hybrid_V2.jpg, id=280, 825.83531pt x 381.67593pt>
 File: Hybrid_V2.jpg Graphic file (type jpg)
 <use Hybrid_V2.jpg>
-Package pdftex.def Info: Hybrid_V2.jpg  used on input line 282.
+Package pdftex.def Info: Hybrid_V2.jpg  used on input line 283.
 (pdftex.def)             Requested size: 360.0pt x 166.38295pt.
 [14
 
- <./Hybrid_V2.jpg>] [15] [16]
-Overfull \hbox (17.12444pt too wide) in paragraph at lines 320--321
-\OT1/ptm/m/n/10.95 sity es-ti-ma-tion based on neu-ral net-works such as the pr
-e-vi-ously dis-cussed MADE/MAF
- []
-
-[17] [18] [19]
+ <./Hybrid_V2.jpg>] [15] [16] [17] [18] [19] [20]
 Chapter 5.
 
-Overfull \hbox (4.78755pt too wide) in alignment at lines 387--387
-[][][][][][][] 
+Underfull \hbox (badness 10000) in alignment at lines 362--362
+[][][][][][][][] 
  []
 
-[20
+[21
 
-] [21]
-Underfull \hbox (badness 10000) in alignment at lines 453--453
+] [22]
+Underfull \hbox (badness 10000) in alignment at lines 412--412
 [][][][][][][][][][] 
  []
 
-
-Underfull \hbox (badness 10000) in alignment at lines 472--472
+[23] [24]
+Underfull \hbox (badness 10000) in alignment at lines 435--435
 [][][][][][][][][][] 
  []
 
-[22]
+[25]
 Chapter 6.
-(thesis.bbl [23
+(thesis.bbl [26
 
 ]
 Underfull \hbox (badness 1132) in paragraph at lines 27--31
@@ -591,41 +590,82 @@ Underfull \hbox (badness 6542) in paragraph at lines 46--54
 
  []
 
-[24
+[27
 
-] [25] [26]) [27]
+]
+LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 8
+3.
+ (C:\Users\bened\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1pcr.fd
+File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
+)
+Underfull \hbox (badness 1831) in paragraph at lines 87--94
+[]\OT1/ptm/m/n/10.95 Frank Kr[]uger, Al-bert Hein, Kristina Yor-danova, and Tho
+mas Kirste.
+ []
+
+
+Underfull \hbox (badness 1546) in paragraph at lines 87--94
+\OT1/ptm/m/n/10.95 Recog-nis-ing user ac-tions dur-ing cook-ing task (Cook-ing 
+task dataset):
+ []
+
+
+Underfull \hbox (badness 1033) in paragraph at lines 87--94
+\OT1/ptm/m/n/10.95 IMU Data.  []$\OT1/pcr/m/n/10.95 https : / / rosdok . uni-[]
+rostock . de / resolve / id /
+ []
+
+[28]
+Underfull \hbox (badness 2065) in paragraph at lines 182--188
+[]\OT1/ptm/m/n/10.95 Terry Tae-woong Um.  Python im-ple-men-ta-tion of data aug
+-men-ta-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 182--188
+\OT1/ptm/m/n/10.95 for wear-able sen-sor data.  []$\OT1/pcr/m/n/10.95 https : /
+ / github . com / terryum /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 182--188
+\OT1/pcr/m/n/10.95 Data-[]Augmentation-[]For-[]Wearable-[]Sensor-[]Data$[]\OT1/
+ptm/m/n/10.95 , Au-gust
+ []
+
+[29]) [30]
 Appendix A.
-[28
+[31
 
 ]
 Appendix B.
-[29
+[32
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 517--526
+Underfull \hbox (badness 10000) in paragraph at lines 480--489
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 517--526
+Underfull \hbox (badness 10000) in paragraph at lines 480--489
 
  []
 
 \tf@thm=\write7
 \openout7 = `thesis.thm'.
 
-[30] (thesis.aux)
+[33] (thesis.aux)
 Package rerunfilecheck Info: File `thesis.out' has not changed.
 (rerunfilecheck)             Checksum: 22CFB8F2915FAF7D656286B1DC890049;2656.
  ) 
 Here is how much of TeX's memory you used:
- 11896 strings out of 478659
- 192131 string characters out of 2845920
- 490036 words of memory out of 3000000
- 29696 multiletter control sequences out of 15000+600000
- 426491 words of font info for 77 fonts, out of 8000000 for 9000
+ 12124 strings out of 478659
+ 195065 string characters out of 2845920
+ 488889 words of memory out of 3000000
+ 29901 multiletter control sequences out of 15000+600000
+ 432176 words of font info for 91 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 60i,12n,63p,2176b,446s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,12n,63p,3924b,446s stack positions out of 5000i,500n,10000p,200000b,80000s
 {C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}<C:
 /Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx1
 0.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
@@ -641,13 +681,14 @@ s/bened/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6.pfb>
 <C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cm
 sy8.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
 ts/symbols/msbm10.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1
-/urw/times/utmb8a.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1
-/urw/times/utmr8a.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1
-/urw/times/utmr8a.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1
-/urw/times/utmri8a.pfb>
-Output written on thesis.pdf (34 pages, 513956 bytes).
+/urw/courier/ucrr8a.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/urw/times/utmb8a.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/urw/times/utmr8a.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/urw/times/utmr8a.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/urw/times/utmri8a.pfb>
+Output written on thesis.pdf (37 pages, 541387 bytes).
 PDF statistics:
- 490 PDF objects out of 1000 (max. 8388607)
- 118 named destinations out of 1000 (max. 500000)
+ 529 PDF objects out of 1000 (max. 8388607)
+ 124 named destinations out of 1000 (max. 500000)
  155 words of extra memory for PDF output out of 10000 (max. 10000000)
 
