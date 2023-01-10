@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 import torch
 import os
-from motionSense import set_data_types, creat_time_series, get_windows
-from dataframeSplitter import DataFrameSplitter
+from dataloader.motionSense import set_data_types, creat_time_series, get_windows
+from dataloader.dataframeSplitter import DataFrameSplitter
 
 
 ACT_LABELS = ["dws","ups", "wlk", "jog", "std", "sit"]

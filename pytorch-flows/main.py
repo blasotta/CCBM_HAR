@@ -194,9 +194,6 @@ def train(epoch, model, train_loader, optimizer):
         loss = -model.log_probs(data, cond_data).mean()
         train_loss += loss.item()
         loss.backward()
-        # Gradient Norm clipping Test
-        #torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=15.0)
-        # Test
         optimizer.step()
 
         pbar.update(data.size(0))
@@ -248,19 +245,15 @@ def validate(epoch, model, loader, prefix='Validation'):
         data = data.to(device)
         with torch.no_grad():
             # sum up batch loss
-            # val_loss += -model.log_probs(data, cond_data).sum().item() # ORIGINAL LINE
             batch_log_probs = model.log_probs(data, cond_data)
-            corrected = torch.nan_to_num(batch_log_probs, nan=-100, posinf=1000, neginf=-100)
+            corrected = torch.nan_to_num(batch_log_probs, nan=-300, posinf=1000, neginf=-300)
             #detect nan or inf values:
             nan = torch.isnan(batch_log_probs).sum().item()
             inf = torch.isinf(batch_log_probs).sum().item()
             if (nan >= 1) or (inf >= 1):
                 print(f'{nan} log densities in batch {batch_idx} are nan {inf} are inf')
-            # if batch_idx == 212:
-            #     print(batch_log_probs)
             sum_log_prob = -corrected.sum().item()
             val_loss += sum_log_prob
-            ##### In this sum the value inf appears some time find out why
         pbar.update(data.size(0))
         pbar.set_description('Val, Log likelihood in nats: {:.6f}'.format(
             -val_loss / pbar.n))
@@ -428,27 +421,44 @@ def run(dataset, cond_inputs, window, win_size, trn_step, augment, noise, plot=F
     
     return bay_acc, hmm_acc, ll
 
-# experiments = [['CARROTS', 16, False, 0, 0, False, False],
-#                ['CARROTS', 16, False, 0, 0, False, True],
-#                ['CARROTS', 16, False, 0, 0, True, False],
-#                ['CARROTS', 16, False, 0, 0, True, True],
-#                ['CARROTS', 16, True, 26, 13, False, False],
-#                ['CARROTS', 16, True, 26, 13, False, True],
-#                ['CARROTS', 16, True, 26, 13, True, False],
-#                ['CARROTS', 16, True, 26, 13, True, True],
-#                ['CARROTS', 16, True, 8, 4, True, False],
-#                ['CARROTS', 16, True, 64, 32, True, False],
-#                ['UCIHAR', 6, True, 0, 0, False, False]]
 
-# experiments = [['MOSENSE', 6, True, 128, 64, False, False],
-#                ['MOSENSE', 6, True, 128, 64, False, True],
-#                ['MOSENSE', 6, True, 128, 64, True, False],
-#                ['MOSENSE', 6, True, 128, 64, True, True],
-#                ['MOSENSE', 6, True, 64, 32, True, True],
-#                ['MOSENSE', 6, True, 32, 16, True, True],
-#                ['UCIHAR', 6, True, 0, 0, False, False],
-#                ['UCIHAR', 6, True, 0, 0, False, True]]
 
+'''
+All experiments are defined in the lists below and then executed at the same
+time. If you only want to run a single experiment you can do it as shown in
+the commented out example below, e.g. running the complete training and
+evaluation of MAF on Carrots data, without windowing, augmentation or noise
+injection can be done with:
+    bay_acc, hmm_acc, ll = run('CARROTS', 16, False, 0, 0, False, False)
+Likewise for running the MVN benchmark:
+    bay_acc, hmm_acc, ll = run_mvn('CARROTS', 16, False, 0, 0, False, False)
+'''
+
+
+
+# c_exp = [['CARROTS', 16, False, 0, 0, False, False],
+#          ['CARROTS', 16, False, 0, 0, False, True],
+#          ['CARROTS', 16, False, 0, 0, True, False],
+#          ['CARROTS', 16, False, 0, 0, True, True],
+#          ['CARROTS', 16, True, 26, 13, False, False],
+#          ['CARROTS', 16, True, 26, 13, False, True],
+#          ['CARROTS', 16, True, 26, 13, True, False],
+#          ['CARROTS', 16, True, 26, 13, True, True],
+#          ['CARROTS', 16, True, 8, 4, True, False],
+#          ['CARROTS', 16, True, 64, 32, True, False]]
+
+# m_exp = [['MOSENSE', 6, True, 128, 64, False, False],
+#          ['MOSENSE', 6, True, 128, 64, False, True],
+#          ['MOSENSE', 6, True, 128, 64, True, False],
+#          ['MOSENSE', 6, True, 128, 64, True, True],
+#          ['MOSENSE', 6, True, 64, 32, False, True],
+#          ['MOSENSE', 6, True, 64, 32, True, True],
+#          ['MOSENSE', 6, True, 32, 16, False, True],
+#          ['MOSENSE', 6, True, 32, 16, True, True]]
+
+# u_exp = [['UCIHAR', 6, True, 128, 64, False, False]]
+
+# experiments = c_exp + m_exp + u_exp
 
 # df = pd.DataFrame(experiments, columns=['Dataset', '# classes', 'Window',
 #                                         'W_size', 'W_step', 'Augment', 'Noise'])
@@ -456,22 +466,24 @@ def run(dataset, cond_inputs, window, win_size, trn_step, augment, noise, plot=F
 # results = []
 
 # for i in range(len(experiments)):
-#     maf_acc, maf_ll = run(*experiments[i])
-#     mvn_acc, mvn_ll = run_mvn(*experiments[i])
-#     results.append({'MVN LL': mvn_ll, 'MAF LL': maf_ll, 'MVN ACC': mvn_acc, 'MAF ACC': maf_acc})
+#     maf_bay_acc, maf_hmm_acc, maf_ll = run(*experiments[i])
+#     mvn_bay_acc, mvn_hmm_acc, mvn_ll = run_mvn(*experiments[i])
+#     results.append({'MVN LL': mvn_ll, 'MAF LL': maf_ll, 'MVN ACC': mvn_bay_acc,
+#                     'MAF ACC': maf_bay_acc, 'MVN_HMM': mvn_hmm_acc,
+#                     'MAF_HMM': maf_hmm_acc})
     
 # rf = pd.DataFrame(results)
 
 # df = pd.concat([df, rf], axis=1)
-# df.to_csv('Experiment_results.csv', index=False)
 # df.to_csv('Experiment_results_format.csv', float_format="%.4f", index=False)
 
 # with open('resultstable.tex', 'w') as tf:
 #       tf.write(df.to_latex(columns=['Dataset', 'Window', 'W_size', 'W_step',
-#                                     'Augment', 'Noise', 'MVN LL', 'MAF LL', 'MVN ACC', 'MAF ACC'],
+#                                     'Augment', 'Noise', 'MVN LL', 'MAF LL',
+#                                     'MVN ACC', 'MAF ACC', 'MVN HMM', 'MAF_HMM'],
 #                           index=False, float_format="%.4f"))
 
-bay_acc, hmm_acc, ll = run('MOSENSE', 6, True, 128, 64, False, False)
+bay_acc, hmm_acc, ll = run('CARROTS', 16, False, 0, 0, False, False)
 # bay_acc, hmm_acc, ll = run_mvn('CARROTS', 16, False, 0, 0, False, False)
 
 print(bay_acc)
