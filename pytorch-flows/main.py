@@ -338,25 +338,25 @@ def evaluate(data, labels, trn_y, epoch, model, log_priors, num_cond_inputs):
 
         lik[i] = log_pxy
 
-    # actual Bayes classifier
-    # LL is the classes x N array containing log p(x|y=c) for all classes c in C over all samples 
+    '''
+    Bayes classifier
+    LL is the classes x N array containing log p(x|y=c) for all classes c in C over all samples
+    First calculate numerator of Bayes' as likelihood + prior in log space for all samples and classes
+    Then get prediction as argmax over each column
+    '''
     LL = np.array(list(lik.values()))
-    # calculate numerator of Bayes' as likelihood + prior in log space for all samples and classes
     result = LL + log_priors.reshape(-1,1)
-    # get prediction as argmax over each column
     y_pred = np.argmax(result, axis=0)
     
-    # result = np.zeros((N, num_cond_inputs))
-    # for i in range(N):
-    #     for c in range(num_cond_inputs):
-    #         log_lik = lik[c][i]
-    #         #calculate numerator of Bayes' as likelihood + prior in log space
-    #         result[i, c] = log_lik + log_priors[c]
-
-    # y_pred = np.argmax(result, axis=1)
-    np.savetxt("MAF_pxy.txt", LL, fmt='%.2f', delimiter=" ")
+   
+    # np.savetxt("MAF_pxy.txt", LL, fmt='%.2f', delimiter=" ")
     
-    # HMM classifier
+    '''
+    HMM recognition model
+    LL is the classes x N array containing log p(x|y=c) for all classes c in C over all samples
+    First calculate prediction step of HMM by matmul of prior and transition matrix A 
+    Then get correction by updating with observation, prediction is argmax over states
+    '''
     trajectory = []
     pi = np.exp(log_priors)
     A = get_transition_matrix(trn_y)
@@ -369,10 +369,11 @@ def evaluate(data, labels, trn_y, epoch, model, log_priors, num_cond_inputs):
         
     s = np.array(trajectory)
 
-    accuracy = accuracy_score(labels, y_pred)
-    accuracy_hmm = accuracy_score(labels, s)
-    print(accuracy_hmm)
-    return accuracy, y_pred
+    bay_accuracy = accuracy_score(labels, y_pred)
+    # bay_f1_mac = f1_score(labels, y_pred, average='macro')
+    # bay_f1_wei = f1_score(labels, y_pred, average='weighted')
+    hmm_accuracy = accuracy_score(labels, s)
+    return bay_accuracy, hmm_accuracy, y_pred
 
 
 def plot_confMat(le, tst_y, y_pred):
@@ -425,12 +426,12 @@ def run(dataset, cond_inputs, window, win_size, trn_step, augment, noise, plot=F
     # test data
     nll = validate(best_validation_epoch, best_model, test_loader, prefix='Test')
     ll = -nll
-    acc, y_pred = evaluate(test_tensor, tst_y, trn_y, best_validation_epoch, best_model, log_priors, cond_inputs)
+    bay_acc, hmm_acc, y_pred = evaluate(test_tensor, tst_y, trn_y, best_validation_epoch, best_model, log_priors, cond_inputs)
     
     if plot:
         plot_confMat(le, tst_y, y_pred)
     
-    return acc, ll
+    return bay_acc, hmm_acc, ll
 
 # experiments = [['CARROTS', 16, False, 0, 0, False, False],
 #                ['CARROTS', 16, False, 0, 0, False, True],
@@ -475,7 +476,9 @@ def run(dataset, cond_inputs, window, win_size, trn_step, augment, noise, plot=F
 #                                     'Augment', 'Noise', 'MVN LL', 'MAF LL', 'MVN ACC', 'MAF ACC'],
 #                           index=False, float_format="%.4f"))
 
-acc, ll = run('CARROTS', 16, False, 0, 0, False, False)
+bay_acc, hmm_acc, ll = run('CARROTS', 16, False, 0, 0, False, False)
+# bay_acc, hmm_acc, ll = run_mvn('CARROTS', 16, False, 0, 0, False, False)
 
-print(acc)
+print(bay_acc)
+print(hmm_acc)
 print(ll)
