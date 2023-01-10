@@ -1,11 +1,7 @@
-# import utils
 import flows as fnn
-# import datasets
-# from tensorboardX import SummaryWriter
 from tqdm import tqdm
 import torch.utils.data
 import torch.optim as optim
-import torch.nn.functional as F
 import torch.nn as nn
 import torch
 import numpy as np
@@ -17,29 +13,25 @@ from sklearn.metrics import confusion_matrix
 from scipy.special import logsumexp
 from MVN_Benchmark import run_mvn
 import pandas as pd
-
 import sys
-sys.path.insert(1, 'C:/Users/bened/PythonWork/CCBM_HAR/carrots/eval')
-from loaders import one_hot_encode, get_carrots, load_conditional_test, get_UCIHAR
-from preprocess_motion_sense import get_moSense
+from dataloader.loaders import one_hot_encode, get_carrots, load_conditional_test, get_UCIHAR
+from dataloader.preprocess_motion_sense import get_moSense
 
 if sys.version_info < (3, 6):
     print('Sorry, this code might need Python 3.6 or higher')
 
 flow = "maf"  # 'maf' or 'made'
-# dataset_name = "CARROTS"  # can be 'mnist', 'power', 'hepmass'
-batch_size = 128 # 128 seems good
-test_bs = 128 # can be 128
+batch_size = 128 # default 128
+test_bs = 128 # default 128
 num_blocks = 5  # number of mades in maf, default 5
-num_hidden = 512  # 1024 or 512 for mnist, 100 for power, 512 for hepmass
-lr = 5e-5  # 5 works well
-weight_decay = 1e-6 # 1e-3 # default 6
+num_hidden = 512  # hidden units per made, default 512
+lr = 5e-5  # 5e-5 works well
+weight_decay = 1e-6 # default 1e-6
 patience = 5  # For early stopping
 seed = 42
-max_epochs = 2  # 1000
+max_epochs = 2
 cond = True
 no_cuda = False
-# num_cond_inputs = 16 # 16 for carrots, 6 for UCIHAR, None if cond = False
 
 cuda = not no_cuda and torch.cuda.is_available()
 print('CUDA:', cuda)
@@ -303,17 +295,20 @@ def get_log_pxy(epoch, model, loader):
 def get_transition_matrix(transitions):
     n = 1+ max(transitions) #number of states
 
-    M = [[0]*n for _ in range(n)]
+    M = np.zeros((n,n))
 
     for (i,j) in zip(transitions,transitions[1:]):
         M[i][j] += 1
 
+    M += 1
     #now convert to probabilities:
-    for row in M:
-        s = sum(row)
-        if s > 0:
-            row[:] = [f/s for f in row]
+    M = M/M.sum(axis=1, keepdims=True)
     return M
+
+def log_matmul(A,B):
+    Astack = np.stack([A]*B.shape[1]).transpose(1,0,2)
+    Bstack = np.stack([B]*A.shape[0]).transpose(0,2,1)
+    return logsumexp(Astack+Bstack, axis=2)
 
 def evaluate(data, labels, trn_y, epoch, model, log_priors, num_cond_inputs):
     # run Bayes classifier prediction
@@ -358,14 +353,14 @@ def evaluate(data, labels, trn_y, epoch, model, log_priors, num_cond_inputs):
     Then get correction by updating with observation, prediction is argmax over states
     '''
     trajectory = []
-    pi = np.exp(log_priors)
-    A = get_transition_matrix(trn_y)
+    pi = log_priors.reshape(1,-1)
+    A = np.log(get_transition_matrix(trn_y))
     for t in range(N):
-        log_pred = np.log(pi.T@A)
+        log_pred = log_matmul(pi, A)
         log_num = log_pred + LL[:,t]
         log_res = log_num - logsumexp(log_num)
         trajectory.append(np.argmax(log_res))
-        pi = np.exp(log_res)
+        pi = log_res
         
     s = np.array(trajectory)
 
@@ -476,7 +471,7 @@ def run(dataset, cond_inputs, window, win_size, trn_step, augment, noise, plot=F
 #                                     'Augment', 'Noise', 'MVN LL', 'MAF LL', 'MVN ACC', 'MAF ACC'],
 #                           index=False, float_format="%.4f"))
 
-bay_acc, hmm_acc, ll = run('CARROTS', 16, False, 0, 0, False, False)
+bay_acc, hmm_acc, ll = run('MOSENSE', 6, True, 128, 64, False, False)
 # bay_acc, hmm_acc, ll = run_mvn('CARROTS', 16, False, 0, 0, False, False)
 
 print(bay_acc)

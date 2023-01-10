@@ -17,7 +17,7 @@
 \contentsline {paragraph}{Multivariate Normal Distribution}{17}{section*.14}%
 \contentsline {paragraph}{Advanced Density Estimation Methods}{17}{section*.15}%
 \contentsline {section}{\numberline {4.3}Recognition Model}{18}{section.4.3}%
-\contentsline {paragraph}{Bayes' Theorem and Argmax}{18}{section*.16}%
+\contentsline {paragraph}{Bayes Classifier}{18}{section*.16}%
 \contentsline {paragraph}{Hidden Markov Model}{19}{section*.17}%
 \contentsline {paragraph}{Computational Causal Behavior Models}{19}{section*.18}%
 \contentsline {chapter}{\numberline {5}Experimental Evaluation}{21}{chapter.5}%

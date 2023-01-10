@@ -1,5 +1,3 @@
-pytorch-flows/data/*
-pytorch-flows/runs/*
+pytorch-flows/dataloader/data/*
+pytorch-flows/dataloader/__pycache__/*
 pytorch-flows/__pycache__/*
-carrots/data/*
-carrots/eval/A_DeviceMotion_data/*

@@ -6,11 +6,8 @@ from scipy.stats import multivariate_normal
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.metrics import confusion_matrix
 from scipy.special import logsumexp
-
-import sys
-sys.path.insert(1, 'C:/Users/bened/PythonWork/CCBM_HAR/carrots/eval')
-from loaders import one_hot_encode, get_carrots, load_conditional_test, get_UCIHAR
-from preprocess_motion_sense import get_moSense
+from dataloader.loaders import one_hot_encode, get_carrots, load_conditional_test, get_UCIHAR
+from dataloader.preprocess_motion_sense import get_moSense
 
 
 def mvn_loader(dataset_name, cond_inputs, window, win_size, trn_step, augment, noise):
@@ -40,17 +37,20 @@ def mvn_loader(dataset_name, cond_inputs, window, win_size, trn_step, augment, n
 def get_transition_matrix(transitions):
     n = 1+ max(transitions) #number of states
 
-    M = [[0]*n for _ in range(n)]
+    M = np.zeros((n,n))
 
     for (i,j) in zip(transitions,transitions[1:]):
         M[i][j] += 1
 
+    M += 1
     #now convert to probabilities:
-    for row in M:
-        s = sum(row)
-        if s > 0:
-            row[:] = [f/s for f in row]
+    M = M/M.sum(axis=1, keepdims=True)
     return M
+
+def log_matmul(A,B):
+    Astack = np.stack([A]*B.shape[1]).transpose(1,0,2)
+    Bstack = np.stack([B]*A.shape[0]).transpose(0,2,1)
+    return logsumexp(Astack+Bstack, axis=2)
 
 
 def mvn_bench(trn_x, trn_y, tst_x, tst_y, N, log_priors, num_cond_inputs):
@@ -100,24 +100,18 @@ def mvn_bench(trn_x, trn_y, tst_x, tst_y, N, log_priors, num_cond_inputs):
     Then get correction by updating with observation, prediction is argmax over states
     '''
     trajectory = []
-    pi = np.exp(log_priors)
-    A = get_transition_matrix(trn_y)
+    pi = log_priors.reshape(1,-1)
+    A = np.log(get_transition_matrix(trn_y))
     for t in range(N):
-        log_pred = np.log(pi.T@A)
+        log_pred = log_matmul(pi, A)
         log_num = log_pred + LL[:,t]
         log_res = log_num - logsumexp(log_num)
         trajectory.append(np.argmax(log_res))
-        pi = np.exp(log_res)
+        pi = log_res
         
     s = np.array(trajectory)
-    
-    # result2 = np.zeros((N,num_cond_inputs))
-    # for i in range(N):
-    #     for c in range(num_cond_inputs):
-    #         log_lik = lik_MVN[c][i]
-    #         result2[i,c]= log_lik + log_priors[c]
             
-    np.savetxt("MVN_pxy.txt", LL, fmt='%.5f', delimiter=" ")
+    # np.savetxt("MVN_pxy.txt", LL, fmt='%.5f', delimiter=" ")
     # y_pred2 = np.argmax(result2, axis = 1)
     ll = np.sum(np.amax(LL, axis=0))/N
     
