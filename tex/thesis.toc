@@ -28,9 +28,16 @@
 \contentsline {section}{\numberline {5.2}Experiments}{22}{section.5.2}%
 \contentsline {paragraph}{Train-Test Split}{23}{section*.23}%
 \contentsline {paragraph}{Settings}{23}{section*.24}%
-\contentsline {section}{\numberline {5.3}Results}{23}{section.5.3}%
-\contentsline {chapter}{\numberline {6}Conclusion}{27}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Summary}{27}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Future Work}{27}{section.6.2}%
-\contentsline {chapter}{\numberline {A}Program Code / Resources}{32}{appendix.A}%
-\contentsline {chapter}{\numberline {B}Further Experimental Results}{33}{appendix.B}%
+\contentsline {section}{\numberline {5.3}Results}{24}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Carrot Dataset}{24}{subsection.5.3.1}%
+\contentsline {paragraph}{Comparing MVN and MAF}{24}{section*.26}%
+\contentsline {paragraph}{Challenges of the Carrot Dataset}{25}{section*.27}%
+\contentsline {paragraph}{Effectiveness of Pre-Processing}{26}{section*.29}%
+\contentsline {paragraph}{Comparing Bayes Classifier and HMM}{27}{section*.31}%
+\contentsline {subsection}{\numberline {5.3.2}MotionSense Dataset}{28}{subsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.3.3}UCI HAR Dataset}{29}{subsection.5.3.3}%
+\contentsline {chapter}{\numberline {6}Conclusion}{31}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Summary}{31}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Future Work}{31}{section.6.2}%
+\contentsline {chapter}{\numberline {A}Program Code / Resources}{36}{appendix.A}%
+\contentsline {chapter}{\numberline {B}Further Experimental Results}{37}{appendix.B}%

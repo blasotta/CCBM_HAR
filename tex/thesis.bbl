@@ -155,6 +155,13 @@ Miquel Ramirez and Hector Geffner.
 \newblock In {\em Twenty-second international joint conference on artificial
   intelligence}, page~6, 2011.
 
+\bibitem{ronald_isplinception_2021}
+Mutegeki Ronald, Alwin Poulose, and Dong~Seog Han.
+\newblock {iSPLInception}: {An} {Inception}-{ResNet} {Deep} {Learning}
+  {Architecture} for {Human} {Activity} {Recognition}.
+\newblock {\em IEEE Access}, 9:68985--69001, 2021.
+\newblock Conference Name: IEEE Access.
+
 \bibitem{rueda_combining_2019}
 Fernando~Moya Rueda, Stefan Lüdtke, Max Schröder, Kristina Yordanova, Thomas
   Kirste, and Gernot~A. Fink.

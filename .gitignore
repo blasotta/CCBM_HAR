@@ -1,3 +1,4 @@
 pytorch-flows/dataloader/data/*
 pytorch-flows/dataloader/__pycache__/*
 pytorch-flows/__pycache__/*
+pytorch-flows/models/*

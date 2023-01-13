@@ -16,6 +16,7 @@
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{makecell}
+\usepackage{tablefootnote}
 
 \usepackage{ntheorem}
 
@@ -347,26 +348,26 @@ Conceptually, activity recognition using CCBM works the same way as for an HMM. 
 
 \section{Datasets}
 \label{sec:data}
-The three datasets used in the evaluation of this work are the Carrot \cite{kruger_recognising_2011}, MotionSense \cite{malekzadeh_mobile_2019} and UCI HAR \cite{anguita_public_2013} datasets. All three sets contain measurements from inertial measurement units. The individual datasets are introduced in greater detail in the paragraphs below. An overview of their features can be found in table \ref{tab:sets}.
+The three datasets used in the evaluation of this work are the Carrot \cite{kruger_recognising_2011}, MotionSense \cite{malekzadeh_mobile_2019} and UCI HAR \cite{anguita_public_2013} datasets. All three sets contain measurements from inertial measurement units. The individual datasets are introduced in greater detail in the paragraphs below. An overview of the dataset statistics can be found in table \ref{tab:sets}.
 
-\begin{table}
+\begin{table}[H]
 	\footnotesize
 	\centering
-	\begin{tabularx}{\textwidth}{lcccrrrr}
+	\begin{tabular}{l c c r r r r}
 		\toprule
-		\textbf{Dataset} & \textbf{Classes} & \textbf{Channels} & \textbf{Features} & \textbf{Train} & \textbf{Valid} & \textbf{Test} & \textbf{Subjects} \\
+		\textbf{Dataset} & \textbf{Classes} & \textbf{Channels} & \textbf{Train} & \textbf{Valid} & \textbf{Test} & \textbf{Subjects} \\
 		\midrule
-		Carrot & 16 & 30 & 30 & 146570 & 36643 & 30036 & 7 \\
-		MotionSense & 6 & 12 & 12 & 812035 & 315156 & 285674 & 24 \\
-		UCI HAR & 6 & 6 & 561 & 5881 & 1471 & 2947 & 30 \\
+		Carrot & 16 & 30 & 146570 & 36643 & 30036 & 7 \\
+		MotionSense & 6 & 12 & 812035 & 315156 & 285674 & 24 \\
+		UCI HAR & 6 & 561 \tablefootnote{561 is the number of pre-computed features used for training. The number of actual sensor channels is 6.} & 5881 & 1471 & 2947 & 30 \\
 		\bottomrule
-	\end{tabularx}
+	\end{tabular}
 	\caption[Dataset statistics]{\label{tab:sets} Dataset statistics}
 \end{table}
 
 \paragraph{Carrot}
 The Carrot dataset uses standalone IMUs which are attached to the subject its body in five locations: upper torso, left forearm, right forearm, left calf, right calf. Seven subjects were tasked with a typical activity of daily living to produce this data.
-The task was to prepare, cook, serve and eat a carrot soup. Afterwards cleaning up and washing the dishes was required. During this task, acceleration and angular rates were measured with the IMUs and annotated based on a motion capturing system.
+The task was to prepare, cook, serve and eat a carrot soup. Afterwards, cleaning up and washing the dishes was required. During this task, acceleration and angular rates were measured with the IMUs and annotated based on a motion capturing system.
 It contains 16 action classes and additionally more fine grained annotations of objects and places. However, this work only uses the 16 action classes as labels. The data is recorded at a sampling rate of 120 Hz. Each sensor at each of the five locations records the angular rate and acceleration in x,y and z direction. Thus, the dataset consists of $D = 5 \cdot 6 = 30$ channels.
 
 \paragraph{MotionSense}
@@ -378,100 +379,178 @@ The UCI HAR dataset is slightly different as it is already processed and contain
 
 \section{Experiments}
 \label{sec:exp}
-To evaluate the usefulness of neural density estimation methods for HAR applications several experiments were conducted on the previously introduced datasets. From the set of optional pre-processing steps, five tunable parameters are obtained. Three boolean flags can be set for windowing ($W$), augmentation ($A$), and input noise injection ($N$). If windowing is true, some window size $T \geq 2$ needs to be specified. In this case, also a step size $s$ with $1 \leq s \leq T$ should be given for stepping the segments in the training data. In the experiments presented here, the step size is fixed to $s = \frac{T}{2}$ such that the training data segments have an overlap of 50 \%. Validation and testing sets use segmentation without overlap by default. If windowing is false, this indicates that no explicit windowing is performed, or in other words window size $T = 1$. The two remaining boolean flags $A$ and $N$ control whether the augmentation of training data, respectively the input noise injection as described in section \ref{sec:prep} is performed. The hyperparameters of these methods which control the amount of noise added and scaling done are the default settings used in the implementation of data augmentation for wearable sensor data \cite{um_augmentation_2017}. Various combinations of these parameters for each dataset have been selected and evaluated. In particular, the usefulness of MAF as the density estimation component is evaluated and compared to the baseline method of estimating densities with a MVN per activity class as described in section \ref{sec:densest}. For this evaluation, the average log likelihood obtained over all test samples is reported. As the downstream task is the recognition of activities, two different components for the density estimation component are compared using the simple recognition model. More precisely, the recognition accuracy as well as macro weighted F1 score of both MVN and MAF densities are compared. To predict activities from sample densities, the simple Bayes classifier is used. The results of all experiments are reported in section \ref{sec:results}.
+To evaluate the usefulness of neural density estimation methods for HAR applications several experiments were conducted on the previously introduced datasets. From the set of optional pre-processing steps, five tunable parameters are obtained. Three boolean flags can be set for windowing ($W$), augmentation ($A$), and input noise injection ($N$). If windowing is true, some window size $T \geq 2$ needs to be specified. In this case, also a step size $s$ with $1 \leq s \leq T$ should be given for stepping the segments in the training data. In the experiments presented here, the step size is fixed to $s = \frac{T}{2}$ such that the training data segments have an overlap of 50 \%. Validation and testing sets use segmentation without overlap by default. If windowing is false, this indicates that no explicit windowing is performed, or in other words window size $T = 1$. The two remaining boolean flags $A$ and $N$ control whether the augmentation of training data, respectively the input noise injection as described in section \ref{sec:prep} is performed. The hyperparameters of these methods which control the amount of noise added and scaling done are the default settings used in the implementation of data augmentation for wearable sensor data \cite{um_augmentation_2017}. Various combinations of these parameters for each dataset have been selected and evaluated. In particular, the usefulness of MAF as the density estimation component is evaluated and compared to the baseline method of estimating densities with a MVN per activity class as described in section \ref{sec:densest}. For this evaluation, the average log likelihood obtained over all test samples is reported. As the downstream task is the recognition of activities, two different components for the density estimation component are compared using two different recognition models. More precisely, the recognition accuracy of both MVN and MAF densities are compared using the Bayes classifier and an HMM as the two recognition models. The results of all experiments are reported in section \ref{sec:results}.
 
 \paragraph{Train-Test Split}
 To facilitate an evaluation that is as close to a real world scenario as possible, a leave-one-subject-out strategy was employed for splitting the data into test and training set. Realistically, the model would be trained on some data and each new subject would not have its data in the training set. This fact is emulated by leaving one or more subjects completely out of the training set and using this subject for testing. This strategy was employed for the Carrot and MotionSense datasets, for the UCI HAR dataset the predefined train-test split was used which also leaves a set of subjects completely out of the training set. For the Carrot dataset it was decided arbitrarily that subject 7 would be the test subject and the remaining data would be used with a 70 \% - 30 \% split for training and validation.  The MotionSense data was split in such a way that subjects 1 to 14 are used for training, 15 to 19 for validation and  20 to 24 as test subjects. UCI HAR splits the data such that 56 \% of subjects are used for training, 14 \% for validation and 30 \% for testing.
 
 \paragraph{Settings}
-All experiments are conducted with a five layer MAF, the number of hidden neurons in each MADE Layer is $H=512$. The parameters are updated by minimizing the negative log likelihood over the training data. The Adam optimizer is used with a base learning rate of $\lambda = 5 \times 10^{-5}$ and a weight decay of $d = 1 \times 10^{-6}$. The batch size is set to $bs = 128$. The model was trained using CUDA on an NVIDIA RTX 2070 SUPER.
+All experiments are conducted with a five layer MAF, the number of hidden neurons in each MADE Layer is $H=512$. The parameters are updated by minimizing the negative log likelihood over the training data. The Adam optimizer is used with a base learning rate of $\lambda = 5 \times 10^{-5}$ and a weight decay of $d = 1 \times 10^{-6}$. The batch size is set to $bs = 128$. The model was trained on a commercial computer. Utilizing the PyTorch framework with CUDA enabled on a single NVIDIA RTX 2070 SUPER GPU.
 
 
 \section{Results}
 \label{sec:results}
-Table \ref{tab:2eps} shows the results of experiments where MAF was only trained for 2 epochs. The individual settings regarding the optional pre-processing steps can be read off the table.
 
-\begin{table}
+\subsection{Carrot Dataset}
+Table \ref{tab:2eps} shows the results of experiments on the Carrot dataset, where MAF was only trained for 2 epochs. The individual settings regarding the optional pre-processing steps can be read off the table.
+
+\begin{table}[H]
 	\centering
 	\tiny
-\begin{tabularx}{0.97\textwidth}{llrrllrrrr}
-	\toprule
-	Dataset &  W &  T &  s &  A &  N &    MVN LL &    MAF LL &  MVN ACC &  MAF ACC \\
-	\midrule
-	CARROT &   F &       1 &       1 &    F &  F &   63.1 &   \textbf{68.2} &   \textbf{0.6006} &   0.5384 \\
-	CARROT &   F &       1 &       1 &    F &   T &   56.8 &   \textbf{59.7} &   0.5932 &   \textbf{0.6037} \\
-	CARROT &   F &       1 &       1 &     T &  F &   52.1 &   \textbf{68.2} &  \textbf{0.5683} &   0.5624 \\
-	CARROT &   F &       1 &       1 &     T &   T &   45.7 &   \textbf{59.2} &   0.5103 &   \textbf{0.6166} \\
-	CARROT &   T &      26 &      13 &    F &  F & \textbf{2986.3} & 1555.2 &   \textbf{0.3299} &   0.3290 \\
-	CARROT &   T &      26 &      13 &    F &   T & \textbf{2016.8} & 1416.1 &   \textbf{0.4398} &   0.3861 \\
-	CARROT &   T &      26 &      13 &     T &  F & \textbf{1881.1} & 1720.2 &   \textbf{0.4312} &   0.4121 \\
-	CARROT &   T &      26 &      13 &     T &   T & \textbf{1566.9} & 1513.4 &   0.4909 &   \textbf{0.5351} \\
-	CARROT &   T &       8 &       4 &     T &  F &  530.5 & \textbf{695.9} &   0.3759 &   \textbf{0.5341} \\
-	CARROT &   T &      64 &      32 &     T &  F & 1376.0 & \textbf{3319.6} &   0.1215 &   \textbf{0.4030} \\
-	UCIHAR &   T &     128 &      64 &    F &  F &  \textbf{717.9} &  351.8 &   \textbf{0.9444} &   0.6291 \\
-	\bottomrule
-\end{tabularx}
-\caption[Evaluation Results Carrot]{\label{tab:2eps} Log likelihoods and prediction accuracies of MAF and a baseline multivariate normal distribution trained per class with unconstrained covariance matrix. The Settings of the experiments are reported in the first 6 columns, the results in the remaining four. MAF was trained for a maximum of 2 epochs with the settings described above.}
-\end{table}
-
-\begin{table}
-	\centering
-	\tiny
-\begin{tabular}{c l c c c c c c c c c c}
-	\toprule
-	\multirow{2}{*}{\bfseries Dataset} & 
-	\multirow{2}{*}{\bfseries W} & 
-	\multirow{2}{*}{\bfseries T} &
-	\multirow{2}{*}{\bfseries s} &
-	\multirow{2}{*}{\bfseries A} &
-	\multirow{2}{*}{\bfseries N} &
-	\multicolumn{2}{c}{\bfseries LL} & 
-	\multicolumn{4}{c}{\bfseries Accuracy}\\
-	\cmidrule(lr){7-8}
-	\cmidrule(lr){9-12}
-	 & & & & & & MVN & MAF & MVN + Bay. & MAF + Bay. & MVN + HMM & MAF + HMM \\
-	\cmidrule(lr){1-12}
-	%------
-	CARROT &   F &       1 &       1 &    F &  F &   63.1 &   \textbf{68.2} &   \textbf{0.6006} &   0.5384 \\
-	CARROT &   F &       1 &       1 &    F &   T &   56.8 &   \textbf{59.7} &   0.5932 &   \textbf{0.6037} \\
-	CARROT &   F &       1 &       1 &     T &  F &   52.1 &   \textbf{68.2} &  \textbf{0.5683} &   0.5624 \\
-	CARROT &   F &       1 &       1 &     T &   T &   45.7 &   \textbf{59.2} &   0.5103 &   \textbf{0.6166} \\
-	CARROT &   T &      26 &      13 &    F &  F & \textbf{2986.3} & 1555.2 &   \textbf{0.3299} &   0.3290 \\
-	CARROT &   T &      26 &      13 &    F &   T & \textbf{2016.8} & 1416.1 &   \textbf{0.4398} &   0.3861 \\
-	CARROT &   T &      26 &      13 &     T &  F & \textbf{1881.1} & 1720.2 &   \textbf{0.4312} &   0.4121 \\
-	CARROT &   T &      26 &      13 &     T &   T & \textbf{1566.9} & 1513.4 &   0.4909 &   \textbf{0.5351} \\
-	CARROT &   T &       8 &       4 &     T &  F &  530.5 & \textbf{695.9} &   0.3759 &   \textbf{0.5341} \\
-	CARROT &   T &      64 &      32 &     T &  F & 1376.0 & \textbf{3319.6} &   0.1215 &   \textbf{0.4030} \\
-	UCIHAR &   T &     128 &      64 &    F &  F &  \textbf{717.9} &  351.8 &   \textbf{0.9444} &   0.6291 \\
-	\bottomrule
-\end{tabular}
-\end{table}
-
-The first result that becomes apparent is that MAF achieves higher likelihoods if the data is not windowed or window sizes are relatively small. This result is expected, as MAF is a much more flexible model than a set of MVN conditioned on the class. MAF should in theory be able to fit an arbitrary distribution while MVN is expected to only be a good fit if individual features are (approximately) normally distributed. Given this discrepancy in log likelihood (LL) it is surprising that MVN significantly outperforms MAF in the base case where no windowing, augmentation or noise injection is done. In that case MVN achieves a LL of 63.1 while that of the MAF is 68.2. Nevertheless, MVN achieves the higher recognition accuracy at 60.06 \%, an increase of 6.22 percentage points (pp) from the result of MAF at 53.84 \%. This outcome warrants the investigation into the Carrot dataset to check if features may indeed be normally distributed which could explain the good performance of the MVN. To examine this, a $30 \times 30$ pair plot was drawn, which plots a histogram per feature from $1600$ samples of the Carrot data and compares each feature to all others. An excerpt of this plot can be found in appendix \ref{cha:appendix-b}, the script to generate it is contained in the attached code. The plot shows that circa half of the 30 features from the Carrot dataset are somewhat well represented by a normal distribution. Given this result, the fact that a MVN performs well is less surprising. Still, the overall recognition accuracy is relatively low at around 60 \%. This can be explained by the fact that the Carrot dataset is very challenging to learn from. The first challenge is, that it is relatively small. Data stems from only 7 subjects and the number of total (non-windowed) training samples is also low at 146570. As discussed in section \ref{sec:prep} a low number of training subjects might lead to difficulties during the learning process due to the high intra-class variability in HAR tasks. In that sense it is plausible that a less flexible model can achieve better results simply because it cannot overfit to the training data as much and thus generalize better to sensor readings from unseen subjects which perform activities slightly differently from those subjects in the training data. The second difficulty of the Carrot data is that some activities occur much less frequently at a shorter duration or have many different concrete expressions. To illustrate  this let us look at two activities that are hard to recognize in greater detail (insert picture of Confusion matrix to actually show this.). The activity \emph{stand up} for example has the lowest relative frequency in the dataset at 0,0036. Also the duration of that activity typically very short. At prediction time it is often confused with other activities that are more frequent. The activity \emph{put} is third most frequent (0,1151) in the training data, but still recognizing it accurately seems difficult. The confusion matrix shows that it has a large spread of other activities that is is confused with at test time. A plausible explanation for this observation is that \emph{put} can have various expressions, which differ greatly in the sensor readings they produce: Putting a glass in a cupboard above your head produces different measurements from putting a dish in the sink at waist level. It is also interesting to see that this activity is often confused with the activity \emph{eat}. Interpreting eating as putting food in ones mouth may explain this. These results are supported by other researchers as well. For example Rueda et al. \cite{rueda_combining_2019} report an overall recognition accuracy on subject 7 of the Carrots data of 65.2 \% using a CNN. However, the recognition accuracy of the activity \emph{put} is only 35.1 \% and that of \emph{stand up} is 11.7 \%.
-
-
-\begin{table}
-	\centering
-	\tiny
-	\begin{tabularx}{0.85\textwidth}{llrrllrrrr}
+	\begin{tabular}{c l c c c c c c c c c c}
 		\toprule
-		Dataset &  W &  T &  s &  A &  N &    MVN LL &    MAF LL &  MVN ACC &  MAF ACC \\
-		\midrule
-		MOSENSE &    True &     128 &      64 &    False &  False & -242.2431 & 1264.8010 &   0.4966 &   0.7487 \\
-		MOSENSE &    True &     128 &      64 &    False &   True &  435.8816 & 1200.5637 &   0.6580 &   0.8254 \\
-		MOSENSE &    True &     128 &      64 &     True &  False &  587.4257 & 1582.0021 &   0.6731 &   0.8030 \\
-		MOSENSE &    True &     128 &      64 &     True &   True &  210.0161 & 1284.2458 &   0.6544 &   0.7916 \\
-		MOSENSE &    True &      64 &      32 &     True &   True &  579.2101 &  868.5525 &   0.8166 &   0.8046 \\
-		MOSENSE &    True &      32 &      16 &     True &   True &  289.0209 &  516.7429 &   0.7376 &   0.7864 \\
-		UCIHAR &    True &       0 &       0 &    False &  False &  846.4878 & 1256.1664 &   0.9474 &   0.8792 \\
-		UCIHAR &    True &       0 &       0 &    False &   True &  846.4878 &  868.8217 &   0.9474 &   0.9433 \\
+		\multirow{2}{*}{\bfseries Dataset} & 
+		\multirow{2}{*}{\bfseries W} & 
+		\multirow{2}{*}{\bfseries T} &
+		\multirow{2}{*}{\bfseries s} &
+		\multirow{2}{*}{\bfseries A} &
+		\multirow{2}{*}{\bfseries N} &
+		\multicolumn{2}{c}{\bfseries LL} & 
+		\multicolumn{4}{c}{\bfseries Accuracy}\\
+		\cmidrule(lr){7-8}
+		\cmidrule(lr){9-12}
+		& & & & & & MVN & MAF & MVN + Bay. & MAF + Bay. & MVN + HMM & MAF + HMM \\
+		\cmidrule(lr){1-12}
+		%------
+		CARROT &   F &       1 &       1 &    F &  F &   65.5 &   \textbf{68.2} &   \textbf{0.6006} &   0.5384 &   0.6005 &   0.5381 \\
+		CARROT &   F &       1 &       1 &    F &  T &   59.4 &   \textbf{59.7} &   0.5932 &   \textbf{0.6037} &   0.5927 &   0.6034 \\
+		CARROT &   F &       1 &       1 &    T &  F &   54.8 &   \textbf{68.2} &   \textbf{0.5683} &   0.5624 &   0.5680 &   0.5621 \\
+		CARROT &   F &       1 &       1 &    T &  T &   48.3 &   \textbf{59.2} &   0.5103 &   0.6166 &   0.5101 &   \textbf{0.6202} \\
+		CARROT &   T &      26 &      13 &    F &  F & \textbf{2988.3} & 1555.2 &   \textbf{0.3299} &   0.3290 &   0.3299 &   0.3290 \\
+		CARROT &   T &      26 &      13 &    F &  T & \textbf{2018.9} & 1416.1 &   \textbf{0.4398} &   0.3861 &   0.4398 &   0.3887 \\
+		CARROT &   T &      26 &      13 &    T &  F & \textbf{1883.5} & 1720.2 &   \textbf{0.4312} &   0.4121 &   0.4312 &   0.4130 \\
+		CARROT &   T &      26 &      13 &    T &  T & \textbf{1569.2} & 1513.4 &   0.4909 &   \textbf{0.5351} &   0.4900 &   0.5342 \\
+		CARROT &   T &       8 &       4 &    T &  F &  534.0 &  \textbf{695.9} &   0.3759 &   0.5341 &   0.3713 &   \textbf{0.5344} \\
+		CARROT &   T &      64 &      32 &    T &  F & 1378.6 & \textbf{3319.6} &   0.1215 &   \textbf{0.4030} &   0.1215 &   0.4030 \\
 		\bottomrule
-	\end{tabularx}
-	\caption[Evaluation Results Motion Sense]{\label{tab:eps50} Log likelihoods and prediction accuracies of MAF and a baseline multivariate normal distribution trained per class with unconstrained covariance matrix. The Settings of the experiments are reported in the first 6 columns, the results in the remaining four. MAF was trained for a maximum of 50 epochs with the settings described above.}
+	\end{tabular}
+	\caption[Evaluation Results Carrot, Short]{\label{tab:2eps} Log likelihoods and recognition accuracies of MAF and a baseline MVN trained per class with unconstrained covariance matrix. The settings of the experiments are reported in the first six columns, the results in the remaining six. MAF was trained for a maximum of 2 epochs.}
 \end{table}
 
+\paragraph{Comparing MVN and MAF}
+\noindent The first result that becomes apparent is that MAF achieves higher likelihoods if the data is not windowed or window sizes are relatively small. This result is expected, as MAF is a much more flexible model than a set of MVN conditioned on the class. MAF should in theory be able to fit an arbitrary distribution while MVN is expected to only be a good fit if individual features are (approximately) normally distributed. Given this discrepancy in log likelihood (LL) it is surprising that MVN significantly outperforms MAF in the base case where no windowing, augmentation or noise injection is done. In that case MVN achieves a LL of 65.5 while that of the MAF is 68.2. Nevertheless, MVN achieves the higher recognition accuracy at 60.06 \%, an increase of 6.22 percentage points (pp) from the result of MAF at 53.84 \%. This outcome warrants the investigation into the Carrot dataset to check if features may indeed be normally distributed which could explain the good performance of the MVN.
 
+To examine this, a $30 \times 30$ pair plot was drawn, which plots a histogram per feature from $1600$ samples of the Carrot data and compares each feature to all others. An excerpt of this plot can be found in appendix \ref{cha:appendix-b}, the script to generate it is contained in the attached code. The plot shows that circa half of the 30 features from the Carrot dataset are somewhat well represented by a normal distribution. Given this result, the fact that a MVN performs well is less surprising. Still, the overall recognition accuracy is relatively low at around 60 \%. This can be explained by the fact that the Carrot dataset is difficult to learn from.
 
+\paragraph{Challenges of the Carrot Dataset}
+The first challenge is, that it is relatively small. Data stems from only 7 subjects and the number of total (non-windowed) training samples is also low at 146570. As discussed in section \ref{sec:prep} a low number of training subjects might lead to difficulties during the learning process due to the high intra-class variability in HAR tasks. In that sense it is plausible that a less flexible model can achieve better results simply because it cannot overfit to the training data as much and thus generalize better to sensor readings from unseen subjects which perform activities slightly differently from those subjects in the training data. The second difficulty of the Carrot data is that some activities occur much less frequently at a shorter duration or have many different concrete expressions. To illustrate this let us look at two activities that are hard to recognize in greater detail. To illustrate these examples figure \ref{fig:conf} shows the confusion matrix of the Bayes classifier using MAF densities. The activity \emph{stand up} for example has the lowest relative frequency in the dataset at 0.36 \%. Also the duration of that activity is typically very short. At prediction time it is often confused with other activities that are more frequent. The activity \emph{put} is third most frequent (11.51 \%) in the training data, but still recognizing it accurately seems difficult. The confusion matrix shows that it has a large spread of other activities that is is confused with at test time. A plausible explanation for this observation is that \emph{put} can have various expressions, which differ greatly in the sensor readings they produce: Putting a glass in a cupboard above your head produces different measurements from putting a dish in the sink at waist level. Other activities follow a more strict pattern. It is also interesting to see that \emph{put} is often confused with the activity \emph{eat}. Interpreting eating as putting food in ones mouth may help to explain this pattern. Similarly put and take are often confused for each other which is also an intuitive result as they share much of the same motion patterns. The result that the Carrot dataset is difficult to train on is supported by other researchers as well. For example Rueda et al. \cite{rueda_combining_2019} report an overall activity recognition accuracy on subject 7 of the Carrots data of 65.2 \% using a CNN. However, the overall recognition accuracy of the activity \emph{put} is only 35.1 \% and that of \emph{stand up} is 11.7 \%.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth]{conf_mat.jpg}
+	\caption[Confusion Matrix MAF with Bayes classifier]{Confusion matrix of the Bayes classifier on MAF densities with settings W=False, A=True, N=True (own image).}
+	\label{fig:conf}
+\end{figure}
+
+Due to the lack of subject variety and class imbalance, generalization performance on data from unseen subjects is poor. MAF has the tendency to overfit easily to a few or only one of the most frequent classes on the Carrot dataset. This behavior was observed early during the development of the model presented here. In fact, when optimizing the model parameters with a large initial learning rate or using a more complex MAF with a greater number of hidden neurons or layers, a severe case of mode collapse is observed. That is, the model learns an unimodal density which only assigns plausible densities to one class and the conditional densities for all other classes are infinitesimally small. To counteract this, a small initial learning rate and a sufficient but not too large number of hidden neurons needs to be chosen for training MAF.
+
+\paragraph{Effectiveness of Pre-Processing}
+Even with a suitable hyperparameter configuration, MAF tends to overfit on the Carrot data. Table \ref{tab:100eps} shows the results of the experiments where MAF was trained for a maximum of 100 epochs and supports this claim. It can be observed that without any additional measures to combat overfitting, the accuracy diminishes significantly compared to the results presented in table \ref{tab:2eps} where the MAF was only trained for two epochs. Thus, the effect of input noise injection and data augmentation is evaluated. Especially the addition of noise appears to counteract the overfitting effectively. Being such a simple measure it is able to not only stop the decrease in accuracy but allows for a more robust learning process where the performance actually increases over time. On its own, data augmentation does not increase recognition performance but in combination with noise the best results on the Carrot data are achieved at a recognition performance of 62,76 \%.
+
+\begin{table}[H]
+	\centering
+	\tiny
+	\begin{tabular}{c l c c c c c c c c c c}
+		\toprule
+		\multirow{2}{*}{\bfseries Dataset} & 
+		\multirow{2}{*}{\bfseries W} & 
+		\multirow{2}{*}{\bfseries T} &
+		\multirow{2}{*}{\bfseries s} &
+		\multirow{2}{*}{\bfseries A} &
+		\multirow{2}{*}{\bfseries N} &
+		\multicolumn{2}{c}{\bfseries LL} & 
+		\multicolumn{4}{c}{\bfseries Accuracy}\\
+		\cmidrule(lr){7-8}
+		\cmidrule(lr){9-12}
+		& & & & & & MVN & MAF & MVN + Bay. & MAF + Bay. & MVN + HMM & MAF + HMM \\
+		\cmidrule(lr){1-12}
+		%------
+		CARROT &   F &       1 &       1 &    F &  F &   \textbf{65.5} &   47.2 &   \textbf{0.6006} &   0.3938 &   0.6005 &   0.3936 \\
+		CARROT &   F &       1 &       1 &    F &  T &   59.4 &  \textbf{ 61.4} &   0.5932 &   \textbf{0.6083} &   0.5927 &   0.6080 \\
+		CARROT &   F &       1 &       1 &    T &  F &   \textbf{54.8} &   53.1 &  \textbf{0.5683} &   0.3289 &   0.5680 &   0.3293 \\
+		CARROT &   F &       1 &       1 &    T &  T &   48.3 &   \textbf{60.8} &   0.5103 &  \textbf{0.6276} &   0.5101 &   0.6276 \\
+		CARROT &   T &      26 &      13 &    F &  F & \textbf{2988.3} & 2860.8 &   0.3299 &   \textbf{0.4026} &   0.3299 &   0.4026 \\
+		CARROT &   T &      26 &      13 &    F &  T & \textbf{2018.9} & 1951.1 &   \textbf{0.4398} &   0.3377 &   0.4398 &   0.3385 \\
+		CARROT &   T &      26 &      13 &    T &  F & 1883.5 & \textbf{2965.4} &   0.4312 &   \textbf{0.4779} &   0.4312 &   0.4771 \\
+		CARROT &   T &      26 &      13 &    T &  T & 1569.2 & \textbf{1972.0} &   \textbf{0.4909} &   0.3203 &   0.4900 &   0.3203 \\
+		CARROT &   T &       8 &       4 &    T &  F &  534.0 & \textbf{1032.3} &   0.3759 &   \textbf{0.5125} &   0.3713 &   0.5117 \\
+		CARROT &   T &      64 &      32 &    T &  F & 1378.6 & \textbf{5491.9} &   0.1215 &   \textbf{0.4051} &   0.1215 &   0.4051 \\
+		\bottomrule
+	\end{tabular}
+\caption[Evaluation Results Carrot, Long]{\label{tab:100eps} Log likelihoods and recognition accuracies of MAF and a baseline MVN trained per class with unconstrained covariance matrix. The settings of the experiments are reported in the first six columns, the results in the remaining six. MAF was trained for a maximum of 100 epochs.}
+\end{table}
+
+When looking at the case where data is segmented into windows of size $T=26$ it is apparent that for short training periods augmentation, noise injection and especially the combination of both, improve recognition performance significantly from the base case. However, overall performance versus the non-windowed data is lower. This is true for predictions using MAF densities but also those using the MVN densities. A possible explanation for this is, that the increased dimensionality of windowed data makes accurate density estimation much more difficult. Models which cope well with high dimensional data and are designed as discriminative models to predict classes such as CNNs may therefore be better suited for windowed high dimensional data. To support this argument, Rueda et al. \cite{rueda_combining_2019} achieve the 65.2 \% accuracy on the Carrot dataset with a CNN on data that has been segmented into windows of size $T=128$. In the case where the MAF was trained for 100 epochs only augmentation has a net positive effect on recognition accuracy over the base case. These results also indicate that a small window size may be better for estimating useful densities with MAF.
+
+\paragraph{Comparing Bayes Classifier and HMM}
+From the results it can be observed that in most cases the recognition accuracy when using the simple Bayes classifier differs not or only marginally from that of an HMM. In most cases the HMM recognizes activities slightly less accurately. Two notable exceptions to this can be found in table \ref{tab:2eps}, where the HMM outperforms the Bayes classifier slightly, using MAF densities. Generally, the densities provided by MVN and MAF on the Carrot dataset are overconfident, i.e., they are especially high for one or a few classes and low for the remaining. Thus, neither the a Bayes classifier nor the more complex HMM recognition model have a large impact on recognition accuracy. For a shorter training duration MAF estimates are less overconfident, which may explain the result introduced above.
+
+\subsection{MotionSense Dataset}
+The training of the MotionSense dataset is more robust and does not tend to mode collapse as training continues. As the recognition performance increases over the epochs, only the results of training MAF for 100 epochs are presented here. They can be found in table \ref{tab:mos}.
+
+\begin{table}[H]
+	\centering
+	\tiny
+	\begin{tabular}{c l c c c c c c c c c c}
+		\toprule
+		\multirow{2}{*}{\bfseries Dataset} & 
+		\multirow{2}{*}{\bfseries W} & 
+		\multirow{2}{*}{\bfseries T} &
+		\multirow{2}{*}{\bfseries s} &
+		\multirow{2}{*}{\bfseries A} &
+		\multirow{2}{*}{\bfseries N} &
+		\multicolumn{2}{c}{\bfseries LL} & 
+		\multicolumn{4}{c}{\bfseries Accuracy}\\
+		\cmidrule(lr){7-8}
+		\cmidrule(lr){9-12}
+		& & & & & & MVN & MAF & MVN + Bay. & MAF + Bay. & MVN + HMM & MAF + HMM \\
+		\cmidrule(lr){1-12}
+		%------
+		MOSENSE &    T &     128 &      64 &    F &  F & -240.8 & \textbf{1485.4} &   0.4966 &   0.7788 &   0.4952 &   \textbf{0.7825} \\
+		MOSENSE &    T &     128 &      64 &    F &  T &  437.3 & \textbf{1316.2} &   0.6580 &   0.7848 &   0.6580 &   \textbf{0.7857} \\
+		MOSENSE &    T &     128 &      64 &    T &  F &  588.9 & \textbf{1622.0} &   0.6731 &   \textbf{0.8067} &   0.6731 &   0.8057 \\
+		MOSENSE &    T &     128 &      64 &    T &  T &  211.5 & \textbf{1316.3} &   0.6544 &   0.7738 &   0.6544 &   \textbf{0.7743} \\
+		MOSENSE &    T &      64 &      32 &    F &  T &  874.3 &  \textbf{876.5} &   0.8222 &   0.8123 &   0.8229 &   \textbf{0.8324} \\
+		MOSENSE &    T &      64 &      32 &    T &  T &  581.0 &  \textbf{894.2} &   \textbf{0.8166} &   0.7911 &   0.8164 &   0.7974 \\
+		MOSENSE &    T &      32 &      16 &    F &  T &  442.3 &  \textbf{532.6} &   0.7380 &   \textbf{0.8033} &   0.7386 &   0.2541 \\
+		MOSENSE &    T &      32 &      16 &    T &  T &  290.9 &  \textbf{541.4} &   0.7376 &   \textbf{0.7862} &   0.7377 &   0.2018 \\
+		\bottomrule
+	\end{tabular}
+	\caption[Evaluation Results MotionSense, Long]{\label{tab:mos} Log likelihoods and recognition accuracies of MAF and a baseline MVN trained per class with unconstrained covariance matrix. The settings of the experiments are reported in the first six columns, the results in the remaining six. MAF was trained for a maximum of 100 epochs.}
+\end{table}
+
+\noindent It can be observed that MAF achieves higher likelihoods than MVN across all experiments. In contrast to the Carrot data, this higher likelihood does result in an increased recognition accuracy in most of the cases. Augmentation and noise injection both appear to have a net positive effect on the recognition accuracy however for MotionSense the effect of data augmentation is greater than that of noise injection. Noise injection was added primarily with the idea that can prevent overfitting and mode collapse, as the results indicate that this is not an issue that occurs for MotionSense, adding noise only has a limited benefit. Augmentation does improve the base recognition rate. This supports the arguments that by adding altered examples to the training data, the high intra-class variability of sensor data from different subjects can be modeled further. The results indicate that using both, augmentation and noise, at the same time might be too much. This is plausible, as naturally the likelihood decreases by adding noisy examples. The highest recognition accuracy is achieved for the HMM using MAF densities at 83. 4 \%. The authors of this dataset report an average classification accuracy of ca. 92 \% \cite{malekzadeh_mobile_2019} using a CNN. They segment data with a window size of $T=128$. Overall it is interesting to see that for MotionSense the HMM recognition model is able to outperform the Bayesian classifier in many cases. A notable exception to this rule is the case of MAF + HMM where data is segmented into windows of size $T=32$. Here the recognition accuracy of the HMM collapses. However, it should be noted that for both the MotionSense and the UCI HAR data the activities have been recorded in trials which means that the sequence of activities is pre-defined and does not follow some goal driven behavior where different paths to a goal can be taken, as is the case for the Carrot dataset. Thus, the transition matrix of the HMM for those datasets contains a very high probability of staying in its own activity, then a small transition probability to the next trial activity and zero probability for all other activities. This severely limits the relevance of using an HMM for datasets where the structure of activities is pre-defined, like MotionSense or UCI HAR.
+
+\subsection{UCI HAR Dataset}
+As for MotionSense, training on the UCI HAR dataset is more robust than for the Carrot data. Because of this, and since no additional steps are used for this already pre-processed dataset, only one experiment was conducted here as a baseline for comparison. The results of this experiment are shown in table \ref{tab:uci}.
+
+\begin{table}[H]
+	\centering
+	\tiny
+	\begin{tabular}{c l c c c c c c c c c c}
+		\toprule
+		\multirow{2}{*}{\bfseries Dataset} & 
+		\multirow{2}{*}{\bfseries W} & 
+		\multirow{2}{*}{\bfseries T} &
+		\multirow{2}{*}{\bfseries s} &
+		\multirow{2}{*}{\bfseries A} &
+		\multirow{2}{*}{\bfseries N} &
+		\multicolumn{2}{c}{\bfseries LL} & 
+		\multicolumn{4}{c}{\bfseries Accuracy}\\
+		\cmidrule(lr){7-8}
+		\cmidrule(lr){9-12}
+		& & & & & & MVN & MAF & MVN + Bay. & MAF + Bay. & MVN + HMM & MAF + HMM \\
+		\cmidrule(lr){1-12}
+		%------
+		UCIHAR &    True &     128 &      64 &    False &  False & -168.4 & \textbf{1375.6} &   0.8982 &   \textbf{0.9230} &   0.8985 &   0.9230 \\
+		\bottomrule
+	\end{tabular}
+	\caption[Evaluation Results UCI HAR, Long]{\label{tab:uci} Log likelihoods and recognition accuracies of MAF and a baseline MVN trained per class with unconstrained covariance matrix. The settings of the experiment are reported in the first six columns, the results in the remaining six. MAF was trained for a maximum of 100 epochs.}
+\end{table}
+
+\noindent Both the Bayes classifier and HMM achieve the same recognition accuracy using MAF densities of 92.3 \%. Here the MVN is outperformed in both log likelihood as well as prediction performance. On paper the UCI HAR data is the easiest dataset evaluated in this thesis, which the results reflect. However, the same limitation as for MotionSense in regard to the non goal directed activities applies here.
+
+These baseline results still provide a good intuition over the usefulness of MAF for density estimation and subsequent activity recognition. Despite the window size of $T=128$, both MAF and MVN achieve high activity recognition accuracies on this dataset. A plausible argument can be made that the pre-computed 561 features per window can be better used by those models to estimate densities, since they are not as high dimensional as raw windowed data of the same window size. The best result of 92.3 \% accuracy achieved here is in line with results from other researchers. For example, Eldele et al. \cite{eldele_time-series_2021} achieve an accuracy of 90.37 \% with their approach for time series representation learning while the iSPLInception model by Ronald et al. \cite{ronald_isplinception_2021} achieves with 95.09 \% the highest accuracy on UCI HAR at the time of writing.
 
 \chapter{Conclusion}
 \label{cha:conclusion}

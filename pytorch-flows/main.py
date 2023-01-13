@@ -14,13 +14,14 @@ from scipy.special import logsumexp
 from MVN_Benchmark import run_mvn
 import pandas as pd
 import sys
+import os
 from dataloader.loaders import one_hot_encode, get_carrots, load_conditional_test, get_UCIHAR
 from dataloader.preprocess_motion_sense import get_moSense
 
 if sys.version_info < (3, 6):
     print('Sorry, this code might need Python 3.6 or higher')
 
-flow = "maf"  # 'maf' or 'made'
+flow = "maf"
 batch_size = 128 # default 128
 test_bs = 128 # default 128
 num_blocks = 5  # number of mades in maf, default 5
@@ -29,7 +30,7 @@ lr = 5e-5  # 5e-5 works well
 weight_decay = 1e-6 # default 1e-6
 patience = 5  # For early stopping
 seed = 42
-max_epochs = 2
+max_epochs = 100
 cond = True
 no_cuda = False
 
@@ -224,9 +225,7 @@ def train(epoch, model, train_loader, optimizer):
     print('Epoch Complete')
 
 
-def validate(epoch, model, loader, prefix='Validation'):
-    print(f'Beginning validation epoch {epoch}')
-    # global global_step, writer
+def validate(model, loader, prefix='Validation'):
 
     model.eval()
     val_loss = 0
@@ -258,13 +257,12 @@ def validate(epoch, model, loader, prefix='Validation'):
         pbar.set_description('Val, Log likelihood in nats: {:.6f}'.format(
             -val_loss / pbar.n))
 
-    # writer.add_scalar('validation/LL', val_loss / len(loader.dataset), epoch)
 
     pbar.close()
     return val_loss / len(loader.dataset)
 
 
-def get_log_pxy(epoch, model, loader):
+def get_log_pxy(model, loader):
 
     log_pxy = []
     model.eval()
@@ -303,7 +301,7 @@ def log_matmul(A,B):
     Bstack = np.stack([B]*A.shape[0]).transpose(0,2,1)
     return logsumexp(Astack+Bstack, axis=2)
 
-def evaluate(data, labels, trn_y, epoch, model, log_priors, num_cond_inputs):
+def evaluate(data, labels, trn_y, model, log_priors, num_cond_inputs):
     # run Bayes classifier prediction
     lik = {}
     N = labels.shape[0]
@@ -322,7 +320,7 @@ def evaluate(data, labels, trn_y, epoch, model, log_priors, num_cond_inputs):
             shuffle=False,
             drop_last=False)
 
-        log_pxy = get_log_pxy(epoch, model, pred_loader)
+        log_pxy = get_log_pxy(model, pred_loader)
 
         lik[i] = log_pxy
 
@@ -382,39 +380,51 @@ def plot_confMat(le, tst_y, y_pred):
 
 def run(dataset, cond_inputs, window, win_size, trn_step, augment, noise, plot=False):
     train_loader, valid_loader, test_loader, test_tensor, tst_y, D, log_priors, le, trn_y = load_data(dataset, cond_inputs, window, win_size, trn_step, augment, noise)
-    model = initialize_model('maf', D, cond_inputs)
-    model.to(device)
-    optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
-    print('Training Length: ', len(train_loader.dataset))
     
-    print('Beginning Training')
-    best_validation_loss = float('inf')
-    best_validation_epoch = 0
-    best_model = model
-
-    for epoch in range(max_epochs):
-        print('\nEpoch: {}'.format(epoch))
-
-        train(epoch, model, train_loader, optimizer)
-        validation_loss = validate(epoch, model, valid_loader)
+    '''
+    Load model if it already exists for evaluation purposes, else initilaize
+    and train from scratch.
+    '''
+    fname = f'models/MAF_{dataset}_{window}_{win_size}_{augment}_{noise}_{max_epochs}.pt'
+    if os.path.isfile(fname):
+        best_model = torch.load(fname)
+        best_model.eval()
+    else:
+        model = initialize_model('maf', D, cond_inputs)
+        model.to(device)
+        optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
+        print('Training Length: ', len(train_loader.dataset))
         
-        if epoch - best_validation_epoch >= patience:
-            break
+        print('Beginning Training')
+        best_validation_loss = float('inf')
+        best_validation_epoch = 0
+        best_model = model
 
-        if validation_loss < best_validation_loss: # Select best model not from validation loss but validation accuracy
-            best_validation_epoch = epoch
-            best_validation_loss = validation_loss
-            best_model = copy.deepcopy(model)
+        for epoch in range(max_epochs):
+            print('\nEpoch: {}'.format(epoch))
 
-        print(
-            'Best validation at epoch {}, with avg. Log likelihood: {:.4f}'.
-            format(best_validation_epoch, -best_validation_loss))
+            train(epoch, model, train_loader, optimizer)
+            validation_loss = validate(model, valid_loader)
+            
+            if epoch - best_validation_epoch >= patience:
+                break
+
+            if validation_loss < best_validation_loss:
+                best_validation_epoch = epoch
+                best_validation_loss = validation_loss
+                best_model = copy.deepcopy(model)
+                torch.save(best_model, fname)
+
+            print(
+                'Best validation at epoch {}, with avg. Log likelihood: {:.4f}'.
+                format(best_validation_epoch, -best_validation_loss))
+
 
     # After training evaluate best model in terms of likelihood and prediction accuracy on
     # test data
-    nll = validate(best_validation_epoch, best_model, test_loader, prefix='Test')
+    nll = validate(best_model, test_loader, prefix='Test')
     ll = -nll
-    bay_acc, hmm_acc, y_pred = evaluate(test_tensor, tst_y, trn_y, best_validation_epoch, best_model, log_priors, cond_inputs)
+    bay_acc, hmm_acc, y_pred = evaluate(test_tensor, tst_y, trn_y, best_model, log_priors, cond_inputs)
     
     if plot:
         plot_confMat(le, tst_y, y_pred)
@@ -437,28 +447,29 @@ Likewise for running the MVN benchmark:
 
 
 # c_exp = [['CARROTS', 16, False, 0, 0, False, False],
-#          ['CARROTS', 16, False, 0, 0, False, True],
-#          ['CARROTS', 16, False, 0, 0, True, False],
-#          ['CARROTS', 16, False, 0, 0, True, True],
-#          ['CARROTS', 16, True, 26, 13, False, False],
-#          ['CARROTS', 16, True, 26, 13, False, True],
-#          ['CARROTS', 16, True, 26, 13, True, False],
-#          ['CARROTS', 16, True, 26, 13, True, True],
-#          ['CARROTS', 16, True, 8, 4, True, False],
-#          ['CARROTS', 16, True, 64, 32, True, False]]
+#           ['CARROTS', 16, False, 0, 0, False, True],
+#           ['CARROTS', 16, False, 0, 0, True, False],
+#           ['CARROTS', 16, False, 0, 0, True, True],
+#           ['CARROTS', 16, True, 26, 13, False, False],
+#           ['CARROTS', 16, True, 26, 13, False, True],
+#           ['CARROTS', 16, True, 26, 13, True, False],
+#           ['CARROTS', 16, True, 26, 13, True, True],
+#           ['CARROTS', 16, True, 8, 4, True, False],
+#           ['CARROTS', 16, True, 64, 32, True, False]]
 
 # m_exp = [['MOSENSE', 6, True, 128, 64, False, False],
-#          ['MOSENSE', 6, True, 128, 64, False, True],
-#          ['MOSENSE', 6, True, 128, 64, True, False],
-#          ['MOSENSE', 6, True, 128, 64, True, True],
-#          ['MOSENSE', 6, True, 64, 32, False, True],
-#          ['MOSENSE', 6, True, 64, 32, True, True],
-#          ['MOSENSE', 6, True, 32, 16, False, True],
-#          ['MOSENSE', 6, True, 32, 16, True, True]]
+#           ['MOSENSE', 6, True, 128, 64, False, True],
+#           ['MOSENSE', 6, True, 128, 64, True, False],
+#           ['MOSENSE', 6, True, 128, 64, True, True],
+#           ['MOSENSE', 6, True, 64, 32, False, True],
+#           ['MOSENSE', 6, True, 64, 32, True, True],
+#           ['MOSENSE', 6, True, 32, 16, False, True],
+#           ['MOSENSE', 6, True, 32, 16, True, True]]
 
 # u_exp = [['UCIHAR', 6, True, 128, 64, False, False]]
 
-# experiments = c_exp + m_exp + u_exp
+# # experiments = c_exp + m_exp + u_exp
+# experiments = m_exp + u_exp
 
 # df = pd.DataFrame(experiments, columns=['Dataset', '# classes', 'Window',
 #                                         'W_size', 'W_step', 'Augment', 'Noise'])
@@ -480,11 +491,11 @@ Likewise for running the MVN benchmark:
 # with open('resultstable.tex', 'w') as tf:
 #       tf.write(df.to_latex(columns=['Dataset', 'Window', 'W_size', 'W_step',
 #                                     'Augment', 'Noise', 'MVN LL', 'MAF LL',
-#                                     'MVN ACC', 'MAF ACC', 'MVN HMM', 'MAF_HMM'],
+#                                     'MVN ACC', 'MAF ACC', 'MVN_HMM', 'MAF_HMM'],
 #                           index=False, float_format="%.4f"))
 
-bay_acc, hmm_acc, ll = run('CARROTS', 16, False, 0, 0, False, False)
-# bay_acc, hmm_acc, ll = run_mvn('CARROTS', 16, False, 0, 0, False, False)
+bay_acc, hmm_acc, ll = run('CARROTS', 16, False, 0, 0, True, True, plot=True)
+# # bay_acc, hmm_acc, ll = run_mvn('CARROTS', 16, False, 0, 0, False, False)
 
 print(bay_acc)
 print(hmm_acc)

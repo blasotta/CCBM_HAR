@@ -8,45 +8,45 @@ Database file #1: thesis-ref.bib
 Warning--empty journal in germain_made_nodate
 Warning--empty journal in raedt_problog_nodate
 Warning--empty year in raedt_problog_nodate
-You've used 27 entries,
+You've used 28 entries,
             2118 wiz_defined-function locations,
-            657 strings with 10878 characters,
-and the built_in function-call counts, 10275 in all, are:
-= -- 970
-> -- 608
+            662 strings with 11109 characters,
+and the built_in function-call counts, 10679 in all, are:
+= -- 1013
+> -- 626
 < -- 10
-+ -- 241
-- -- 212
-* -- 771
-:= -- 1706
-add.period$ -- 94
-call.type$ -- 27
-change.case$ -- 187
++ -- 248
+- -- 218
+* -- 803
+:= -- 1773
+add.period$ -- 98
+call.type$ -- 28
+change.case$ -- 193
 chr.to.int$ -- 0
-cite$ -- 30
-duplicate$ -- 344
-empty$ -- 738
-format.name$ -- 212
-if$ -- 2129
+cite$ -- 31
+duplicate$ -- 355
+empty$ -- 768
+format.name$ -- 218
+if$ -- 2211
 int.to.chr$ -- 0
-int.to.str$ -- 27
-missing$ -- 20
-newline$ -- 147
-num.names$ -- 54
-pop$ -- 228
+int.to.str$ -- 28
+missing$ -- 21
+newline$ -- 153
+num.names$ -- 56
+pop$ -- 231
 preamble$ -- 1
-purify$ -- 160
+purify$ -- 165
 quote$ -- 0
-skip$ -- 245
+skip$ -- 252
 stack$ -- 0
-substring$ -- 483
-swap$ -- 81
+substring$ -- 525
+swap$ -- 82
 text.length$ -- 10
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 108
+type$ -- 112
 warning$ -- 3
-while$ -- 87
-width$ -- 29
-write$ -- 313
+while$ -- 91
+width$ -- 30
+write$ -- 326
 (There were 3 warnings)
