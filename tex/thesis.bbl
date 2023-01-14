@@ -8,6 +8,8 @@ Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra, and Jorge~L.
 \newblock In {\em 21th {European} {Symposium} on {Artificial} {Neural}
   {Networks}, {Computational} {Intelligence} and {Machine} {Learning}}, Bruges,
   Belgium, April 2013.
+\newblock
+  \url{https://archive.ics.uci.edu/ml/datasets/human+activity+recognition+using+smartphones}.
 
 \bibitem{arrotta_knowledge_2022}
 Luca Arrotta, Gabriele Civitarese, and Claudio Bettini.
@@ -15,7 +17,6 @@ Luca Arrotta, Gabriele Civitarese, and Claudio Bettini.
   {Activity} {Recognition}.
 \newblock In {\em 2022 {IEEE} {International} {Conference} on {Smart}
   {Computing} ({SMARTCOMP})}, pages 1--8, June 2022.
-\newblock ISSN: 2693-8340.
 
 \bibitem{bettini_caviar_2020}
 Claudio Bettini, Gabriele Civitarese, and Riccardo Presotto.
@@ -34,13 +35,17 @@ Liming Chen, Jesse Hoey, Chris~D. Nugent, Diane~J. Cook, and Zhiwen Yu.
 \newblock Sensor-{Based} {Activity} {Recognition}.
 \newblock {\em IEEE Transactions on Systems, Man, and Cybernetics, Part C
   (Applications and Reviews)}, 42(6):790--808, November 2012.
-\newblock Conference Name: IEEE Transactions on Systems, Man, and Cybernetics,
-  Part C (Applications and Reviews).
+
+\bibitem{raedt_problog_nodate}
+Luc De~Raedt, Angelika Kimmig, and Hannu Toivonen.
+\newblock {ProbLog}: {A} {Probabilistic} {Prolog} and {Its} {Application} in
+  {Link} {Discovery}.
+\newblock {\em IJCAI}, 7:2462--2467, 2007.
 
 \bibitem{dinh_density_2017}
 Laurent Dinh, Jascha Sohl-Dickstein, and Samy Bengio.
 \newblock Density estimation using {Real} {NVP}, February 2017.
-\newblock arXiv:1605.08803 [cs, stat].
+\newblock arXiv:1605.08803.
 
 \bibitem{eldele_time-series_2021}
 Emadeldeen Eldele, Mohamed Ragab, Zhenghua Chen, Min Wu, Chee~Keong Kwoh,
@@ -49,33 +54,31 @@ Emadeldeen Eldele, Mohamed Ragab, Zhenghua Chen, Min Wu, Chee~Keong Kwoh,
   {Contextual} {Contrasting}.
 \newblock In {\em Proceedings of the {Thirtieth} {International} {Joint}
   {Conference} on {Artificial} {Intelligence}}, pages 2352--2359, Montreal,
-  Canada, August 2021. International Joint Conferences on Artificial
-  Intelligence Organization.
+  Canada, August 2021. IJCAI.
 
 \bibitem{garcez_neurosymbolic_2020}
 Artur~d'Avila Garcez and Luis~C. Lamb.
 \newblock Neurosymbolic {AI}: {The} 3rd {Wave}, December 2020.
-\newblock arXiv:2012.05876 [cs].
+\newblock arXiv:2012.05876.
 
 \bibitem{germain_made_nodate}
 Mathieu Germain, Karol Gregor, Iain Murray, and Hugo Larochelle.
 \newblock {MADE}: {Masked} {Autoencoder} for {Distribution} {Estimation}.
-\newblock page~9, 2015.
+\newblock In {\em International conference on machine learning}, pages
+  881--889. PMLR, 2015.
 
 \bibitem{kingma_glow_2018}
 Diederik~P. Kingma and Prafulla Dhariwal.
-\newblock Glow: {Generative} {Flow} with {Invertible} 1x1 {Convolutions}, July
+\newblock Glow: {Generative} {Flow} with {Invertible} 1x1 {Convolutions}.
+\newblock {\em Advances in neural information processing systems}, 31, July
   2018.
-\newblock arXiv:1807.03039 [cs, stat].
 
 \bibitem{kobyzev_normalizing_2021}
 Ivan Kobyzev, Simon~J.D. Prince, and Marcus~A. Brubaker.
 \newblock Normalizing {Flows}: {An} {Introduction} and {Review} of {Current}
   {Methods}.
 \newblock {\em IEEE Transactions on Pattern Analysis and Machine Intelligence},
-  43(11):3964--3979, November 2021.
-\newblock Conference Name: IEEE Transactions on Pattern Analysis and Machine
-  Intelligence.
+  43(11):3964--3979, November 2020.
 
 \bibitem{kostrikov_pytorch-flows_2022}
 Ilya Kostrikov.
@@ -105,7 +108,7 @@ Stefan Lüdtke, Fernando~Moya Rueda, Waqas Ahmed, Gernot~A. Fink, and Thomas
   Kirste.
 \newblock Human {Activity} {Recognition} using {Attribute}-{Based} {Neural}
   {Networks} and {Context} {Information}, October 2021.
-\newblock arXiv:2111.04564 [cs, eess].
+\newblock arXiv:2111.04564.
 
 \bibitem{malekzadeh_mobile_2019}
 Mohammad Malekzadeh, Richard~G. Clegg, Andrea Cavallaro, and Hamed Haddadi.
@@ -113,6 +116,7 @@ Mohammad Malekzadeh, Richard~G. Clegg, Andrea Cavallaro, and Hamed Haddadi.
 \newblock In {\em Proceedings of the {International} {Conference} on {Internet}
   of {Things} {Design} and {Implementation}}, pages 49--58, Montreal, Quebec,
   Canada, 2019. ACM.
+\newblock \url{https://github.com/mmalekzadeh/motion-sense/tree/master/data}.
 
 \bibitem{manhaeve_deepproblog_2018}
 Robin Manhaeve, Sebastijan Dumancic, Angelika Kimmig, Thomas Demeester, and Luc
@@ -127,7 +131,15 @@ Fernando Moya~Rueda, René Grzeszick, Gernot~A. Fink, Sascha Feldhorst, and
 \newblock Convolutional {Neural} {Networks} for {Human} {Activity}
   {Recognition} {Using} {Body}-{Worn} {Sensors}.
 \newblock {\em Informatics}, 5(2):26, June 2018.
-\newblock Number: 2 Publisher: Multidisciplinary Digital Publishing Institute.
+
+\bibitem{rueda_combining_2019}
+Fernando Moya~Rueda, Stefan Lüdtke, Max Schröder, Kristina Yordanova, Thomas
+  Kirste, and Gernot~A. Fink.
+\newblock Combining {Symbolic} {Reasoning} and {Deep} {Learning} for {Human}
+  {Activity} {Recognition}.
+\newblock In {\em 2019 {IEEE} {International} {Conference} on {Pervasive}
+  {Computing} and {Communications} {Workshops} ({PerCom} {Workshops})}, pages
+  22--27, March 2019.
 
 \bibitem{nyolt_marginal_2015}
 Martin Nyolt, Frank Krüger, Kristina Yordanova, Albert Hein, and Thomas
@@ -142,34 +154,18 @@ George Papamakarios, Theo Pavlakou, and Iain Murray.
 \newblock In {\em Advances in {Neural} {Information} {Processing} {Systems}},
   volume~30. Curran Associates, Inc., 2017.
 
-\bibitem{raedt_problog_nodate}
-Luc~De Raedt.
-\newblock {ProbLog}: {A} {Probabilistic} {Prolog} and {Its} {Application} in
-  {Link} {Discovery}.
-\newblock page~6.
-
 \bibitem{ramirez_goal_2011}
 Miquel Ramirez and Hector Geffner.
 \newblock Goal {Recognition} over {POMDPs}: {Inferring} the {Intention} of a
   {POMDP} {Agent}.
 \newblock In {\em Twenty-second international joint conference on artificial
-  intelligence}, page~6, 2011.
+  intelligence}, pages 2009--2014, 2011.
 
 \bibitem{ronald_isplinception_2021}
 Mutegeki Ronald, Alwin Poulose, and Dong~Seog Han.
 \newblock {iSPLInception}: {An} {Inception}-{ResNet} {Deep} {Learning}
   {Architecture} for {Human} {Activity} {Recognition}.
 \newblock {\em IEEE Access}, 9:68985--69001, 2021.
-\newblock Conference Name: IEEE Access.
-
-\bibitem{rueda_combining_2019}
-Fernando~Moya Rueda, Stefan Lüdtke, Max Schröder, Kristina Yordanova, Thomas
-  Kirste, and Gernot~A. Fink.
-\newblock Combining {Symbolic} {Reasoning} and {Deep} {Learning} for {Human}
-  {Activity} {Recognition}.
-\newblock In {\em 2019 {IEEE} {International} {Conference} on {Pervasive}
-  {Computing} and {Communications} {Workshops} ({PerCom} {Workshops})}, pages
-  22--27, March 2019.
 
 \bibitem{shavit_boosting_2021}
 Yoli Shavit and Itzik Klein.
@@ -200,6 +196,5 @@ Terry~Taewoong Um, Franz Michael~Josef Pfister, Daniel Pichler, Satoshi Endo,
   {Disease} {Monitoring} using {Convolutional} {Neural} {Networks}.
 \newblock In {\em Proceedings of the 19th {ACM} {International} {Conference} on
   {Multimodal} {Interaction}}, pages 216--220, November 2017.
-\newblock arXiv:1706.00527 [cs].
 
 \end{thebibliography}

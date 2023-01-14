@@ -17,6 +17,7 @@
 \usepackage{multirow}
 \usepackage{makecell}
 \usepackage{tablefootnote}
+\usepackage{outlines}
 
 \usepackage{ntheorem}
 
@@ -90,80 +91,47 @@
    }
    \vspace{1cm} 
    {submitted to the\\
-    Institute for Enterprise Systems\\
-    Dr.\ Stefan L\"udtke\\
+    Data and Web Science Group\\
+    Prof. Dr.\ Heiner Stuckenschmidt\\
     University of Mannheim\\} \vspace{2cm}
    {January 2023}
   \end{center}
-\end{titlepage} 
+\end{titlepage}
 
-% no lets make some add some table of contents
+\chapter*{Abstract}
+Human activity recognition (HAR) from motion sensor, time series data is a central aspect for many healthcare and assistance systems. In the past, two paradigms of solving this task have been evaluated. Symbolic methods make use of prior domain knowledge and consequently reduce the need for training data. However, recent advances in deep learning methods for HAR have produced promising results. Yet, such approaches are by default not able to take into account additional information that might be available about the process at hand. Thus, combining symbolic reasoning with neural network architectures has gained popularity in recent years. Such an approach is often referred to as a hybrid model. This thesis proposes a framework to build a hybrid model for HAR, combining computational state space models with a neural architecture for density estimation known as masked autoregressive flow (MAF). In particular, three components of such a system are defined and several alternative options are introduced for each of the components. Various configurations of the system are then evaluated on three datasets of human activities recorded with inertial measurement units. The results show that learning useful densities with MAF from raw, high dimensional data is not straightforward and requires additional processing steps to be an effective method. The experiments also imply that the choice of recognition model is less influential with this approach. The reason for this is that the obtained likelihoods are often erroneously high for incorrect classes. These results suggest that high dimensional motion data should be processed in some form before useful densities can be learned.
+
+
 \tableofcontents
 \newpage
 
-% \listofalgorithms
+
 
 \listoffigures
 
 \listoftables
 
-% evntuelly you might add something like this
-% \listtheorems{definition}
-% \listtheorems{proposition}
-
 \newpage
 
-
-% okay, start new numbering ... here is where it really starts
 \pagenumbering{arabic}
 
 \chapter{Introduction}
 \label{cha:intro}
-
-%\begin{itemize}
-%	\item A table can be found in Section \ref{sec:results}. This example (Table \ref{tab:confonly}) is only a suggestion. You are allowed to format your tables in your preferred style.
-%	\item An example of an algorithm is depicted in Section \ref{sec:diag}. Again, you are allowed to use a different style for algorithms, but the style we used to display Algorithm \ref{alg:efficient-lod} looks quite nice.
-%	\item Chapter \ref{cha:intro} demontrates how to refer to chapters and algorithms and other elements of your thesis.
-%	\item You should always place definitions, propositions, and whatever might be useful in an appropriate environment.  Examples can be found in section \ref{sec:prelim}.
-%\end{itemize}
-
-%The structure of this draft is \emph{non-binding}. The structure of your thesis - the breakup in chapters, sections, and so on - highly depends on the chosen topic and should be discussed with your adviser. In this draft we made no use of subsections. While subsections might make sense in your own thesis, we believe that subsubsections should be avoided if possible. Notice that we did not break up this template in different parts using the command \verb|\part{}|. It depends on your own style and your work wether to use this option.
-
-%If you cite something, do it in the following way. 
-%\begin{itemize}
-%	\item Conference Proceedings: This problem is typically addressed by approaches for selecting the optimal matcher based on the nature of the matching task and the known characteristics of the different matching systems. Such an approach is described in \cite{mochol08matcher}.
-%	\item Journal Article: S-Match, described in \cite{giunchiglia2008semanticmatching}, employs sound and complete reasoning procedures. Nevertheless, the underlying semantic is restricted to propositional logic due to the fact that ontologies are interpreted as tree-like structures.
-%	\item Book: According to Euzenat and Shvaiko \cite{euzenat07matcherbook}, we define a correspondence as follows.
-%\end{itemize}
-%These are some randomly chosen examples from other works. Take a look at the end of this thesis so see how the bibliography is included.
-
-%In this examples thesis you will find two chapters in the appendix. Appendix \ref{cha:appendix-a} describes the program code that might have been part of your work. It depends of the type of work wether such an appendix makes sense. Appendix \ref{cha:appendix-b} contains some additional experimental results. It might happen that most of your experimental results are presented in aggregated form; a complete listing of detailed results in the appendix might make sense. Nevertheless, there are no hard requirements with respect to the use of an appendix. It is up to you wether or not you will use an appendix (well .. as long as your adviser does not tell you something else).
-%
-%Some words about the list of figures, list of algorithm, and so on. Listing your figures is obligatory. It depends on your own choice, wether to include a list of other \textit{things}. Relevant aspects are the subject of your thesis and the way you develop your ideas. For example: If your work contains lots of tables with different experimental results, add a list of tables. If you develop and explicitly state algorithms, add a list of algorithms. 
-
-%\emph{Very Important:} Do not forget to sign (manually) the last page, before you submit/deliver the final version of your thesis. Otherwise your work cannot be accepted for legal reasons.
-
 The task of recognizing human activities from sensor data is relevant for many real world applications. Its uses range from optimizing logistics in warehouses to providing healthcare and assistance systems for elderly and disabled people \cite{ludtke_human_2021, chen_sensor-based_2012}. Consequently, human activity recognition (HAR) has been an active topic of research in recent years. Historically, methods to perform sensor-based HAR, broadly fall into either of two categories, each with their respective strengths and weaknesses: Symbolic methods as proposed by Kr\"uger et al. or Ramirez and Geffner \cite{kruger_computational_2014, ramirez_goal_2011} can employ prior domain knowledge and thus may need less training data, but often lack the capacity to learn from complex, time-series sensor data. One such approach are computational state space models (CSSMs) \cite{kruger_computational_2014}, which employ probabilistic inference on top of symbolic, rule based representations of possible actions within a domain to reason about observed activities. Contrary to this, modern, data-driven methods are capable of handling complex, multi-channel sensor data and have shown promising results in the past. An approach using a convolutional neural network (CNN) is described by Moya Rueda et al. \cite{moya_rueda_convolutional_2018}. In recent literature Transformers have been applied to the task of recognizing human activities. Such an approach is described by Shavit and Klein \cite{shavit_boosting_2021}, which uses an encoder-only Transformer architecture to aggregate sensor data from the entire time series via the attention mechanism. Their results indicate that such a system improves prediction accuracy over models based on CNNs.
 Next to this, many other deep learning methods for sensor-based HAR exist. A comprehensive survey over current deep learning HAR methods and challenges is given by Chen et al. \cite{chen_deep_2022}. Among the drawbacks of purely data-driven methods is the fact that they are oblivious to the causal structure of activities in the domain and thus may require more training data which is often hard to obtain. Thus recently, attempts have been made to integrate symbolic and data driven models. In the line of this work such approaches are referred to as hybrid models. The goal of these is to combine both approaches in order to obtain state of the art performance while being able to incorporate prior knowledge to reduce the need for training data. This work is not the first to propose such a hybrid model, three other notable systems are listed below: DeepProbLog \cite{manhaeve_deepproblog_2018}, extends probabilistic-logic modeling with neural networks. The system proposed by Rueda et al. \cite{rueda_combining_2019}, employs a CNN to learn from sensor data and uses the output of this deep model to infer the most probable activity class via Bayesian filtering. DUSTIN \cite{arrotta_knowledge_2022} is a hybrid system which concatenates features obtained by a knowledge based reasoner to features extracted via a neural network. In this way information about the causal structure of activities can be captured. A more thorough overview of related work is given in chapter \ref{cha:rel}.
 
-To benefit from the advantages of symbolic and data-driven methods, the main goal of this thesis is to develop a hybrid system for sensor-based HAR by combining existing components in a novel way. The aim of this hybrid system is to achieve a greater sample efficiency than current state of the art systems. That is, with a fixed amount of limited training data the hybrid system should outperform both data-driven and purely symbolic approaches. To build this hybrid model an implementation of computational state space models (CSSM) \cite{kruger_computational_2014} referred to as computational causal behavior models (CCBM) will be combined with an observation model that is obtained from sensor data via neural density estimation methods. Initial experiments will be conducted with a type of normalizing flows called masked autoregressive flow (MAF) \cite{papamakarios_masked_2017} since it has shown promising performance on similar density estimation tasks \cite{kobyzev_normalizing_2021}. The system will be evaluated on three datasets containing sensor data from inertial measurement units (IMUs) of people performing activities of daily living: The Carrot dataset \cite{kruger_recognising_2011}, MotionSense \cite{malekzadeh_mobile_2019}, and the UCI HAR dataset \cite{anguita_public_2013} will be used.
+To benefit from the advantages of symbolic and data-driven methods, the main goal of this thesis is to define the components of such a hybrid system for sensor-based HAR and evaluate options thereof in a systematic way. To this end, existing components are combined in a novel way to learn data densities from samples and recognize their activity class. The aim of this hybrid system is to achieve a greater sample efficiency than current state of the art systems. That is, with a fixed amount of limited training data the hybrid system should outperform both data-driven and purely symbolic approaches. The hybrid model consists of three components. Namely the data processing, density estimation and recognition model component. For the recognition model three options, a simple Bayes classifier, a hidden Markov model and an implementation of computational state space models (CSSM) \cite{kruger_computational_2014} referred to as computational causal behavior model (CCBM) will be introduced. These can be combined with sample densities obtained from neural distribution estimation methods. For this component a type of normalizing flow called masked autoregressive flow (MAF) \cite{papamakarios_masked_2017} will be introduced and deployed on sensor data, since it has shown promising performance on similar density estimation tasks \cite{kobyzev_normalizing_2021}. The density estimation via MAF is compared to a simple baseline method of using a multivariate normal distribution per activity to obtain likelihoods. Various configurations of the hybrid system are evaluated on three datasets. The Carrot dataset \cite{kruger_recognising_2011}, MotionSense \cite{malekzadeh_mobile_2019}, and the UCI HAR dataset \cite{anguita_public_2013} will be used. These datasets contain sensor data from inertial measurement units (IMUs) of people performing activities of daily living.
 
-Additionally, an important research goal of this thesis is to examine which component contributes in what part to the final performance. To this end, an ablation study will be conducted. For this, the performance of the symbolic approach with a simple observation model, the density estimation component with a simple prediction, the full hybrid model, and a baseline of quadratic discriminant analysis (QDA) will be compared on the data set introduced above. The results of this ablation study can be found in chapter (insert ref).
+The remainder of this thesis is structured as follows: Chapter \ref{cha:theory} introduces the theoretical background of CSSMs and distribution estimation with MAF. Afterwards, chapter \ref{cha:rel} presents related work in the field of hybrid methods. Chapter \ref{cha:alg} establishes the components of the proposed hybrid models and potential variations thereof. Following this, chapter \ref{cha:exp} gives an overview over the datasets used for evaluation, the concrete experiments and their results. Lastly, chapter \ref{cha:conclusion} offers a summary of these results as well as an outlook on future research.
 
 %TODO: Add outline for the remaining paper
- 
-%\section{Problem Statement}
- 
-
-%\section{Contribution}
-
 
 \chapter{Theoretical Background}
 \label{cha:theory}
 
 \section{Introduction to Computational State Space Models}
 \label{sec:cssm}
-The following paragraphs will introduce some preliminary knowledge and terminology that is required to follow the remainder  of this thesis. Following convention, vector-valued variables will be written bold. Random variables are indicated by capital letters, while assignments to those random variables are indicated by non-capital letters.
+Sections \ref{sec:cssm} and \ref{sec:maf} introduce some preliminary knowledge and terminology that is required to follow the remainder  of this thesis. Following convention, vector-valued variables will be written bold. Random variables are indicated by capital letters, while assignments to those random variables are indicated by non-capital letters.
 
 The goal of human activity recognition is to recognize activities in a sequence of potential actions that a human could perform. As such the HAR context is always a dynamic one, i.e. entities within this system are subject to changing states. Starting from some initial state and following a transition model the system state changes as time progresses. Due to combinatorial explosion the space of potential states is very large. Thus, a system which allows tractable inference in dynamic systems is required. In a feasibility study by Kr\"uger et al.  \cite{kruger_computational_2014}, Computational State Space models (CSSMs) have been shown to fulfill this property, even in complex, real-world applications. The Authors found that the domain model used in their evaluation of the Carrot data set had circa $10^8$ states. Yet, the system was able to outperform Hidden Markov Models (HMMs) if the correct inference procedures were chosen. This section introduces the necessary background and notation to understand such models.
 
@@ -379,13 +347,13 @@ The UCI HAR dataset is slightly different as it is already processed and contain
 
 \section{Experiments}
 \label{sec:exp}
-To evaluate the usefulness of neural density estimation methods for HAR applications several experiments were conducted on the previously introduced datasets. From the set of optional pre-processing steps, five tunable parameters are obtained. Three boolean flags can be set for windowing ($W$), augmentation ($A$), and input noise injection ($N$). If windowing is true, some window size $T \geq 2$ needs to be specified. In this case, also a step size $s$ with $1 \leq s \leq T$ should be given for stepping the segments in the training data. In the experiments presented here, the step size is fixed to $s = \frac{T}{2}$ such that the training data segments have an overlap of 50 \%. Validation and testing sets use segmentation without overlap by default. If windowing is false, this indicates that no explicit windowing is performed, or in other words window size $T = 1$. The two remaining boolean flags $A$ and $N$ control whether the augmentation of training data, respectively the input noise injection as described in section \ref{sec:prep} is performed. The hyperparameters of these methods which control the amount of noise added and scaling done are the default settings used in the implementation of data augmentation for wearable sensor data \cite{um_augmentation_2017}. Various combinations of these parameters for each dataset have been selected and evaluated. In particular, the usefulness of MAF as the density estimation component is evaluated and compared to the baseline method of estimating densities with a MVN per activity class as described in section \ref{sec:densest}. For this evaluation, the average log likelihood obtained over all test samples is reported. As the downstream task is the recognition of activities, two different components for the density estimation component are compared using two different recognition models. More precisely, the recognition accuracy of both MVN and MAF densities are compared using the Bayes classifier and an HMM as the two recognition models. The results of all experiments are reported in section \ref{sec:results}.
+To evaluate the usefulness of neural density estimation methods for HAR applications several experiments were conducted on the previously introduced datasets. From the set of optional pre-processing steps, five tunable parameters are obtained. Three boolean flags can be set for windowing ($W$), augmentation ($A$), and input noise injection ($N$). If windowing is true, some window size $T \geq 2$ needs to be specified. In this case, also a step size $s$ with $1 \leq s \leq T$ should be given for stepping the segments in the training data. In the experiments presented here, the step size is fixed to $s = \frac{T}{2}$ such that the training data segments have an overlap of 50 \%. Validation and testing sets use segmentation without overlap by default. If windowing is false, this indicates that no explicit windowing is performed, or in other words window size $T = 1$. The two remaining boolean flags $A$ and $N$ control whether the augmentation of training data, respectively the input noise injection as described in section \ref{sec:prep} is performed. Various combinations of these parameters for each dataset have been selected and evaluated. The hyperparameters of these methods which control the amount of noise added and scaling done are the default settings used in the implementation of data augmentation for wearable sensor data \cite{um_augmentation_2017}. In particular, the usefulness of MAF as the density estimation component is evaluated and compared to the baseline method of estimating densities with a MVN per activity class as described in section \ref{sec:densest}. For this evaluation, the average log likelihood obtained over all test samples is reported. As the downstream task is the recognition of activities, two different components for the density estimation component are compared using two different recognition models. More precisely, the recognition accuracy of both MVN and MAF densities are compared using the Bayes classifier and an HMM as the two recognition models. The results of all experiments are reported in section \ref{sec:results}.
 
 \paragraph{Train-Test Split}
-To facilitate an evaluation that is as close to a real world scenario as possible, a leave-one-subject-out strategy was employed for splitting the data into test and training set. Realistically, the model would be trained on some data and each new subject would not have its data in the training set. This fact is emulated by leaving one or more subjects completely out of the training set and using this subject for testing. This strategy was employed for the Carrot and MotionSense datasets, for the UCI HAR dataset the predefined train-test split was used which also leaves a set of subjects completely out of the training set. For the Carrot dataset it was decided arbitrarily that subject 7 would be the test subject and the remaining data would be used with a 70 \% - 30 \% split for training and validation.  The MotionSense data was split in such a way that subjects 1 to 14 are used for training, 15 to 19 for validation and  20 to 24 as test subjects. UCI HAR splits the data such that 56 \% of subjects are used for training, 14 \% for validation and 30 \% for testing.
+To facilitate an evaluation that is as close to a real world scenario as possible, a leave-one-subject-out strategy was employed for splitting the data into test and training set. Realistically, the model would be trained on some data and each new subject would not have its data in the training set. This fact is emulated by leaving one or more subjects completely out of the training set and using this subject for testing. This strategy was employed for the Carrot and MotionSense datasets, for the UCI HAR dataset the predefined train-test split was used which also leaves a set of subjects completely out of the training set. For the Carrot dataset it was decided arbitrarily that subject 7 would be the test subject and the remaining data would be used with a 70 \% - 30 \% split for training and validation. The MotionSense data was split in such a way that subjects 1 to 14 are used for training, 15 to 19 for validation and  20 to 24 as test subjects. UCI HAR splits the data such that 56 \% of subjects are used for training, 14 \% for validation and 30 \% for testing.
 
 \paragraph{Settings}
-All experiments are conducted with a five layer MAF, the number of hidden neurons in each MADE Layer is $H=512$. The parameters are updated by minimizing the negative log likelihood over the training data. The Adam optimizer is used with a base learning rate of $\lambda = 5 \times 10^{-5}$ and a weight decay of $d = 1 \times 10^{-6}$. The batch size is set to $bs = 128$. The model was trained on a commercial computer. Utilizing the PyTorch framework with CUDA enabled on a single NVIDIA RTX 2070 SUPER GPU.
+All experiments are conducted with a five layer MAF, the number of hidden neurons in each MADE Layer is $H=512$. Model parameters are updated by minimizing the negative log likelihood over the training data. The Adam optimizer is used with a base learning rate of $\lambda = 5 \times 10^{-5}$ and a weight decay of $d = 1 \times 10^{-6}$. Furthermore, the batch size is set to $bs = 128$. The model was trained on a commercial computer utilizing the PyTorch framework with CUDA enabled on a single NVIDIA RTX 2070 SUPER GPU.
 
 
 \section{Results}
@@ -433,12 +401,12 @@ Table \ref{tab:2eps} shows the results of experiments on the Carrot dataset, whe
 To examine this, a $30 \times 30$ pair plot was drawn, which plots a histogram per feature from $1600$ samples of the Carrot data and compares each feature to all others. An excerpt of this plot can be found in appendix \ref{cha:appendix-b}, the script to generate it is contained in the attached code. The plot shows that circa half of the 30 features from the Carrot dataset are somewhat well represented by a normal distribution. Given this result, the fact that a MVN performs well is less surprising. Still, the overall recognition accuracy is relatively low at around 60 \%. This can be explained by the fact that the Carrot dataset is difficult to learn from.
 
 \paragraph{Challenges of the Carrot Dataset}
-The first challenge is, that it is relatively small. Data stems from only 7 subjects and the number of total (non-windowed) training samples is also low at 146570. As discussed in section \ref{sec:prep} a low number of training subjects might lead to difficulties during the learning process due to the high intra-class variability in HAR tasks. In that sense it is plausible that a less flexible model can achieve better results simply because it cannot overfit to the training data as much and thus generalize better to sensor readings from unseen subjects which perform activities slightly differently from those subjects in the training data. The second difficulty of the Carrot data is that some activities occur much less frequently at a shorter duration or have many different concrete expressions. To illustrate this let us look at two activities that are hard to recognize in greater detail. To illustrate these examples figure \ref{fig:conf} shows the confusion matrix of the Bayes classifier using MAF densities. The activity \emph{stand up} for example has the lowest relative frequency in the dataset at 0.36 \%. Also the duration of that activity is typically very short. At prediction time it is often confused with other activities that are more frequent. The activity \emph{put} is third most frequent (11.51 \%) in the training data, but still recognizing it accurately seems difficult. The confusion matrix shows that it has a large spread of other activities that is is confused with at test time. A plausible explanation for this observation is that \emph{put} can have various expressions, which differ greatly in the sensor readings they produce: Putting a glass in a cupboard above your head produces different measurements from putting a dish in the sink at waist level. Other activities follow a more strict pattern. It is also interesting to see that \emph{put} is often confused with the activity \emph{eat}. Interpreting eating as putting food in ones mouth may help to explain this pattern. Similarly put and take are often confused for each other which is also an intuitive result as they share much of the same motion patterns. The result that the Carrot dataset is difficult to train on is supported by other researchers as well. For example Rueda et al. \cite{rueda_combining_2019} report an overall activity recognition accuracy on subject 7 of the Carrots data of 65.2 \% using a CNN. However, the overall recognition accuracy of the activity \emph{put} is only 35.1 \% and that of \emph{stand up} is 11.7 \%.
+The first challenge of the Carrot dataset is, that it is relatively small. Data stems from only 7 subjects and the number of total (non-windowed) training samples is also low at 146570. As discussed in section \ref{sec:prep} a low number of training subjects might lead to difficulties during the learning process due to the high intra-class variability in HAR tasks. In that sense it is plausible that a less flexible model can achieve better results simply because it cannot overfit to the training data as much and thus generalize better to sensor readings from unseen subjects which perform activities slightly differently from the training data subjects. The second difficulty of the Carrot data is that some activities occur much less frequently at a shorter duration or have many different concrete expressions. To support this argument let us look at two activities that are hard to recognize in greater detail. Figure \ref{fig:conf} shows the confusion matrix of the Bayes classifier using MAF densities and illustrates these examples. The activity \emph{stand up} for example has the lowest relative frequency in the dataset at 0.36 \%. Also the duration of that activity is typically very short. At prediction time it is often confused with other activities that are more frequent. The activity \emph{put} is the third most frequent (11.51 \%) in the training data, but still recognizing it accurately seems difficult. The confusion matrix shows that it has a large spread of other activities that is is confused with at test time. A plausible explanation for this observation is that \emph{put} can have various expressions, which differ greatly in the sensor readings they produce: Putting a glass in a cupboard above your head produces different measurements from putting a dish in the sink at waist level. Other activities follow a more strict pattern. It is also interesting to see that \emph{put} is often confused with the activity \emph{eat}. Interpreting eating as putting food in ones mouth may help to explain this pattern. Similarly, \emph{put} and \emph{take} are often confused for each other which is also an intuitive result as they share much of the same motion patterns. The result that the Carrot dataset is difficult to train on is supported by other researchers as well. For example Rueda et al. \cite{rueda_combining_2019} report an overall activity recognition accuracy on subject 7 of the Carrots data of 65.2 \% using a CNN. However, the recognition accuracy of the activity \emph{put} is only 35.1 \% and that of \emph{stand up} is 11.7 \%.
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=\linewidth]{conf_mat.jpg}
-	\caption[Confusion Matrix MAF with Bayes classifier]{Confusion matrix of the Bayes classifier on MAF densities with settings W=False, A=True, N=True (own image).}
+	\caption[Confusion matrix Carrot]{Confusion matrix of the Bayes classifier on MAF densities with settings W=False, A=True, N=True (own image).}
 	\label{fig:conf}
 \end{figure}
 
@@ -447,7 +415,7 @@ Due to the lack of subject variety and class imbalance, generalization performan
 \paragraph{Effectiveness of Pre-Processing}
 Even with a suitable hyperparameter configuration, MAF tends to overfit on the Carrot data. Table \ref{tab:100eps} shows the results of the experiments where MAF was trained for a maximum of 100 epochs and supports this claim. It can be observed that without any additional measures to combat overfitting, the accuracy diminishes significantly compared to the results presented in table \ref{tab:2eps} where the MAF was only trained for two epochs. Thus, the effect of input noise injection and data augmentation is evaluated. Especially the addition of noise appears to counteract the overfitting effectively. Being such a simple measure it is able to not only stop the decrease in accuracy but allows for a more robust learning process where the performance actually increases over time. On its own, data augmentation does not increase recognition performance but in combination with noise the best results on the Carrot data are achieved at a recognition performance of 62,76 \%.
 
-\begin{table}[H]
+\begin{table}[ht]
 	\centering
 	\tiny
 	\begin{tabular}{c l c c c c c c c c c c}
@@ -480,10 +448,45 @@ Even with a suitable hyperparameter configuration, MAF tends to overfit on the C
 \caption[Evaluation Results Carrot, Long]{\label{tab:100eps} Log likelihoods and recognition accuracies of MAF and a baseline MVN trained per class with unconstrained covariance matrix. The settings of the experiments are reported in the first six columns, the results in the remaining six. MAF was trained for a maximum of 100 epochs.}
 \end{table}
 
-When looking at the case where data is segmented into windows of size $T=26$ it is apparent that for short training periods augmentation, noise injection and especially the combination of both, improve recognition performance significantly from the base case. However, overall performance versus the non-windowed data is lower. This is true for predictions using MAF densities but also those using the MVN densities. A possible explanation for this is, that the increased dimensionality of windowed data makes accurate density estimation much more difficult. Models which cope well with high dimensional data and are designed as discriminative models to predict classes such as CNNs may therefore be better suited for windowed high dimensional data. To support this argument, Rueda et al. \cite{rueda_combining_2019} achieve the 65.2 \% accuracy on the Carrot dataset with a CNN on data that has been segmented into windows of size $T=128$. In the case where the MAF was trained for 100 epochs only augmentation has a net positive effect on recognition accuracy over the base case. These results also indicate that a small window size may be better for estimating useful densities with MAF.
+When looking at the case where data is segmented into windows of size $T=26$ it is apparent that for short training periods augmentation, noise injection and especially the combination of both, improve recognition performance significantly from the base case. However, overall performance versus the non-windowed data is lower. This is true for predictions using MAF densities but also those using the MVN densities. A possible explanation for this is, that the increased dimensionality of windowed data makes accurate density estimation much more difficult. Models which cope well with high dimensional data and are designed as discriminative models to predict classes such as CNNs may therefore be better suited for windowed high dimensional data. To support this argument, Rueda et al. \cite{rueda_combining_2019} achieve the 65.2 \% accuracy on the Carrot dataset with a CNN on data that has been segmented into windows of size $T=128$. Setting the window size to even half that at $T=64$, does not produce promising results. Instead increasing window size leads to a further decrease in recognition accuracy. In the case where the MAF was trained for 100 epochs only augmentation has a net positive effect on recognition accuracy over the base case. These results indicate that a small window size and thus a reduced number of dimensions may be better for estimating useful densities with MAF. Consequently, the argument can be made that for MAF to be an effective method of obtaining densities from time series data, some form of dimensionality reduction or representation learning should be applied before the training phase.
 
 \paragraph{Comparing Bayes Classifier and HMM}
-From the results it can be observed that in most cases the recognition accuracy when using the simple Bayes classifier differs not or only marginally from that of an HMM. In most cases the HMM recognizes activities slightly less accurately. Two notable exceptions to this can be found in table \ref{tab:2eps}, where the HMM outperforms the Bayes classifier slightly, using MAF densities. Generally, the densities provided by MVN and MAF on the Carrot dataset are overconfident, i.e., they are especially high for one or a few classes and low for the remaining. Thus, neither the a Bayes classifier nor the more complex HMM recognition model have a large impact on recognition accuracy. For a shorter training duration MAF estimates are less overconfident, which may explain the result introduced above.
+From the results it can be observed that in most cases the recognition accuracy when using the simple Bayes classifier differs not or only marginally from that of an HMM. In most cases the HMM recognizes activities slightly less accurately. Two notable exceptions to this can be found in table \ref{tab:2eps}, where the HMM outperforms the Bayes classifier slightly, using MAF densities. Generally, the likelihoods provided by MVN and MAF on the Carrot dataset are high for the most common activity, regardless of the true class of a sample. This is illustrated in table \ref{tab:llc}. It shows the average per class log likelihood of test samples grouped by their true class. That is, the first data column of that table shows the average LL per class over all test samples belonging to class zero. Consequently, we would expect that the entries on the main diagonal would be the maximum in every column. However, this is not the case. Rather a few classes, such as the majority class 15, have high likelihoods across most samples, regardless of their true class. It can be stated that on the Carrot data often highly confident but wrong predictions occur. As an example take class 12. On average, samples belonging to this class have the highest test likelihood not for that class (avg. LL is 28.2) but rather for class 14 (avg. LL is 66.5). This is a large discrepancy. Consequently, neither the prior of the Bayes classifier nor the more complex HMM recognition model have a large impact on recognition accuracy. The predicted class of a sample is mainly controlled by the calculated likelihoods. 
+
+\begin{table}[H]
+	\tiny
+	\centerline{%
+	\begin{tabular}{c c c c c c c c c c c c c c c c c}
+		\toprule
+		\multirow[b]{2}{*}{} &
+		\multicolumn{16}{c}{\bfseries Avg. per class LL of samples grouped by true class y}\\
+		\cmidrule(lr){2-17}
+		\bfseries Class & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15\\
+		\cmidrule(lr){1-17}
+		0 & 40.0 & 30.3 & -28.9 & -206.4 & -97.8 & 12.8 & 20.4 & 41.3 & 7.6 & 12.7 & 1.3 & 7.3 & 23.2 & 14.6 & -2.6 & 7.5 \\
+		1 & -18.1 & \textbf{70.3} & 37.1 & -36.0 & -32.5 & 5.6 & 22.6 & 10.1 & 20.4 & 10.8 & 2.8 & 15.2 & 38.7 & 16.2 & 29.3 & 9.6 \\
+		2 & 10.5 & 52.2 & \textbf{70.3} & 13.7 & 12.8 & 13.5 & 13.4 & 22.1 & 24.8 & -25.0 & -5.9 & 18.4 & 25.0 & 28.7 & 33.8 & 20.0 \\
+		3 & 2.2 & -32.1 & -72.2 & -34.4 & -27.5 & -8.9 & -47.8 & 1.8 & -56.7 & -41.2 & -94.2 & -43.4 & -146.7 & -64.0 & -41.9 & -65.7 \\
+		4 & 19.7 & -37.1 & -19.4 & \textbf{20.5} & \textbf{38.9} & 10.4 & -37.3 & 16.4 & -17.0 & -32.4 & -22.0 & -41.4 & -120.0 & -85.6 & -24.8 & -31.2 \\
+		5 & 25.3 & 50.2 & 39.9 & -223.5 & -240.7 & 32.6 & 21.6 & 35.0 & 16.0 & 14.6 & 30.2 & 10.7 & 45.7 & 44.8 & 10.7 & 36.7 \\
+		6 & -1.7 & 53.5 & 35.0 & -71.5 & -58.6 & 35.2 & \textbf{45.7} & 12.5 & 26.0 & 12.7 & 26.5 & 23.4 & 52.8 & 46.1 & 27.7 & 39.1 \\
+		7 & 18.6 & 19.3 & -71.1 & -163.3 & -144.6 & -34.9 & 27.9 & 41.2 & -10.2 & -1.4 & -22.8 & 3.9 & -0.9 & 21.0 & -12.5 & -33.4 \\
+		8 & 44.4 & 56.9 & 63.6 & 2.8 & 4.7 & 38.3 & 34.8 & 43.0 & 44.1 & 3.9 & 36.4 & 38.6 & 58.1 & 43.1 & 45.2 & 50.7 \\
+		9 & 32.5 & 29.5 & 29.1 & -44.9 & 35.0 & 33.3 & 27.3 & 36.2 & 40.0 & \textbf{30.6} & 26.0 & 33.7 & 43.4 & 37.1 & 44.2 & 30.6 \\
+		10 & 11.4 & -2.1 & 18.2 & -38.6 & 8.5 & 12.2 & 4.4 & 26.7 & 20.3 & -17.6 & \textbf{45.6} & 4.6 & 10.3 & -3.3 & 8.9 & 18.2 \\
+		11 & 50.9 & 59.1 & 27.7 & -28.4 & 16.0 & 36.8 & 38.8 & 52.3 & 46.9 & 25.0 & 30.8 & 39.2 & 60.6 & 49.0 & 43.0 & 46.1 \\
+		12 & -14.6 & 33.3 & 8.8 & -64.4 & -64.0 & -13.7 & 18.6 & 6.7 & 2.2 & -2.0 & 21.6 & 4.2 & 28.2 & 31.1 & 5.6 & -28.1 \\
+		13 & -100.0 & 53.2 & 43.9 & -392.1 & -406.7 & -54.9 & 15.4 & -6.6 & -40.4 & -12.3 & -1.0 & -27.1 & 38.3 & 33.0 & -43.6 & 6.7 \\
+		14 & 38.9 & 55.7 & 31.2 & 15.7 & -34.7 & 26.2 & 37.7 & 47.9 & 35.1 & 20.5 & 28.6 & 34.3 & \textbf{66.5} & \textbf{52.5} & 33.6 & 44.8 \\
+		15 & \textbf{55.0} & 52.2 & 50.3 & 14.2 & 33.8 & \textbf{59.2} & 28.7 & \textbf{52.5} & \textbf{48.1} & 20.1 & 35.7 & \textbf{39.8} & 55.8 & 52.2 & \textbf{50.3} & \textbf{66.2} \\
+		
+		\bottomrule
+	\end{tabular}
+	}
+	\caption[Carrot average LL]{\label{tab:llc} Carrot dataset, MAF densities: Average LL per class c over all test samples of true class y. Highest LL per column in bold.}
+\end{table}
+
+\noindent Tables \ref{tab:llm}, and \ref{tab:llu} show the average per class log likelihood of samples grouped by their true class of the MotionSense and UCI HAR datasets respectively and can be read in the same way. It is apparent, that the log likelihoods achieved on those datasets reflect the true class of samples much more precisely. This can be seen in the fact that the maximum elements per column lie on the main diagonal with the exception of class two in the MotionSense dataset. However, in that case the difference in avg. LL between the correct class and the class with the maximum avg. LL is only 5.4, such that the prior of a Bayes classifier or filtering in HMM may change the prediction in some cases.
 
 \subsection{MotionSense Dataset}
 The training of the MotionSense dataset is more robust and does not tend to mode collapse as training continues. As the recognition performance increases over the epochs, only the results of training MAF for 100 epochs are presented here. They can be found in table \ref{tab:mos}.
@@ -519,7 +522,32 @@ The training of the MotionSense dataset is more robust and does not tend to mode
 	\caption[Evaluation Results MotionSense, Long]{\label{tab:mos} Log likelihoods and recognition accuracies of MAF and a baseline MVN trained per class with unconstrained covariance matrix. The settings of the experiments are reported in the first six columns, the results in the remaining six. MAF was trained for a maximum of 100 epochs.}
 \end{table}
 
-\noindent It can be observed that MAF achieves higher likelihoods than MVN across all experiments. In contrast to the Carrot data, this higher likelihood does result in an increased recognition accuracy in most of the cases. Augmentation and noise injection both appear to have a net positive effect on the recognition accuracy however for MotionSense the effect of data augmentation is greater than that of noise injection. Noise injection was added primarily with the idea that can prevent overfitting and mode collapse, as the results indicate that this is not an issue that occurs for MotionSense, adding noise only has a limited benefit. Augmentation does improve the base recognition rate. This supports the arguments that by adding altered examples to the training data, the high intra-class variability of sensor data from different subjects can be modeled further. The results indicate that using both, augmentation and noise, at the same time might be too much. This is plausible, as naturally the likelihood decreases by adding noisy examples. The highest recognition accuracy is achieved for the HMM using MAF densities at 83. 4 \%. The authors of this dataset report an average classification accuracy of ca. 92 \% \cite{malekzadeh_mobile_2019} using a CNN. They segment data with a window size of $T=128$. Overall it is interesting to see that for MotionSense the HMM recognition model is able to outperform the Bayesian classifier in many cases. A notable exception to this rule is the case of MAF + HMM where data is segmented into windows of size $T=32$. Here the recognition accuracy of the HMM collapses. However, it should be noted that for both the MotionSense and the UCI HAR data the activities have been recorded in trials which means that the sequence of activities is pre-defined and does not follow some goal driven behavior where different paths to a goal can be taken, as is the case for the Carrot dataset. Thus, the transition matrix of the HMM for those datasets contains a very high probability of staying in its own activity, then a small transition probability to the next trial activity and zero probability for all other activities. This severely limits the relevance of using an HMM for datasets where the structure of activities is pre-defined, like MotionSense or UCI HAR.
+\noindent It can be observed that MAF achieves higher likelihoods than MVN across all experiments. In contrast to the Carrot data, this higher likelihood does result in an increased recognition accuracy in most of the cases. Augmentation and noise injection both appear to have a net positive effect on the recognition accuracy. However, for MotionSense the effect of data augmentation is greater than that of noise injection. Noise injection was added primarily with the idea that it can prevent overfitting and mode collapse. As the results indicate that this is not an issue that occurs for MotionSense, adding noise only has a limited benefit. Augmentation does improve the base recognition rate. This supports the arguments that by adding altered examples to the training data, the high intra-class variability of sensor data from different subjects can be modeled in some way. The results also suggest that using both, augmentation and noise, at the same time might be too much. This is plausible, as naturally the likelihood decreases by adding noisy examples. The highest recognition accuracy is achieved for the HMM using MAF densities at 83. 4 \%. The authors of this dataset report an average classification accuracy of ca. 92 \% \cite{malekzadeh_mobile_2019} using a CNN. They segment data with a window size of $T=128$. Overall it is interesting to see that for MotionSense the HMM recognition model is able to outperform the Bayesian classifier in many cases. A similar pattern to the Carrot dataset can be seen here, where MAF performs better when the dimensionality of data is not too large. This observation further underlines the previously made argument that MAF may need some form of dimensionality reduction to perform well.
+
+A plausible explanation, why HMM can improve results over the Bayes classifier on MotionSense can be found in table \ref{tab:llm}. The maximum avg. LL of samples belonging to class 2 is actually achieved for class 1. As the difference between them seems to be relatively small (on avg. 5.4) the more impactful HMM model may be able to correct the prediction, while this is not the case for the prior used in the Bayes classifier.
+
+\begin{table}[H]
+	\centering
+	\tiny
+	\begin{tabular}{c c c c c c c}
+		\toprule
+		\multirow[b]{2}{*}{} &
+		\multicolumn{6}{c}{\bfseries Avg. per class LL of samples grouped by true class y}\\
+		\cmidrule(lr){2-7}
+		\bfseries Class & 0 & 1 & 2 & 3 & 4 & 5\\
+		\cmidrule(lr){1-7}
+		0 & \textbf{-352.4} & -399.5 & -120.6 & -1562.8 & 1752.7 & 1752.1 \\
+		1 & -381.1 & \textbf{-298.9} & \textbf{-92.0} & -1588.1 & 1960.7 & 1843.4 \\
+		2 & -586.7 & -494.6 & -97.4 & -1837.6 & 1672.6 & 1251.1 \\
+		3 & -480.3 & -530.4 & -220.0 & \textbf{-1561.3} & 1363.7 & 942.6 \\
+		4 & -1350.8 & -1271.3 & -1211.1 & -2558.4 & \textbf{3637.5} & 2443.4 \\
+		5 & -1308.5 & -1279.9 & -1217.1 & -2393.6 & 501.2 & \textbf{4335.5} \\
+		\bottomrule
+	\end{tabular}
+	\caption[MotionSense average LL]{\label{tab:llm} MotionSense dataset, MAF densities: Average LL per class c over all test samples of true class y. Highest LL per column in bold.}
+\end{table}
+
+\noindent A notable exception to the observation that the HMM outperforms the Bayes classifier is the case of MAF + HMM where data is segmented into windows of size $T=32$. Here the recognition accuracy of the HMM collapses. A plausible explanation for this can also be obtained from table \ref{tab:llm}. If a configuration exists where data likelihoods for different classes are far enough apart where the prior of a Bayes classifier will not affect the prediction to strongly but close enough together such that the more flexible filtering of the HMM can sway the prediction. Such an error may occur if the transition probabilities and priors obtained from the training data do not accurately represent the test data. Thus, the filtering equations of the HMM may lead to incorrect predictions. However, it should be noted that for both the MotionSense and the UCI HAR data the activities have been recorded in trials which means that the sequence of activities is pre-defined and does not follow some goal driven behavior where different paths to a goal can be taken, as is the case for the Carrot dataset. Thus, the transition matrix of the HMM for those datasets contains a very high probability of staying in its own activity, then a small transition probability to the next trial activity and zero probability for all other activities. This severely limits the relevance of using an HMM for datasets where the structure of activities is pre-defined, like MotionSense or UCI HAR.
 
 \subsection{UCI HAR Dataset}
 As for MotionSense, training on the UCI HAR dataset is more robust than for the Carrot data. Because of this, and since no additional steps are used for this already pre-processed dataset, only one experiment was conducted here as a baseline for comparison. The results of this experiment are shown in table \ref{tab:uci}.
@@ -550,6 +578,27 @@ As for MotionSense, training on the UCI HAR dataset is more robust than for the 
 
 \noindent Both the Bayes classifier and HMM achieve the same recognition accuracy using MAF densities of 92.3 \%. Here the MVN is outperformed in both log likelihood as well as prediction performance. On paper the UCI HAR data is the easiest dataset evaluated in this thesis, which the results reflect. However, the same limitation as for MotionSense in regard to the non goal directed activities applies here.
 
+\begin{table}[H]
+	\centering
+	\tiny
+	\begin{tabular}{c c c c c c c}
+		\toprule
+		\multirow[b]{2}{*}{} &
+		\multicolumn{6}{c}{\bfseries Avg. per class LL grouped by samples of true class y}\\
+		\cmidrule(lr){2-7}
+		\bfseries Class & 0 & 1 & 2 & 3 & 4 & 5\\
+		\cmidrule(lr){1-7}
+		0 & \textbf{704.6} & 658.6 & 566.4 & -102821.1 & -65943.1 & -83389.7 \\
+		1 & 625.6 & \textbf{759.0} & 587.7 & -153396.8 & -105138.7 & -118194.1 \\
+		2 & 595.5 & 661.2 & \textbf{641.1} & -274920.5 & -163715.9 & -209836.9 \\
+		3 & 233.4 & 297.3 & 318.0 & \textbf{2059.7} & 1900.2 & 1700.4 \\
+		4 & 328.2 & 361.4 & 356.8 & 2038.4 & \textbf{1924.7} & 1407.7 \\
+		5 & 340.3 & 347.5 & 355.2 & 1791.8 & 1696.6 & \textbf{1941.0} \\
+		\bottomrule
+	\end{tabular}
+	\caption[UCI HAR average LL]{\label{tab:llu} UCIHAR dataset, MAF densities: Average LL per class c over all test samples of true class y. Highest LL per column in bold.}
+\end{table}
+
 These baseline results still provide a good intuition over the usefulness of MAF for density estimation and subsequent activity recognition. Despite the window size of $T=128$, both MAF and MVN achieve high activity recognition accuracies on this dataset. A plausible argument can be made that the pre-computed 561 features per window can be better used by those models to estimate densities, since they are not as high dimensional as raw windowed data of the same window size. The best result of 92.3 \% accuracy achieved here is in line with results from other researchers. For example, Eldele et al. \cite{eldele_time-series_2021} achieve an accuracy of 90.37 \% with their approach for time series representation learning while the iSPLInception model by Ronald et al. \cite{ronald_isplinception_2021} achieves with 95.09 \% the highest accuracy on UCI HAR at the time of writing.
 
 \chapter{Conclusion}
@@ -558,11 +607,31 @@ These baseline results still provide a good intuition over the usefulness of MAF
 
 \section{Summary}
 \label{sec:sum}
+The evaluation of MAF gives a few concrete insights into how density estimation models can be applied on IMU data. During the  evaluation of the model proposed in this thesis it has become clear that using MAF on raw sensor data is not as straightforward as previously assumed. The central findings of this paper are summed up below:
+\begin{outline}
+	\1 MAF does not cope well with very high dimensional data.
+		\2 Thus, applying MAF to time series sensor data is a challenging task due to the high dimensionality of such data.
+	\1 Distribution estimation on the Carrot dataset is especially difficult for multiple reasons:
+		\2 The dataset only contains 7 distinct subjects, not all intra-class variance is captured in the training data.
+		\2 Strong class imbalance makes recognizing less frequent classes difficult.
+		\2 Some actions like put and take have very low inter-class variance, making the differentiation between them difficult.
+	\1 Applying pre-processing steps prior to MAF training helps to make this process more robust: 
+		\2 Input noise injection is promising where MAF tends to overfitting and mode collapse.
+		\2 Even simple augmentation methods can help to capture some of the intra-class variance.
+	\1 Windowing data, without additional measures to produce a useful representation of a segment, often has a negative effect on distribution estimation as it increases the data dimensionality.
+	\1 The performance of a simple Bayes classifier and a more complex HMM is very similar. The sample densities computed by the density estimation model control the activity recognition in the largest part. To counteract this, two potential solutions exist:
+		\2 Use a recognition model which has a greater impact on learned densities.
+		\2 Learn densities which are more robust and less overconfident in wrong predictions. Such that HMM or Bayes can correct erroneously high densities of the incorrect classes.
+	\1 Activity recognition performance on MotionSense and UCI HAR datasets is significantly higher than the Carrot dataset. These sets contain data from more subjects, have less fine-grained classes and data is of lower dimensionality.
+	\1 Performance on the UCI HAR dataset is especially promising. This further support the argument that some form of dimensionality reduction or representation learning is useful prior to MAF training.
+	\1 A large number of subjects with diverse physiological features, such as height, weight, age and gender is required to train robust density estimation models on motion sensor data.
+\end{outline}
+
 
 
 \section{Future Work}
 \label{sec:future}
-
+From the core findings outlined in section \ref{sec:sum} a few recommendations for future research can be derived. The large impact of pre-processing steps on MAF performance suggests that a more thorough evaluation of different methods is required. Especially methods that reduce the dimensionality of the input vector are of great interest here. Options for this step range from a principal component analysis to more complex representation learning methods such as the TS-TCC approach proposed by Eldele et al. \cite{eldele_time-series_2021}. A further interesting topic is the construction of a dataset which contains many fine-grained activity classes and has more than 20 diverse subjects. This would allow to investigate how much of the difficulty present in the Carrot dataset stems form the lack of various subjects and how much can be attributed to the fact that it is difficult to distinguish certain actions solely based on raw sensor data. Simultaneously, it  is of great interest to research whether more complex augmentation methods can alter sensor data in a way that can simulate other subjects, which would eliminate the need to create datasets with a lot of subjects, as this is a resource-intensive process. To achieve this, finding out how factors like height or weight of a subject affect sensor readings is the first step. Lastly, although learning useful densities from complex datasets is difficult, testing more impactful recognition models is an important next step. While hardly any difference between HMM and a Bayes classifier was found during this evaluation, a recognition model of greater predictive power may very well be able to correct erroneously high likelihoods given by an overconfident density estimation model.
 
 \bibliographystyle{plain}
 \bibliography{thesis-ref}
@@ -573,12 +642,30 @@ These baseline results still provide a good intuition over the usefulness of MAF
 \chapter{Program Code / Resources}
 \label{cha:appendix-a}
 
-The source code to run all experiments in this thesis is uploaded to a GitHub Repository. To run this code please follow the instructions given in the readme file of that repository. Steps are: 1. Downloading the required data; 2. Change the \emph{BASEPATH} variable in the file pytorch-flows\slash dataloader\slash loaders.py, respectively the file pytorch-flows\slash dataloader\slash motionSense.py to the absolute path of the dataloader directory. For example in my case C:\slash Users\slash bened\slash PythonWork\slash Test\textunderscore MA\slash pytorch-flows\slash dataloader
+The source code to run all experiments in this thesis is uploaded to a \href{https://github.com/blasotta/CCBM_HAR}{GitHub repository}. To run this code please follow the instructions given in the readme file of that repository. Steps are: 1. Downloading the required data; 2. Change the \emph{BASEPATH} variable in the file pytorch-flows\slash dataloader\slash loaders.py, respectively the file pytorch-flows\slash dataloader\slash motionSense.py to the absolute path of the dataloader directory. For example in my case C:\slash Users\slash bened\slash PythonWork\slash Test\textunderscore MA\slash pytorch-flows\slash dataloader
 
 \chapter{Further Experimental Results}
 \label{cha:appendix-b}
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{conf_mat_mos.jpg}
+	\caption[Confusion matrix MotionSense]{Confusion matrix of MAF + Bayes classifier on MotionSense data, settings of MAF are W=True, T=64, A=True, N=True (own image).}
+	\label{fig:confm}
+\end{figure}
 
-In the following further experimental results are ...
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{conf_mat_uci.jpg}
+	\caption[Confusion matrix UCIHAR]{Confusion matrix of MAF + Bayes classifier on UCI HAR data, settings of MAF are W=True, T=128, A=False, N=False (own image).}
+	\label{fig:confu}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{pairplot.png}
+	\caption[Pairplot Carrot]{Pairplot of Carrot dataset features, the histograms on the main diagonal show the distribution of each feature (own image).}
+	\label{fig:pair}
+\end{figure}
 
 
 \newpage
@@ -593,12 +680,12 @@ und ohne Benutzung anderer als der angegebenen Quellen und Hilfsmittel
 angefertigt und die den benutzten Quellen w\"ortlich oder inhaltlich
 entnommenen Stellen als solche kenntlich gemacht habe. Diese Arbeit
 hat in gleicher oder \"ahnlicher Form noch keiner Pr\"ufungsbeh\"orde
-vorgelegen. Ich bin mir bewusst, dass eine falsche Er- kl\"arung rechtliche Folgen haben
+vorgelegen. Ich bin mir bewusst, dass eine falsche Erkl\"arung rechtliche Folgen haben
 wird.
 \\
 \\
 
 \noindent
-Mannheim, den 31.09.2022 \hspace{4cm} Unterschrift
+Mannheim, den 15.01.2023 \hspace{4cm} Unterschrift
 
 \end{document}

@@ -323,19 +323,35 @@ def evaluate(data, labels, trn_y, model, log_priors, num_cond_inputs):
         log_pxy = get_log_pxy(model, pred_loader)
 
         lik[i] = log_pxy
-
+        
+    
+    LL = np.array(list(lik.values()))
+    
+    # '''
+    # Saving the obtained log likelihoods as average over each class for manual inspection
+    # '''
+    # r = []
+    # for i in range(num_cond_inputs):
+    #     mask = (labels == i).nonzero()
+    #     M = len(mask[0])
+    #     a = LL[:,mask]
+    #     a = a.reshape(num_cond_inputs, -1)
+    #     classLL = np.sum(a, axis=1, keepdims=True)/M
+    #     r.append(classLL)
+    
+    # visLL = np.concatenate(r, axis=1)
+    # np.savetxt("MAF_UCIHAR_example_LL.txt", visLL, fmt='%.1f', delimiter=" & ")
+    
+    
     '''
     Bayes classifier
     LL is the classes x N array containing log p(x|y=c) for all classes c in C over all samples
     First calculate numerator of Bayes' as likelihood + prior in log space for all samples and classes
     Then get prediction as argmax over each column
     '''
-    LL = np.array(list(lik.values()))
     result = LL + log_priors.reshape(-1,1)
     y_pred = np.argmax(result, axis=0)
     
-   
-    # np.savetxt("MAF_pxy.txt", LL, fmt='%.2f', delimiter=" ")
     
     '''
     HMM recognition model
@@ -361,7 +377,6 @@ def evaluate(data, labels, trn_y, model, log_priors, num_cond_inputs):
     hmm_accuracy = accuracy_score(labels, s)
     return bay_accuracy, hmm_accuracy, y_pred
 
-
 def plot_confMat(le, tst_y, y_pred):
     try:
         classes = list(le.classes_)
@@ -375,7 +390,7 @@ def plot_confMat(le, tst_y, y_pred):
     plt.figure(figsize = (16,9))
     s = sns.heatmap(df_cm, annot=True, cmap="flare", fmt='g')
     s.set(xlabel='predicted class', ylabel='true class')
-    plt.savefig('conf_mat.jpg')
+    # plt.savefig('conf_mat_uci.jpg')
 
 
 def run(dataset, cond_inputs, window, win_size, trn_step, augment, noise, plot=False):
@@ -446,57 +461,58 @@ Likewise for running the MVN benchmark:
 
 
 
-# c_exp = [['CARROTS', 16, False, 0, 0, False, False],
-#           ['CARROTS', 16, False, 0, 0, False, True],
-#           ['CARROTS', 16, False, 0, 0, True, False],
-#           ['CARROTS', 16, False, 0, 0, True, True],
-#           ['CARROTS', 16, True, 26, 13, False, False],
-#           ['CARROTS', 16, True, 26, 13, False, True],
-#           ['CARROTS', 16, True, 26, 13, True, False],
-#           ['CARROTS', 16, True, 26, 13, True, True],
-#           ['CARROTS', 16, True, 8, 4, True, False],
-#           ['CARROTS', 16, True, 64, 32, True, False]]
+c_exp = [['CARROTS', 16, False, 0, 0, False, False],
+          ['CARROTS', 16, False, 0, 0, False, True],
+          ['CARROTS', 16, False, 0, 0, True, False],
+          ['CARROTS', 16, False, 0, 0, True, True],
+          ['CARROTS', 16, True, 26, 13, False, False],
+          ['CARROTS', 16, True, 26, 13, False, True],
+          ['CARROTS', 16, True, 26, 13, True, False],
+          ['CARROTS', 16, True, 26, 13, True, True],
+          ['CARROTS', 16, True, 8, 4, True, False],
+          ['CARROTS', 16, True, 64, 32, True, False]]
 
-# m_exp = [['MOSENSE', 6, True, 128, 64, False, False],
-#           ['MOSENSE', 6, True, 128, 64, False, True],
-#           ['MOSENSE', 6, True, 128, 64, True, False],
-#           ['MOSENSE', 6, True, 128, 64, True, True],
-#           ['MOSENSE', 6, True, 64, 32, False, True],
-#           ['MOSENSE', 6, True, 64, 32, True, True],
-#           ['MOSENSE', 6, True, 32, 16, False, True],
-#           ['MOSENSE', 6, True, 32, 16, True, True]]
+m_exp = [['MOSENSE', 6, True, 128, 64, False, False],
+          ['MOSENSE', 6, True, 128, 64, False, True],
+          ['MOSENSE', 6, True, 128, 64, True, False],
+          ['MOSENSE', 6, True, 128, 64, True, True],
+          ['MOSENSE', 6, True, 64, 32, False, True],
+          ['MOSENSE', 6, True, 64, 32, True, True],
+          ['MOSENSE', 6, True, 32, 16, False, True],
+          ['MOSENSE', 6, True, 32, 16, True, True]]
 
-# u_exp = [['UCIHAR', 6, True, 128, 64, False, False]]
+u_exp = [['UCIHAR', 6, True, 128, 64, False, False]]
 
-# # experiments = c_exp + m_exp + u_exp
-# experiments = m_exp + u_exp
+experiments = c_exp + m_exp + u_exp
 
-# df = pd.DataFrame(experiments, columns=['Dataset', '# classes', 'Window',
-#                                         'W_size', 'W_step', 'Augment', 'Noise'])
+df = pd.DataFrame(experiments, columns=['Dataset', '# classes', 'Window',
+                                        'W_size', 'W_step', 'Augment', 'Noise'])
 
-# results = []
+results = []
 
-# for i in range(len(experiments)):
-#     maf_bay_acc, maf_hmm_acc, maf_ll = run(*experiments[i])
-#     mvn_bay_acc, mvn_hmm_acc, mvn_ll = run_mvn(*experiments[i])
-#     results.append({'MVN LL': mvn_ll, 'MAF LL': maf_ll, 'MVN ACC': mvn_bay_acc,
-#                     'MAF ACC': maf_bay_acc, 'MVN_HMM': mvn_hmm_acc,
-#                     'MAF_HMM': maf_hmm_acc})
+for i in range(len(experiments)):
+    maf_bay_acc, maf_hmm_acc, maf_ll = run(*experiments[i])
+    mvn_bay_acc, mvn_hmm_acc, mvn_ll = run_mvn(*experiments[i])
+    results.append({'MVN LL': mvn_ll, 'MAF LL': maf_ll, 'MVN ACC': mvn_bay_acc,
+                    'MAF ACC': maf_bay_acc, 'MVN_HMM': mvn_hmm_acc,
+                    'MAF_HMM': maf_hmm_acc})
     
-# rf = pd.DataFrame(results)
+rf = pd.DataFrame(results)
 
-# df = pd.concat([df, rf], axis=1)
-# df.to_csv('Experiment_results_format.csv', float_format="%.4f", index=False)
+df = pd.concat([df, rf], axis=1)
+df.to_csv('Experiment_results_format.csv', float_format="%.4f", index=False)
 
-# with open('resultstable.tex', 'w') as tf:
-#       tf.write(df.to_latex(columns=['Dataset', 'Window', 'W_size', 'W_step',
-#                                     'Augment', 'Noise', 'MVN LL', 'MAF LL',
-#                                     'MVN ACC', 'MAF ACC', 'MVN_HMM', 'MAF_HMM'],
-#                           index=False, float_format="%.4f"))
+with open('resultstable.tex', 'w') as tf:
+      tf.write(df.to_latex(columns=['Dataset', 'Window', 'W_size', 'W_step',
+                                    'Augment', 'Noise', 'MVN LL', 'MAF LL',
+                                    'MVN ACC', 'MAF ACC', 'MVN_HMM', 'MAF_HMM'],
+                          index=False, float_format="%.4f"))
 
-bay_acc, hmm_acc, ll = run('CARROTS', 16, False, 0, 0, True, True, plot=True)
+# bay_acc, hmm_acc, ll = run('CARROTS', 16, False, 0, 0, True, True, plot=True)
+# bay_acc, hmm_acc, ll = run('MOSENSE', 6, True, 64, 32, True, True, plot=True)
+# bay_acc, hmm_acc, ll = run('UCIHAR', 6, True, 128, 64, False, False, plot=True)
 # # bay_acc, hmm_acc, ll = run_mvn('CARROTS', 16, False, 0, 0, False, False)
 
-print(bay_acc)
-print(hmm_acc)
-print(ll)
+# print(bay_acc)
+# print(hmm_acc)
+# print(ll)

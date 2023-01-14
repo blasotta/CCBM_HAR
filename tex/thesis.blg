@@ -5,48 +5,50 @@ Reallocating 'name_of_file' (item size: 1) to 6 items.
 The style file: plain.bst
 Reallocating 'name_of_file' (item size: 1) to 11 items.
 Database file #1: thesis-ref.bib
-Warning--empty journal in germain_made_nodate
-Warning--empty journal in raedt_problog_nodate
-Warning--empty year in raedt_problog_nodate
+I was expecting a `,' or a `}'---line 64 of file thesis-ref.bib
+ :  
+ :  file = {Ramirez and Geffner - Goal Recognition over POMDPs Inferring the Intent.pdf:C\:\\Users\\bened\\Zotero\\storage\\8A6CY3CQ\\Ramirez and Geffner - Goal Recognition over POMDPs Inferring the Intent.pdf:application/pdf},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
 You've used 28 entries,
             2118 wiz_defined-function locations,
-            662 strings with 11109 characters,
-and the built_in function-call counts, 10679 in all, are:
-= -- 1013
-> -- 626
-< -- 10
-+ -- 248
-- -- 218
-* -- 803
-:= -- 1773
-add.period$ -- 98
+            664 strings with 10852 characters,
+and the built_in function-call counts, 11131 in all, are:
+= -- 1075
+> -- 637
+< -- 9
++ -- 252
+- -- 222
+* -- 843
+:= -- 1824
+add.period$ -- 95
 call.type$ -- 28
-change.case$ -- 193
+change.case$ -- 195
 chr.to.int$ -- 0
-cite$ -- 31
-duplicate$ -- 355
-empty$ -- 768
-format.name$ -- 218
-if$ -- 2211
+cite$ -- 28
+duplicate$ -- 372
+empty$ -- 804
+format.name$ -- 222
+if$ -- 2318
 int.to.chr$ -- 0
 int.to.str$ -- 28
-missing$ -- 21
-newline$ -- 153
+missing$ -- 22
+newline$ -- 149
 num.names$ -- 56
-pop$ -- 231
+pop$ -- 221
 preamble$ -- 1
-purify$ -- 165
+purify$ -- 167
 quote$ -- 0
-skip$ -- 252
+skip$ -- 275
 stack$ -- 0
-substring$ -- 525
-swap$ -- 82
-text.length$ -- 10
+substring$ -- 622
+swap$ -- 96
+text.length$ -- 9
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 112
-warning$ -- 3
-while$ -- 91
+warning$ -- 0
+while$ -- 96
 width$ -- 30
-write$ -- 326
-(There were 3 warnings)
+write$ -- 323
+(There was 1 error message)

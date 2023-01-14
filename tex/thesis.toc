@@ -2,42 +2,42 @@
 \contentsline {chapter}{\numberline {2}Theoretical Background}{3}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Introduction to Computational State Space Models}{3}{section.2.1}%
 \contentsline {section}{\numberline {2.2}Distribution Estimation with Masked Autoregressive Flow}{6}{section.2.2}%
-\contentsline {paragraph}{Distribution Estimation with MADE}{7}{section*.4}%
-\contentsline {paragraph}{Advantages of MAF}{8}{section*.6}%
-\contentsline {paragraph}{Conditional MAF}{9}{section*.7}%
+\contentsline {paragraph}{Distribution Estimation with MADE}{7}{section*.5}%
+\contentsline {paragraph}{Advantages of MAF}{8}{section*.7}%
+\contentsline {paragraph}{Conditional MAF}{9}{section*.8}%
 \contentsline {chapter}{\numberline {3}Related Work}{11}{chapter.3}%
 \contentsline {chapter}{\numberline {4}Methods}{14}{chapter.4}%
 \contentsline {section}{\numberline {4.1}Data pre-processing}{15}{section.4.1}%
-\contentsline {paragraph}{Normalization}{15}{section*.9}%
-\contentsline {paragraph}{Windowing}{15}{section*.10}%
-\contentsline {paragraph}{Data Augmentation}{16}{section*.11}%
-\contentsline {paragraph}{Input Noise Injection}{16}{section*.12}%
-\contentsline {paragraph}{Pre-Processing Alternatives}{16}{section*.13}%
+\contentsline {paragraph}{Normalization}{15}{section*.10}%
+\contentsline {paragraph}{Windowing}{15}{section*.11}%
+\contentsline {paragraph}{Data Augmentation}{16}{section*.12}%
+\contentsline {paragraph}{Input Noise Injection}{16}{section*.13}%
+\contentsline {paragraph}{Pre-Processing Alternatives}{16}{section*.14}%
 \contentsline {section}{\numberline {4.2}Density Estimation}{17}{section.4.2}%
-\contentsline {paragraph}{Multivariate Normal Distribution}{17}{section*.14}%
-\contentsline {paragraph}{Advanced Density Estimation Methods}{17}{section*.15}%
+\contentsline {paragraph}{Multivariate Normal Distribution}{17}{section*.15}%
+\contentsline {paragraph}{Advanced Density Estimation Methods}{17}{section*.16}%
 \contentsline {section}{\numberline {4.3}Recognition Model}{18}{section.4.3}%
-\contentsline {paragraph}{Bayes Classifier}{18}{section*.16}%
-\contentsline {paragraph}{Hidden Markov Model}{19}{section*.17}%
-\contentsline {paragraph}{Computational Causal Behavior Models}{19}{section*.18}%
+\contentsline {paragraph}{Bayes Classifier}{18}{section*.17}%
+\contentsline {paragraph}{Hidden Markov Model}{19}{section*.18}%
+\contentsline {paragraph}{Computational Causal Behavior Models}{19}{section*.19}%
 \contentsline {chapter}{\numberline {5}Experimental Evaluation}{21}{chapter.5}%
 \contentsline {section}{\numberline {5.1}Datasets}{21}{section.5.1}%
-\contentsline {paragraph}{Carrot}{21}{section*.20}%
-\contentsline {paragraph}{MotionSense}{22}{section*.21}%
-\contentsline {paragraph}{UCI HAR}{22}{section*.22}%
+\contentsline {paragraph}{Carrot}{21}{section*.21}%
+\contentsline {paragraph}{MotionSense}{22}{section*.22}%
+\contentsline {paragraph}{UCI HAR}{22}{section*.23}%
 \contentsline {section}{\numberline {5.2}Experiments}{22}{section.5.2}%
-\contentsline {paragraph}{Train-Test Split}{23}{section*.23}%
-\contentsline {paragraph}{Settings}{23}{section*.24}%
+\contentsline {paragraph}{Train-Test Split}{23}{section*.24}%
+\contentsline {paragraph}{Settings}{23}{section*.25}%
 \contentsline {section}{\numberline {5.3}Results}{24}{section.5.3}%
 \contentsline {subsection}{\numberline {5.3.1}Carrot Dataset}{24}{subsection.5.3.1}%
-\contentsline {paragraph}{Comparing MVN and MAF}{24}{section*.26}%
-\contentsline {paragraph}{Challenges of the Carrot Dataset}{25}{section*.27}%
-\contentsline {paragraph}{Effectiveness of Pre-Processing}{26}{section*.29}%
-\contentsline {paragraph}{Comparing Bayes Classifier and HMM}{27}{section*.31}%
-\contentsline {subsection}{\numberline {5.3.2}MotionSense Dataset}{28}{subsection.5.3.2}%
-\contentsline {subsection}{\numberline {5.3.3}UCI HAR Dataset}{29}{subsection.5.3.3}%
-\contentsline {chapter}{\numberline {6}Conclusion}{31}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Summary}{31}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Future Work}{31}{section.6.2}%
-\contentsline {chapter}{\numberline {A}Program Code / Resources}{36}{appendix.A}%
-\contentsline {chapter}{\numberline {B}Further Experimental Results}{37}{appendix.B}%
+\contentsline {paragraph}{Comparing MVN and MAF}{24}{section*.27}%
+\contentsline {paragraph}{Challenges of the Carrot Dataset}{25}{section*.28}%
+\contentsline {paragraph}{Effectiveness of Pre-Processing}{26}{section*.30}%
+\contentsline {paragraph}{Comparing Bayes Classifier and HMM}{27}{section*.32}%
+\contentsline {subsection}{\numberline {5.3.2}MotionSense Dataset}{29}{subsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.3.3}UCI HAR Dataset}{31}{subsection.5.3.3}%
+\contentsline {chapter}{\numberline {6}Conclusion}{33}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Summary}{33}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Future Work}{34}{section.6.2}%
+\contentsline {chapter}{\numberline {A}Program Code / Resources}{40}{appendix.A}%
+\contentsline {chapter}{\numberline {B}Further Experimental Results}{41}{appendix.B}%
