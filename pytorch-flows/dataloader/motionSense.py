@@ -3,7 +3,7 @@ import pandas as pd
 import itertools
 from numpy.lib.stride_tricks import as_strided
 
-BASEPATH = 'C:/Users/bened/PythonWork/Test_MA/pytorch-flows/dataloader'
+BASEPATH = 'C:/Users/bened/PythonWork/CCBM_HAR/pytorch-flows/dataloader'
 
 def get_ds_infos():
     """

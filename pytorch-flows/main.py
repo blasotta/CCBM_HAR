@@ -511,7 +511,7 @@ with open('resultstable.tex', 'w') as tf:
 # bay_acc, hmm_acc, ll = run('CARROTS', 16, False, 0, 0, True, True, plot=True)
 # bay_acc, hmm_acc, ll = run('MOSENSE', 6, True, 64, 32, True, True, plot=True)
 # bay_acc, hmm_acc, ll = run('UCIHAR', 6, True, 128, 64, False, False, plot=True)
-# # bay_acc, hmm_acc, ll = run_mvn('CARROTS', 16, False, 0, 0, False, False)
+# bay_acc, hmm_acc, ll = run_mvn('CARROTS', 16, False, 0, 0, False, False)
 
 # print(bay_acc)
 # print(hmm_acc)

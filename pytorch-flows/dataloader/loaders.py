@@ -8,7 +8,7 @@ from numpy.lib.stride_tricks import as_strided
 
 from sklearn.model_selection import train_test_split
 
-BASEPATH = 'C:/Users/bened/PythonWork/Test_MA/pytorch-flows/dataloader'
+BASEPATH = 'C:/Users/bened/PythonWork/CCBM_HAR/pytorch-flows/dataloader'
 
 def load_dataset(number):
     dataset, meta = arff.loadarff(

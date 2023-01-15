@@ -1,12 +1,9 @@
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 from scipy.stats import multivariate_normal
 from sklearn.metrics import f1_score, accuracy_score
-from sklearn.metrics import confusion_matrix
 from scipy.special import logsumexp
-from dataloader.loaders import one_hot_encode, get_carrots, load_conditional_test, get_UCIHAR
+from dataloader.loaders import get_carrots, load_conditional_test, get_UCIHAR
 from dataloader.preprocess_motion_sense import get_moSense
 
 

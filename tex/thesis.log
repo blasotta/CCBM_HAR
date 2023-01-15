@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 21.12) (preloaded format=pdflatex 2022.1.27)  14 JAN 2023 19:09
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 21.12) (preloaded format=pdflatex 2022.1.27)  15 JAN 2023 14:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -572,10 +572,10 @@ Chapter 2.
 <MADE_vis.jpg, id=276, 840.13875pt x 387.69844pt>
 File: MADE_vis.jpg Graphic file (type jpg)
 <use MADE_vis.jpg>
-Package pdftex.def Info: MADE_vis.jpg  used on input line 209.
+Package pdftex.def Info: MADE_vis.jpg  used on input line 211.
 (pdftex.def)             Requested size: 360.0pt x 166.12732pt.
  [8 <./MADE_vis.jpg>]
-Overfull \hbox (3.60138pt too wide) in paragraph at lines 224--226
+Overfull \hbox (3.60138pt too wide) in paragraph at lines 226--228
 \OT1/ptm/m/n/10.95 According to Pa-pa-makar-ios et al. [[]] the com-pu-ta-tion 
 of this ex-pres-sion is tractable
  []
@@ -589,7 +589,7 @@ Chapter 4.
 <Hybrid_V2.jpg, id=325, 825.83531pt x 381.67593pt>
 File: Hybrid_V2.jpg Graphic file (type jpg)
 <use Hybrid_V2.jpg>
-Package pdftex.def Info: Hybrid_V2.jpg  used on input line 253.
+Package pdftex.def Info: Hybrid_V2.jpg  used on input line 255.
 (pdftex.def)             Requested size: 360.0pt x 166.38295pt.
 [14
 
@@ -601,33 +601,33 @@ Chapter 5.
 <conf_mat.jpg, id=430, 909.3975pt x 577.15625pt>
 File: conf_mat.jpg Graphic file (type jpg)
 <use conf_mat.jpg>
-Package pdftex.def Info: conf_mat.jpg  used on input line 408.
+Package pdftex.def Info: conf_mat.jpg  used on input line 412.
 (pdftex.def)             Requested size: 360.0pt x 228.48059pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [25] [26 <./conf_mat.jpg>] [27] [28]
-Overfull \hbox (4.75064pt too wide) in paragraph at lines 497--522
+Overfull \hbox (4.75064pt too wide) in paragraph at lines 501--526
  [][] 
  []
 
 [29] [30]
-Overfull \hbox (21.35223pt too wide) in paragraph at lines 558--576
+Overfull \hbox (21.35223pt too wide) in paragraph at lines 562--580
  [][] 
  []
 
 [31] [32]
 Chapter 6.
 LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 6
-12.
+16.
 (C:\Users\bened\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
 [33
 
 ]
-Overfull \hbox (4.14877pt too wide) in paragraph at lines 627--628
+Overfull \hbox (4.14877pt too wide) in paragraph at lines 631--632
 []\OT1/ptm/m/n/10.95 A large num-ber of sub-jects with di-verse phys-i-o-log-i-
 cal fea-tures, such as height,
  []
@@ -703,27 +703,27 @@ Appendix B.
 <conf_mat_mos.jpg, id=532, 1156.32pt x 650.43pt>
 File: conf_mat_mos.jpg Graphic file (type jpg)
 <use conf_mat_mos.jpg>
-Package pdftex.def Info: conf_mat_mos.jpg  used on input line 651.
+Package pdftex.def Info: conf_mat_mos.jpg  used on input line 655.
 (pdftex.def)             Requested size: 360.0pt x 202.49466pt.
 <conf_mat_uci.jpg, id=533, 1156.32pt x 650.43pt>
 File: conf_mat_uci.jpg Graphic file (type jpg)
 <use conf_mat_uci.jpg>
-Package pdftex.def Info: conf_mat_uci.jpg  used on input line 658.
+Package pdftex.def Info: conf_mat_uci.jpg  used on input line 662.
 (pdftex.def)             Requested size: 360.0pt x 202.49466pt.
 <pairplot.png, id=534, 5420.25pt x 5420.25pt>
 File: pairplot.png Graphic file (type png)
 <use pairplot.png>
-Package pdftex.def Info: pairplot.png  used on input line 665.
+Package pdftex.def Info: pairplot.png  used on input line 669.
 (pdftex.def)             Requested size: 360.0pt x 359.93759pt.
 [41
 
 ] [42 <./conf_mat_mos.jpg> <./conf_mat_uci.jpg>] [43 <./pairplot.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 678--687
+Underfull \hbox (badness 10000) in paragraph at lines 682--691
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 678--687
+Underfull \hbox (badness 10000) in paragraph at lines 682--691
 
  []
 
@@ -732,16 +732,16 @@ Underfull \hbox (badness 10000) in paragraph at lines 678--687
 
 [44] (thesis.aux)
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: F4BB98E5EDE027B514F3D3E968FFAAD4;3094.
+(rerunfilecheck)             Checksum: 1D304793E95A9941D29A6442E5FCB136;3094.
  ) 
 Here is how much of TeX's memory you used:
- 12896 strings out of 478659
- 207868 string characters out of 2845920
+ 12895 strings out of 478659
+ 207850 string characters out of 2845920
  517225 words of memory out of 3000000
- 30605 multiletter control sequences out of 15000+600000
+ 30604 multiletter control sequences out of 15000+600000
  436249 words of font info for 97 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 60i,14n,63p,2620b,540s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,14n,63p,2124b,540s stack positions out of 5000i,500n,10000p,200000b,80000s
 {C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}<C:
 /Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx1
 0.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
@@ -762,7 +762,7 @@ e1/urw/times/utmb8a.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/typ
 e1/urw/times/utmr8a.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/typ
 e1/urw/times/utmr8a.pfb><C:/Users/bened/AppData/Local/Programs/MiKTeX/fonts/typ
 e1/urw/times/utmri8a.pfb>
-Output written on thesis.pdf (49 pages, 5269974 bytes).
+Output written on thesis.pdf (49 pages, 5269782 bytes).
 PDF statistics:
  662 PDF objects out of 1000 (max. 8388607)
  155 named destinations out of 1000 (max. 500000)
